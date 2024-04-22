@@ -2,6 +2,8 @@ package models;
 import java.io.*;
 import java.net.*;
 
+import org.json.simple.JSONObject;
+
 public class Cliente {
 	
 	private String ip;
@@ -22,7 +24,7 @@ public class Cliente {
 				new InputStreamReader( clientSocket.getInputStream()));
     }
 
-    public void enviarMensagem(String msg) {
+    public void enviarMensagem(JSONObject msg) {
     	this.out.println(msg);
     }
     

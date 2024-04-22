@@ -47,7 +47,7 @@ public class HomeFrame extends JFrame {
 	public HomeFrame(Cliente cliente) {
 		this.cliente = cliente;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 799, 605);
+		setBounds(100, 100, 813, 605);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 128, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -71,7 +71,7 @@ public class HomeFrame extends JFrame {
 			}
 		});
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnNewButton.setBounds(204, 212, 377, 57);
+		btnNewButton.setBounds(58, 185, 305, 57);
 		contentPane.add(btnNewButton);
 		
 		JButton btnLoginCandidato = new JButton("LOGIN CANDIDATO");
@@ -81,18 +81,33 @@ public class HomeFrame extends JFrame {
 			}
 		});
 		btnLoginCandidato.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnLoginCandidato.setBounds(204, 296, 377, 57);
+		btnLoginCandidato.setBounds(430, 185, 305, 57);
 		contentPane.add(btnLoginCandidato);
 		
-		JButton btnRegistrar = new JButton("REGISTRAR");
+		JButton btnRegistrar = new JButton("REGISTRAR CANDIDATO");
+		btnRegistrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				chamarRegistroCandidato();
+			}
+		});
 		btnRegistrar.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnRegistrar.setBounds(204, 377, 377, 57);
+		btnRegistrar.setBounds(430, 261, 305, 57);
 		contentPane.add(btnRegistrar);
+		
+		JButton btnRegistrarEmpresa = new JButton("REGISTRAR EMPRESA");
+		btnRegistrarEmpresa.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnRegistrarEmpresa.setBounds(58, 261, 305, 57);
+		contentPane.add(btnRegistrarEmpresa);
 	
 	}
 	private void chamarLoginCandidato() {
 		LoginCandidatoFrame login = new LoginCandidatoFrame(this.cliente);
 		login.setVisible(true);
+		dispose();
+	}
+	private void chamarRegistroCandidato(){
+		RegistroCandidatoFrame regFrame = new RegistroCandidatoFrame(this.cliente);
+		regFrame.setVisible(true);
 		dispose();
 	}
 }

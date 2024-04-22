@@ -1,10 +1,11 @@
 package models;
 import java.net.*;
+import java.sql.SQLException;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import org.json.simple.JSONObject;
+
+import controllers.JSONController;
+import dao.UsuarioDAO;
 
 import java.io.*; 
 
@@ -83,16 +84,33 @@ public void run()
                  new InputStreamReader( clientSocket.getInputStream())); 
 
          String inputLine; 
-
+         JSONController jsonController = new JSONController();
+         ConexaoBanco.iniciarBD();
+         
          while ((inputLine = in.readLine()) != null) 
              { 
               System.out.println ("Server: " + inputLine); 
-
-              JsonObject response = JsonParser.parseString(inputLine).getAsJsonObject();
-              System.out.println(response);
+              String res = jsonController.getOperacao(inputLine);
+              
+              System.out.println(res);
+	              switch(res) {
+		              case "loginCandidato":{
+		            	  jsonController.changeCandidatoLoginToJSON(res);
+		              }
+		              case "cadastrarCandidato":{
+		            	  Candidato candidato = jsonController.changeCandidatoCompletoJSON(res);
+		            	  UsuarioDAO userDao = new UsuarioDAO();
+		            	  try {
+							userDao.adicionarUsuarioCandidato(candidato);
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+		              }
+	              }
+            
               
              } 
-
+         
          out.close(); 
          in.close(); 
          clientSocket.close(); 

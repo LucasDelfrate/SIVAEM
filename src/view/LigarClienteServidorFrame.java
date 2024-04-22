@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 
-public class Conection extends JFrame {
+public class LigarClienteServidorFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -31,7 +31,7 @@ public class Conection extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Conection frame = new Conection();
+					LigarClienteServidorFrame frame = new LigarClienteServidorFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,7 +43,7 @@ public class Conection extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Conection() {
+	public LigarClienteServidorFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 465, 368);
 		contentPane = new JPanel();

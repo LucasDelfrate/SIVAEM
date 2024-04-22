@@ -3,11 +3,14 @@ package view;
 import java.awt.EventQueue;
 
 
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import controllers.LoginCandidatoController;
+import org.json.simple.JSONObject;
+
+import controllers.JSONController;
 import models.Candidato;
 import models.Cliente;
 import javax.swing.JLabel;
@@ -89,13 +92,17 @@ public class LoginCandidatoFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				 String username = txtUsername.getText();
-				 char[] password = txtPassword.getPassword();
+				 String password = txtPassword.getText();
 				 Candidato candidato = new Candidato();
 				 candidato.setOperacao("loginCandidato");
 				 candidato.setPassword(password);
 				 candidato.setUser(username);
-				 LoginCandidatoController loginController = new LoginCandidatoController();
-				 loginController.changeToJSON(candidato);
+				 JSONController loginController = new JSONController();
+				 JSONObject res = loginController.changeToJSON(candidato);
+				 
+				 loginCandidato(res);
+				 
+				 
 			}
 		});
 		btnNewButton.setBounds(92, 268, 227, 41);
@@ -104,5 +111,14 @@ public class LoginCandidatoFrame extends JFrame {
 		txtPassword = new JPasswordField();
 		txtPassword.setBounds(92, 216, 227, 29);
 		contentPane.add(txtPassword);
+	}
+	
+	public void loginCandidato(JSONObject res) {
+		if(this.client == null) {
+			System.out.println("O cliente está nulo, você deve primeiro inicializar o cliente e o servidor");
+			
+		}else {			
+			this.client.enviarMensagem(res);
+		}
 	}
 }
