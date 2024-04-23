@@ -23,7 +23,7 @@ public class JSONController {
 		cand.put("user", candidato.getUser());
 		cand.put("password", candidato.getPassword());
 		cand.put("operacao", candidato.getOperacao());
-		
+		cand.put("email", candidato.getEmail());
 		return cand;
 		
 	}
@@ -50,18 +50,18 @@ public class JSONController {
 	}
 	public Candidato changeCandidatoCompletoJSON(String candidato) {
 		Candidato candidato1 = new Candidato();
+		UUIDController uuidController = new UUIDController();
 		JSONParser parser = new JSONParser();
 		try {
 			
 			JSONObject jsonObject = (JSONObject) parser.parse(candidato);
 			
-			String user = (String) jsonObject.get("user");
-			candidato1.setUser(user);
-			String password = (String) jsonObject.get("password");
-			candidato1.setPassword(password);
 			
-			String email = (String) jsonObject.get("password");
-			candidato1.setEmail(email);
+			candidato1.setUser((String) jsonObject.get("user") );
+			candidato1.setPassword((String) jsonObject.get("password"));
+			candidato1.setEmail((String) jsonObject.get("email"));
+			String stringUUID = uuidController.generateUUID();
+			candidato1.setUUID(stringUUID);
 			
 			return candidato1;
 			

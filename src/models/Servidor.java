@@ -1,11 +1,14 @@
 package models;
 import java.net.*;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
+import controllers.CadastroController;
 import controllers.JSONController;
-import dao.UsuarioDAO;
+import dao.BancoDados;
+import dao.candidatoDAO;
 
 import java.io.*; 
 
@@ -15,8 +18,8 @@ public class Servidor extends Thread
  protected Socket clientSocket;
  protected int porta;
 
- 
- public void ligarServidor() {
+
+public void ligarServidor() {
 	 ServerSocket serverSocket = null; 
 
 	    try { 
@@ -83,32 +86,44 @@ public void run()
          BufferedReader in = new BufferedReader( 
                  new InputStreamReader( clientSocket.getInputStream())); 
 
-         String inputLine; 
+         String res; 
          JSONController jsonController = new JSONController();
-         ConexaoBanco.iniciarBD();
+         CadastroController cadastroController = new CadastroController();
          
-         while ((inputLine = in.readLine()) != null) 
+         
+         while ((res = in.readLine()) != null) 
              { 
-              System.out.println ("Server: " + inputLine); 
-              String res = jsonController.getOperacao(inputLine);
-              
-              System.out.println(res);
-	              switch(res) {
+              System.out.println ("Server: " + res); 
+              String op = jsonController.getOperacao(res);
+	              switch(op) {
 		              case "loginCandidato":{
 		            	  jsonController.changeCandidatoLoginToJSON(res);
+		            	  break;
 		              }
 		              case "cadastrarCandidato":{
-		            	  Candidato candidato = jsonController.changeCandidatoCompletoJSON(res);
-		            	  UsuarioDAO userDao = new UsuarioDAO();
-		            	  try {
-							userDao.adicionarUsuarioCandidato(candidato);
-						} catch (SQLException e) {
-							e.printStackTrace();
-						}
+		            	  
+		            	 Candidato candidato = jsonController.changeCandidatoCompletoJSON(res);
+		            	 Boolean response = cadastroController.validarCadastro(candidato);
+		            	 if(response) {
+		            		 String msg = "Usuario ja existe no banco";
+		            		 System.out.println(msg);
+		            		 out.println(msg);
+		            	 }else if(candidato == null) {
+		            		System.out.println("Algum valor informado está incorreto");
+		            		
+		            	}else {
+		            		try {
+		            			Connection conn = BancoDados.conectar();
+		            			new candidatoDAO(conn).cadastrarUsuario(candidato);
+		            			BancoDados.desconectar();
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+		            	}
+		            	break;
+		            			
 		              }
 	              }
-            
-              
              } 
          
          out.close(); 

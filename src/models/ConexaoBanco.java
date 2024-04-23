@@ -12,7 +12,7 @@ public class ConexaoBanco {
 	private static void conectarBanco(){
 		 try {
 	            Class.forName("org.sqlite.JDBC");
-	            conexao = DriverManager.getConnection("jdbc:sqlite:banco.db");
+	            conexao = DriverManager.getConnection("jdbc:sqlite:banco.sqlite");
 	            Statement statement = conexao.createStatement();
 	           
         }catch (ClassNotFoundException e) {
@@ -35,16 +35,14 @@ public class ConexaoBanco {
 		}
 	}
 	public static Connection getConexao() {
-		 try {
+	
 			 if(conexao==null) {
-				 System.out.println("Conexão ainda não iniciada");
+				 {
+					 System.out.println("Conexão ainda não iniciada");	
+					 return null;
+				 }
 			 }
-			 if(conexao.isClosed()) {
-				 System.out.println("Conexão ainda não iniciada");
-			 }			 
-		 }catch(SQLException e) {
-			 System.err.println("Não foi possível abrir a conexão com o banco");
-		 }
+ 
 	        return conexao;
 	 }
 	public static void limparUsuarios() throws SQLException {
@@ -61,6 +59,7 @@ public class ConexaoBanco {
 					+ "nome TEXT NOT NULL," + "senha TEXT NOT NULL," + "email TEXT NOT NULL)");
 			
 			stm.executeUpdate("INSERT INTO usuario VALUES (null, 'admin', 'admin','admin@email.com')");
+			System.out.println("Banco iniciado com sucesso!");
 		}catch(SQLException e) {
 			 System.err.println("Não foi possível abrir a conexão com o banco");
 		 }

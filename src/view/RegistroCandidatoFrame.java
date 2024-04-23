@@ -78,16 +78,14 @@ public class RegistroCandidatoFrame extends JFrame {
 		btnRegistrar_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Candidato candidato = new Candidato();
+				candidato.setOperacao("cadastrarCandidato");
 				candidato.setUser(iptNome.getText());
 				candidato.setPassword(iptSenha.getText());
 				candidato.setEmail(iptEmail.getText());
-				candidato.setOperacao("cadastrarCandidato");
 				JSONController registroController = new JSONController();
 				JSONObject res = registroController.changeToJSON(candidato);
 				 
 				 registrarCandidato(res);
-				cliente.enviarMensagem(res);
-				
 			}
 		});
 		btnRegistrar_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -128,6 +126,7 @@ public class RegistroCandidatoFrame extends JFrame {
 			System.out.println("O cliente está nulo, você deve primeiro inicializar o cliente e o servidor");
 			
 		}else {			
+			System.out.println(res);
 			this.cliente.enviarMensagem(res);
 		}
 	}

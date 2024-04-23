@@ -33,5 +33,4 @@ public class Cliente {
     	this.out.close();
     	this.clientSocket.close();
     }
-
 }
