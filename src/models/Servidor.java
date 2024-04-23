@@ -9,6 +9,7 @@ import controllers.CadastroController;
 import controllers.JSONController;
 import dao.BancoDados;
 import dao.candidatoDAO;
+import enums.CadastroEnum;
 
 import java.io.*; 
 
@@ -103,25 +104,31 @@ public void run()
 		              case "cadastrarCandidato":{
 		            	  
 		            	 Candidato candidato = jsonController.changeCandidatoCompletoJSON(res);
-		            	 Boolean response = cadastroController.validarCadastro(candidato);
-		            	 if(response) {
-		            		 String msg = "Usuario ja existe no banco";
-		            		 System.out.println(msg);
-		            		 out.println(msg);
-		            	 }else if(candidato == null) {
-		            		System.out.println("Algum valor informado está incorreto");
+		            	 CadastroEnum response = cadastroController.validarCadastro(candidato);
+		            	 switch(response) {
+			            	 case ERRO_USUARIO: {
+			            		 out.print("Usuario informado não é válido ou já está cadastrado");
+			            		 break;
+			            	 }case ERRO_EMAIL: {
+			            		 out.print("Email informado não é válido ou já está cadastrado");
+			            		 break;
+			            	 }case ERRO_SENHA: {
+			            		 out.print("Senha informada não é válida ou já está cadastrada");
+			            		 break;
+			            	 }case SUCESSO:{
+			            		 try {
+				            			Connection conn = BancoDados.conectar();
+				            			new candidatoDAO(conn).cadastrarUsuario(candidato);
+				            			out.print("Cadastro realizado com sucesso!");
+				            			BancoDados.desconectar();
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}	 
+			            		 break;
+			            	 }
 		            		
-		            	}else {
-		            		try {
-		            			Connection conn = BancoDados.conectar();
-		            			new candidatoDAO(conn).cadastrarUsuario(candidato);
-		            			BancoDados.desconectar();
-							} catch (SQLException e) {
-								e.printStackTrace();
-							}
 		            	}
-		            	break;
-		            			
+		            	break;			
 		              }
 	              }
              } 

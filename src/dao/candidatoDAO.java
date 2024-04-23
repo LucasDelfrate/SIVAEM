@@ -27,17 +27,34 @@ public class candidatoDAO {
 			BancoDados.desconectar();
 		}
 	}
-	public boolean validarUsuario(String username) {
+	public boolean validarUsername(String username) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("SELECT * FROM candidato WHERE nome = '"+username+"'");
+			st = conn.prepareStatement("SELECT * FROM candidato WHERE nome = ?");
+			st.setString(1, username);
 			rs = st.executeQuery();
-			System.out.println("rs: "+rs);
-			if(rs == null) {
-				return false;
-			}else {				
+			if(rs.next()) {
 				return true;
+			}else {				
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	public boolean validarEmail(String email) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement("SELECT * FROM candidato WHERE email = ?");
+			st.setString(1, email);
+			rs = st.executeQuery();
+			if(rs.next()) {
+				return true;
+			}else {				
+				return false;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

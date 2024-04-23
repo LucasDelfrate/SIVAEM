@@ -11,6 +11,7 @@ public class Cliente {
 	private Socket clientSocket;
 	private PrintWriter out;
 	private BufferedReader in;
+	 private Thread threadEscuta;
 	
 	
     public Cliente(String ip, int porta) throws UnknownHostException, IOException {
@@ -22,6 +23,22 @@ public class Cliente {
                 true); 
 		this.in = new BufferedReader( 
 				new InputStreamReader( clientSocket.getInputStream()));
+		
+		// Iniciar uma thread para escutar mensagens do servidor
+        threadEscuta = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String mensagem;
+                    while ((mensagem = in.readLine()) != null) {
+                        System.out.println("Mensagem do servidor: " + mensagem);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        threadEscuta.start();
     }
 
     public void enviarMensagem(JSONObject msg) {
