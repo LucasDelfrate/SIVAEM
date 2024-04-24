@@ -7,9 +7,11 @@ import org.json.simple.JSONObject;
 
 import controllers.CadastroController;
 import controllers.JSONController;
+import controllers.LoginController;
 import dao.BancoDados;
 import dao.candidatoDAO;
 import enums.CadastroEnum;
+import enums.LoginEnum;
 
 import java.io.*; 
 
@@ -90,6 +92,7 @@ public void run()
          String res; 
          JSONController jsonController = new JSONController();
          CadastroController cadastroController = new CadastroController();
+         LoginController loginController = new LoginController();
          
          
          while ((res = in.readLine()) != null) 
@@ -98,7 +101,36 @@ public void run()
               String op = jsonController.getOperacao(res);
 	              switch(op) {
 		              case "loginCandidato":{
-		            	  jsonController.changeCandidatoLoginToJSON(res);
+		            	  Candidato candidato = jsonController.changeCandidatoLoginToJSON(res);
+		            	  LoginEnum response = loginController.validarLogin(candidato);
+		            	  Resposta resposta = new Resposta();
+		            	  resposta.setOperacao("loginCandidato");
+		            	  switch(response) {
+			            	 case SUCESSO: {
+				            		 resposta.setMsg("Login realizado com sucesso!");
+				            		 resposta.setStatus(200);
+				            		 String uuid;
+									try {
+										uuid = loginController.getUUID(candidato.getEmail());
+										resposta.setToken(uuid);
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}
+				            		 System.out.println("LOGIN SUCESSO");
+				            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+			            		 out.println(respostaJSON);
+			            		 break;
+			            	 	}
+			            	 case ERRO_USUARIO_E_SENHA:{
+			            		 resposta.setMsg("Login ou senha incorreto");
+			            		 resposta.setStatus(401);
+			            		 resposta.setToken(candidato.getUUID());
+			            		 System.out.println("ERRO NO LOGIN");
+			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+			            		 out.println(respostaJSON);
+			            		 break;
+			            	 }
+		            	  }
 		            	  break;
 		              }
 		              case "cadastrarCandidato":{
@@ -107,19 +139,19 @@ public void run()
 		            	 CadastroEnum response = cadastroController.validarCadastro(candidato);
 		            	 switch(response) {
 			            	 case ERRO_USUARIO: {
-			            		 out.print("Usuario informado não é válido ou já está cadastrado");
+			            		 out.println("Usuario informado não é válido ou já está cadastrado");
 			            		 break;
 			            	 }case ERRO_EMAIL: {
-			            		 out.print("Email informado não é válido ou já está cadastrado");
+			            		 out.println("Email informado não é válido ou já está cadastrado");
 			            		 break;
 			            	 }case ERRO_SENHA: {
-			            		 out.print("Senha informada não é válida ou já está cadastrada");
+			            		 out.println("Senha informada não é válida");
 			            		 break;
 			            	 }case SUCESSO:{
 			            		 try {
 				            			Connection conn = BancoDados.conectar();
 				            			new candidatoDAO(conn).cadastrarUsuario(candidato);
-				            			out.print("Cadastro realizado com sucesso!");
+				            			out.println("Cadastro realizado com sucesso!");
 				            			BancoDados.desconectar();
 									} catch (SQLException e) {
 										e.printStackTrace();

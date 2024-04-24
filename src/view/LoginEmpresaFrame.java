@@ -42,6 +42,7 @@ public class LoginEmpresaFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 515);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(128, 128, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -78,7 +79,7 @@ public class LoginEmpresaFrame extends JFrame {
 		contentPane.add(textField_1);
 		
 		JButton btnNewButton = new JButton("LOGAR");
-		btnNewButton.setBounds(106, 286, 227, 41);
+		btnNewButton.setBounds(106, 319, 227, 41);
 		contentPane.add(btnNewButton);
 	}
 

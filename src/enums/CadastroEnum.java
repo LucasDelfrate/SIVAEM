@@ -2,10 +2,10 @@ package enums;
 
 public enum CadastroEnum {
 	
-	SUCESSO(0),
-	ERRO_USUARIO(1),
-    ERRO_EMAIL(2),
-    ERRO_SENHA(3);
+	SUCESSO(1),
+	ERRO_USUARIO(2),
+    ERRO_EMAIL(3),
+    ERRO_SENHA(4);
 	
 	private final int valor;
 	

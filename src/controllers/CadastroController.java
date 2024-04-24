@@ -15,62 +15,59 @@ public class CadastroController {
 		Boolean isUsernameValid = validarUsername(candidato.getUser());
 		Boolean isEmailValid = validarEmail(candidato.getEmail());
 		Boolean isPasswordValid = validarSenha(candidato.getPassword());
-		if(isUsernameValid) {
+		System.out.println("USER: "+isUsernameValid +" Email: "+ isEmailValid + " Password: "+ isPasswordValid);
+		if(!isUsernameValid) {
 			return CadastroEnum.ERRO_USUARIO;
-		}else if(isEmailValid) {
+		}else if(!isEmailValid) {
 			return CadastroEnum.ERRO_EMAIL;
-		}else if(isPasswordValid) {
+		}else if(!isPasswordValid) {
 			return CadastroEnum.ERRO_SENHA;
 		}else {
 			return CadastroEnum.SUCESSO;
 		}
 	}
 	public boolean validarUsername(String username) throws IOException {
-		if(username == null) {
+		if(username == null || username.length() == 0) {
 			return false;
 		}else {
 			try {
     			Connection conn = BancoDados.conectar();
     			Boolean response = new candidatoDAO(conn).validarUsername(username);
     			BancoDados.desconectar();
-    			if(response) {
-    				return false;
-    			}else {
-    				return true;
-    			}
+    			return response;
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		return false;
 	}
+	
 	public Boolean validarEmail(String email) throws IOException {
-			if(email == null || email.length()>50 || email.length()<7 || !email.contains("@")) {
+			if(email == null || email.length()>50 || email.length()<7 || !email.contains("@") || email.length()==0) {
 				return false;			
 			}else {
 				try {
 					Connection conn = BancoDados.conectar();
 					Boolean response = new candidatoDAO(conn).validarEmail(email);
-					System.out.println("response: " + response);
 					BancoDados.desconectar();
+					return response;
 				}catch (SQLException e) {
 					e.printStackTrace();
 					return false;
 				}
-			return false;
 		}
 	}
+	
 	public Boolean validarSenha(String password) {
-			if(password == null) {				
+			if(password == null || password.length()==0) {				
 				return false;
 			}else {
 				for (int i = 0; i < password.length(); i++) {
 		            if (!Character.isDigit(password.charAt(i))) {
 		                return false; 
 		            }
-		            return true;
 		        }
 			}
-		return false;
+		return true;
 	}
 }

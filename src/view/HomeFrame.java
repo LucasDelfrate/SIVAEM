@@ -18,6 +18,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.border.BevelBorder;
 
 public class HomeFrame extends JFrame {
 
@@ -47,7 +48,7 @@ public class HomeFrame extends JFrame {
 	public HomeFrame(Cliente cliente) {
 		this.cliente = cliente;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 813, 605);
+		setBounds(100, 100, 657, 514);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 128, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -55,59 +56,74 @@ public class HomeFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("SIVAEM");
-		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("Verdana", Font.PLAIN, 44));
-		lblNewLabel.setBounds(10, 49, 775, 125);
-		contentPane.add(lblNewLabel);
-		
-		JButton btnNewButton = new JButton("LOGIN EMPRESA");
+		JButton btnNewButton = new JButton("Login");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LoginEmpresaFrame login = new LoginEmpresaFrame();
 				login.setVisible(true);
-				dispose();
 			}
 		});
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnNewButton.setBounds(58, 185, 305, 57);
+		btnNewButton.setBounds(79, 222, 210, 46);
 		contentPane.add(btnNewButton);
 		
-		JButton btnLoginCandidato = new JButton("LOGIN CANDIDATO");
+		JButton btnLoginCandidato = new JButton("Login");
 		btnLoginCandidato.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				chamarLoginCandidato();
 			}
 		});
 		btnLoginCandidato.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnLoginCandidato.setBounds(430, 185, 305, 57);
+		btnLoginCandidato.setBounds(354, 222, 210, 46);
 		contentPane.add(btnLoginCandidato);
 		
-		JButton btnRegistrar = new JButton("REGISTRAR CANDIDATO");
+		JButton btnRegistrar = new JButton("Registrar");
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				chamarRegistroCandidato();
 			}
 		});
 		btnRegistrar.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnRegistrar.setBounds(430, 261, 305, 57);
+		btnRegistrar.setBounds(354, 279, 210, 46);
 		contentPane.add(btnRegistrar);
 		
-		JButton btnRegistrarEmpresa = new JButton("REGISTRAR EMPRESA");
+		JButton btnRegistrarEmpresa = new JButton("Registrar");
+		btnRegistrarEmpresa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnRegistrarEmpresa.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnRegistrarEmpresa.setBounds(58, 261, 305, 57);
+		btnRegistrarEmpresa.setBounds(79, 279, 210, 46);
 		contentPane.add(btnRegistrarEmpresa);
+		
+		JLabel lblCandidato = new JLabel("Candidato");
+		lblCandidato.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCandidato.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblCandidato.setBounds(354, 165, 210, 46);
+		contentPane.add(lblCandidato);
+		
+		JLabel lblEmpresa = new JLabel("Empresa");
+		lblEmpresa.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEmpresa.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblEmpresa.setBounds(79, 165, 210, 46);
+		contentPane.add(lblEmpresa);
+		
+		JLabel lblNewLabel = new JLabel("SIVAEM");
+		lblNewLabel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		lblNewLabel.setBackground(new Color(0, 0, 0));
+		lblNewLabel.setForeground(new Color(0, 0, 0));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Yu Gothic UI", Font.BOLD, 44));
+		lblNewLabel.setBounds(28, 11, 588, 78);
+		contentPane.add(lblNewLabel);
 	
 	}
 	private void chamarLoginCandidato() {
 		LoginCandidatoFrame login = new LoginCandidatoFrame(this.cliente);
 		login.setVisible(true);
-		dispose();
 	}
 	private void chamarRegistroCandidato(){
 		RegistroCandidatoFrame regFrame = new RegistroCandidatoFrame(this.cliente);
 		regFrame.setVisible(true);
-		dispose();
 	}
 }

@@ -14,6 +14,8 @@ import controllers.JSONController;
 import models.Candidato;
 import models.Cliente;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Color;
@@ -56,6 +58,7 @@ public class LoginCandidatoFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 425, 433);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(128, 128, 128));
 		contentPane.setForeground(new Color(128, 128, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -75,7 +78,7 @@ public class LoginCandidatoFrame extends JFrame {
 		contentPane.add(txtUsername);
 		txtUsername.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("Usuário");
+		JLabel lblNewLabel_1 = new JLabel("Email");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lblNewLabel_1.setBounds(166, 112, 78, 13);
@@ -91,12 +94,12 @@ public class LoginCandidatoFrame extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				 String username = txtUsername.getText();
+				 String email = txtUsername.getText();
 				 String password = txtPassword.getText();
 				 Candidato candidato = new Candidato();
 				 candidato.setOperacao("loginCandidato");
 				 candidato.setPassword(password);
-				 candidato.setUser(username);
+				 candidato.setEmail(email);
 				 JSONController loginController = new JSONController();
 				 JSONObject res = loginController.changeToJSON(candidato);
 				 
@@ -105,7 +108,7 @@ public class LoginCandidatoFrame extends JFrame {
 				 
 			}
 		});
-		btnNewButton.setBounds(92, 268, 227, 41);
+		btnNewButton.setBounds(92, 286, 227, 41);
 		contentPane.add(btnNewButton);
 		
 		txtPassword = new JPasswordField();
@@ -118,7 +121,12 @@ public class LoginCandidatoFrame extends JFrame {
 			System.out.println("O cliente está nulo, você deve primeiro inicializar o cliente e o servidor");
 			
 		}else {			
+			this.client.setLoginFrame(this);
 			this.client.enviarMensagem(res);
 		}
+	}
+	public void respostaAposLogin() {
+		JOptionPane.showMessageDialog(null, "Login inválido!");
+
 	}
 }
