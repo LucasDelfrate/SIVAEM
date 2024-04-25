@@ -7,53 +7,48 @@ import java.sql.SQLException;
 import dao.BancoDados;
 import dao.candidatoDAO;
 import enums.CadastroEnum;
+import enums.EmailEnum;
 import models.Candidato;
 
 public class CadastroController {
 	
 	public CadastroEnum validarCadastro(Candidato candidato) throws IOException {
 		Boolean isUsernameValid = validarUsername(candidato.getUser());
-		Boolean isEmailValid = validarEmail(candidato.getEmail());
+		EmailEnum isEmailValid = validarEmail(candidato.getEmail());
 		Boolean isPasswordValid = validarSenha(candidato.getPassword());
 		System.out.println("USER: "+isUsernameValid +" Email: "+ isEmailValid + " Password: "+ isPasswordValid);
 		if(!isUsernameValid) {
-			return CadastroEnum.ERRO_USUARIO;
-		}else if(!isEmailValid) {
-			return CadastroEnum.ERRO_EMAIL;
+			return CadastroEnum.ERRO;
+		}else if(isEmailValid == EmailEnum.JA_CADASTRADO) {
+			return CadastroEnum.EMAIL_CADASTRADO;
+		}else if(isEmailValid == EmailEnum.CARACTERES_INVALIDOS) {
+			return CadastroEnum.ERRO;
 		}else if(!isPasswordValid) {
-			return CadastroEnum.ERRO_SENHA;
+			return CadastroEnum.ERRO;
 		}else {
 			return CadastroEnum.SUCESSO;
 		}
 	}
 	public boolean validarUsername(String username) throws IOException {
-		if(username == null || username.length() == 0) {
+		if(username == null || username.length() == 0 || username.length()<6 || username.length()>30) {
 			return false;
-		}else {
-			try {
-    			Connection conn = BancoDados.conectar();
-    			Boolean response = new candidatoDAO(conn).validarUsername(username);
-    			BancoDados.desconectar();
-    			return response;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return false;
+		}else return true;
 	}
 	
-	public Boolean validarEmail(String email) throws IOException {
+	public EmailEnum validarEmail(String email) throws IOException {
 			if(email == null || email.length()>50 || email.length()<7 || !email.contains("@") || email.length()==0) {
-				return false;			
+				return EmailEnum.CARACTERES_INVALIDOS;		 	
 			}else {
 				try {
 					Connection conn = BancoDados.conectar();
 					Boolean response = new candidatoDAO(conn).validarEmail(email);
 					BancoDados.desconectar();
-					return response;
+					if(response == true) {
+						return EmailEnum.SUCESSO;
+					}else return EmailEnum.JA_CADASTRADO;
 				}catch (SQLException e) {
 					e.printStackTrace();
-					return false;
+					return EmailEnum.ERRO;
 				}
 		}
 	}

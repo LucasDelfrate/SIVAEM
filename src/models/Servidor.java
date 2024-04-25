@@ -107,25 +107,23 @@ public void run()
 		            	  resposta.setOperacao("loginCandidato");
 		            	  switch(response) {
 			            	 case SUCESSO: {
-				            		 resposta.setMsg("Login realizado com sucesso!");
-				            		 resposta.setStatus(200);
-				            		 String uuid;
+				            		resposta.setMsg("Login realizado com sucesso!");
+				            		resposta.setStatus(200);
+				            		String uuid;
 									try {
 										uuid = loginController.getUUID(candidato.getEmail());
 										resposta.setToken(uuid);
 									} catch (SQLException e) {
 										e.printStackTrace();
 									}
-				            		 System.out.println("LOGIN SUCESSO");
-				            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
-			            		 out.println(respostaJSON);
+				            		JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+			            		    out.println(respostaJSON);
 			            		 break;
 			            	 	}
 			            	 case ERRO_USUARIO_E_SENHA:{
 			            		 resposta.setMsg("Login ou senha incorreto");
 			            		 resposta.setStatus(401);
 			            		 resposta.setToken(candidato.getUUID());
-			            		 System.out.println("ERRO NO LOGIN");
 			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 			            		 out.println(respostaJSON);
 			            		 break;
@@ -137,38 +135,56 @@ public void run()
 		            	  
 		            	 Candidato candidato = jsonController.changeCandidatoCompletoJSON(res);
 		            	 CadastroEnum response = cadastroController.validarCadastro(candidato);
+		            	 Resposta resposta = new Resposta();
+		            	 resposta.setOperacao("cadastrarCandidato");
 		            	 switch(response) {
-			            	 case ERRO_USUARIO: {
-			            		 out.println("Usuario informado não é válido ou já está cadastrado");
-			            		 break;
-			            	 }case ERRO_EMAIL: {
-			            		 out.println("Email informado não é válido ou já está cadastrado");
-			            		 break;
-			            	 }case ERRO_SENHA: {
-			            		 out.println("Senha informada não é válida");
-			            		 break;
-			            	 }case SUCESSO:{
+			            	 case SUCESSO:{
 			            		 try {
 				            			Connection conn = BancoDados.conectar();
 				            			new candidatoDAO(conn).cadastrarUsuario(candidato);
-				            			out.println("Cadastro realizado com sucesso!");
+				            			resposta.setMsg("Cadastro realizado com sucesso!");
+					            		resposta.setStatus(200);
+					            		String uuid;
+										try {
+											uuid = loginController.getUUID(candidato.getEmail());
+											resposta.setToken(uuid);
+										} catch (SQLException e) {
+											e.printStackTrace();
+										}
+										JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+					            		out.println(respostaJSON);
 				            			BancoDados.desconectar();
 									} catch (SQLException e) {
 										e.printStackTrace();
 									}	 
 			            		 break;
-			            	 }
-		            		
+			            	 }case ERRO: {
+			            		 resposta.setMsg("Dados inválidos");
+			            		 resposta.setStatus(404);
+			            		 resposta.setToken(candidato.getUUID());
+			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+			            		 out.println(respostaJSON);
+			            		 break;
+			            		 
+			            	 }case EMAIL_CADASTRADO: {
+			            		 resposta.setMsg("Email já cadastrado");
+			            		 resposta.setStatus(422);
+			            		 resposta.setToken(candidato.getUUID());
+			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+			            		 out.println(respostaJSON);
+			            		 break;
 		            	}
-		            	break;			
+		            			
 		              }
 	              }
-             } 
+		              break;
+	            }
          
-         out.close(); 
-         in.close(); 
-         clientSocket.close(); 
-        } 
+             } 
+	         out.close(); 
+	         in.close(); 
+	         clientSocket.close(); 
+         }
     catch (IOException e) 
         { 
          System.err.println("Problem with Communication Server");

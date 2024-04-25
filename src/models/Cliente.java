@@ -8,6 +8,7 @@ import controllers.JSONController;
 import enums.StatusEnum;
 import view.AplicationHomeFrame;
 import view.LoginCandidatoFrame;
+import view.RegistroCandidatoFrame;
 
 public class Cliente {
 	
@@ -19,6 +20,7 @@ public class Cliente {
 	private Thread threadEscuta;
 	private JSONController json;
 	private LoginCandidatoFrame loginFrame;
+	private RegistroCandidatoFrame cadastroFrame;
 	
 	
     public Cliente(String ip, int porta) throws UnknownHostException, IOException {
@@ -32,6 +34,7 @@ public class Cliente {
 				new InputStreamReader( clientSocket.getInputStream()));
 		this.json = new JSONController();
 		this.loginFrame = new LoginCandidatoFrame(this);
+		this.cadastroFrame = new RegistroCandidatoFrame(this);
 		
 		// Iniciar uma thread para escutar mensagens do servidor
         threadEscuta = new Thread(new Runnable() {
@@ -46,19 +49,40 @@ public class Cliente {
                         Resposta resposta = new Resposta();
                         resposta = json.changeResponseToObjectJSON(mensagem);
                         int status = resposta.getStatus();
+                        if(status == 0) {
+                        	System.out.println("Não foi informado nenhum status");
+                        }
                         String operacao = resposta.getOperacao();
                         switch(operacao){                           
                         	case "loginCandidato":{
-                        		if(status == 200) {
-                        			AplicationHomeFrame app = new AplicationHomeFrame();
-                        			fecharTelaLogin();
-                        			app.setVisible(true);
-                        		}else if(status == 401) {
-                        			System.out.println("Credenciais incorretas");
-                        			retornarRespostaPraTela();
-                        		}else {
-                        			System.out.println("Status informado não está cadastrado");
-                        		}
+                        		String msg;
+	                        		if(status == 200) {
+	                        			AplicationHomeFrame app = new AplicationHomeFrame();
+	                        			fecharTelaLogin();
+	                        			app.setVisible(true);
+	                        		}else if(status == 401) {
+	                        			msg = "Login inválido";
+	                        			respostaTelaLogin(msg);
+	                        		}else {
+	                        			System.out.println("Status informado não está cadastrado");
+	                        		}
+	                        	break;
+                        	}case "cadastrarCandidato":{
+                        		String msg;
+	                        		if(status == 200) {
+	                        			AplicationHomeFrame app = new AplicationHomeFrame();
+	                        			msg = "Cadastro realizado com sucesso!";
+	                        			respostaTelaCadastro(msg);
+	                        		}else if(status == 404) {
+	                        			msg = "Credenciais inválidas";
+	                        			respostaTelaCadastro(msg);
+	                        		}else if(status == 422){
+	                        			msg = "Email já cadastrado";
+	                        			respostaTelaCadastro(msg);
+	                        		}else {
+	                        			System.out.println("Status informado não está cadastrado");
+	                        		}
+	                        	break;
                         	}
                         }
                     }
@@ -84,8 +108,11 @@ public class Cliente {
 		this.loginFrame = loginFrame;
 	}
 	
-	public void retornarRespostaPraTela() {
-		this.loginFrame.respostaAposLogin();
+	public void respostaTelaLogin(String msg) {
+		this.loginFrame.respostaTela(msg);
+	}
+	public void respostaTelaCadastro(String msg) {
+		this.cadastroFrame.respostaTela(msg);
 	}
 	public void fecharTelaLogin() {
 		this.loginFrame.dispose();

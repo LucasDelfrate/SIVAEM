@@ -53,9 +53,7 @@ public class LoginCandidatoFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginCandidatoFrame(Cliente client) {
-		
 		this.client = client;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 425, 433);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 128, 128));
@@ -125,8 +123,8 @@ public class LoginCandidatoFrame extends JFrame {
 			this.client.enviarMensagem(res);
 		}
 	}
-	public void respostaAposLogin() {
-		JOptionPane.showMessageDialog(null, "Login inválido!");
+	public void respostaTela(String msg) {
+		JOptionPane.showMessageDialog(null, msg);
 
 	}
 }

@@ -14,6 +14,8 @@ import models.Cliente;
 
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
@@ -52,7 +54,6 @@ public class RegistroCandidatoFrame extends JFrame {
 	 */
 	public RegistroCandidatoFrame(Cliente cliente) {
 		this.cliente = cliente;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 664, 499);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -132,5 +133,8 @@ public class RegistroCandidatoFrame extends JFrame {
 			System.out.println(res);
 			this.cliente.enviarMensagem(res);
 		}
+	}
+	public void respostaTela(String msg) {
+		JOptionPane.showMessageDialog(null, msg);
 	}
 }

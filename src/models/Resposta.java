@@ -6,6 +6,10 @@ public class Resposta {
 	private int status;
 	private String msg;
 	private String token;
+	
+	public Resposta() {
+		this.status = 0;
+	}
 	public String getOperacao() {
 		return operacao;
 	}
