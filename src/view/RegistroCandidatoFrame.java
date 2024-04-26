@@ -32,27 +32,10 @@ public class RegistroCandidatoFrame extends JFrame {
 	private JTextField iptEmail;
 	private JPasswordField iptSenha;
 	private Cliente cliente;
+	private HomeFrame home;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RegistroCandidatoFrame frame = new RegistroCandidatoFrame(null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public RegistroCandidatoFrame(Cliente cliente) {
+	public RegistroCandidatoFrame(HomeFrame home, Cliente cliente) {
+		this.home = home;
 		this.cliente = cliente;
 		setBounds(100, 100, 664, 499);
 		contentPane = new JPanel();
@@ -131,6 +114,7 @@ public class RegistroCandidatoFrame extends JFrame {
 			
 		}else {			
 			System.out.println(res);
+			this.cliente.setHomeFrame(this.home);
 			this.cliente.enviarMensagem(res);
 		}
 	}

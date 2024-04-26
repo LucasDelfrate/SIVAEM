@@ -10,6 +10,7 @@ import models.Cliente;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import javax.swing.JLabel;
 import java.awt.Color;
@@ -119,11 +120,14 @@ public class HomeFrame extends JFrame {
 	
 	}
 	private void chamarLoginCandidato() {
-		LoginCandidatoFrame login = new LoginCandidatoFrame(this.cliente);
+		LoginCandidatoFrame login = new LoginCandidatoFrame(this, this.cliente);
 		login.setVisible(true);
 	}
 	private void chamarRegistroCandidato(){
-		RegistroCandidatoFrame regFrame = new RegistroCandidatoFrame(this.cliente);
+		RegistroCandidatoFrame regFrame = new RegistroCandidatoFrame(this, this.cliente);
 		regFrame.setVisible(true);
+	}
+	public void respostaTela(String msg) {
+		JOptionPane.showMessageDialog(null, msg);
 	}
 }

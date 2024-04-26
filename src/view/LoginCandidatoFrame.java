@@ -32,27 +32,10 @@ public class LoginCandidatoFrame extends JFrame {
 	private JTextField txtUsername;
 	private JPasswordField txtPassword;
 	private Cliente client;
+	private HomeFrame home;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginCandidatoFrame frame = new LoginCandidatoFrame(null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public LoginCandidatoFrame(Cliente client) {
+	public LoginCandidatoFrame(HomeFrame home, Cliente client) {
+		this.home = home;
 		this.client = client;
 		setBounds(100, 100, 425, 433);
 		contentPane = new JPanel();

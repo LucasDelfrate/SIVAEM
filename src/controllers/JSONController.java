@@ -63,7 +63,7 @@ public class JSONController {
 			String msg = (String) jsonObject.get("mensagem");
 			resposta1.setMsg(msg);
 			
-			String token = (String) jsonObject.get("mensagem");
+			String token = (String) jsonObject.get("token");
 			resposta1.setToken(token);
 			
 			return resposta1;

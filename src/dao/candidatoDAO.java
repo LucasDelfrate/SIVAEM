@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 import models.Candidato;
 
@@ -12,6 +13,20 @@ public class candidatoDAO {
 	public candidatoDAO(Connection conn) {
 		this.conn = conn;
 	}
+	
+	public int deleteUser(String email) throws SQLException {
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("DELETE FROM candidato WHERE email = ?");
+			st.setString(1, email);
+			int linhasAfetadas = st.executeUpdate();
+			return linhasAfetadas;
+		}finally {
+			BancoDados.finalizarStatement(st);
+			BancoDados.desconectar();
+		}
+	}
+	
 	
 	public void cadastrarUsuario(Candidato candidato) throws SQLException {
 		PreparedStatement st = null;
@@ -28,7 +43,7 @@ public class candidatoDAO {
 		}
 	}
 	
-	public boolean validarEmail(String email) {
+	public boolean validarEmail(String email) throws SQLException {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
@@ -43,10 +58,13 @@ public class candidatoDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			BancoDados.finalizarStatement(st);
+			BancoDados.desconectar();
 		}
 	}
 	
-	public boolean loginCandidato(String email, String senha) {
+	public boolean loginCandidato(String email, String senha) throws SQLException {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
@@ -64,10 +82,13 @@ public class candidatoDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
+		}finally {
+			BancoDados.finalizarStatement(st);
+			BancoDados.desconectar();
 		}
 	}
 	
-	public String getUUID(String email) {
+	public String getUUID(String email) throws SQLException {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
@@ -85,8 +106,39 @@ public class candidatoDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
+		}finally {
+			BancoDados.finalizarStatement(st);
+			BancoDados.desconectar();
 		}
 	}
 	
-	
+	public Candidato getCandidato(String token) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+            try {
+    			st = conn.prepareStatement("SELECT * FROM candidato WHERE UUID = ?");
+    			st.setString(1, token);
+    			System.out.println(token);
+    			rs = st.executeQuery();
+    			if(rs.next()) {
+    				System.out.println("Candidato encontrado");
+    				Candidato candidato = new Candidato();
+    				candidato.setEmail(rs.getString("email"));
+    				candidato.setPassword(rs.getString("senha"));
+    				candidato.setUser(rs.getString("nome"));
+    				candidato.setUUID(rs.getString("UUID"));
+    				return candidato;
+    			}else {		
+    				System.out.println("==================================== Candidato não encontrado ========================================");
+    				return null;
+    			}
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    			return null;
+    		}	finally {
+    			BancoDados.finalizarStatement(st);
+    			BancoDados.desconectar();
+    		}
+	}
+
 }

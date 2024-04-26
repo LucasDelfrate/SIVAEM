@@ -6,11 +6,13 @@ import java.sql.SQLException;
 import org.json.simple.JSONObject;
 
 import controllers.CadastroController;
+import controllers.DeleteController;
 import controllers.JSONController;
 import controllers.LoginController;
 import dao.BancoDados;
 import dao.candidatoDAO;
 import enums.CadastroEnum;
+import enums.EmailEnum;
 import enums.LoginEnum;
 
 import java.io.*; 
@@ -176,8 +178,26 @@ public void run()
 		            	}
 		            			
 		              }
+		            	 break;
 	              }
-		              break;
+		              case "apagarCandidato":{
+		            	  Resposta response = new Resposta();
+		            	  response.setOperacao("apagarCandidato");
+		            	  Candidato candidato = jsonController.changeCandidatoLoginToJSON(res);
+		            	  String email = candidato.getEmail();
+		            	  DeleteController delControll = new DeleteController();
+		            	  EmailEnum resposta = delControll.validarEmailToDelete(email);
+		            	  if(resposta == EmailEnum.SUCESSO) {
+		            		  response.setMsg("Candidato deletado com sucesso!");
+		            		  response.setStatus(201);
+		            	  }else if(resposta == EmailEnum.NAO_ENCONTRADO) {
+		            		  response.setStatus(404);
+		            		  response.setMsg("Email não encontrado");
+		            	  }
+		            	  JSONObject respostaJSON = jsonController.changeReponseToJson(response);
+		            	  out.println(respostaJSON);
+		            	  break;
+		              }
 	            }
          
              } 

@@ -39,7 +39,6 @@ public class LoginEmpresaFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginEmpresaFrame() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 515);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 128, 128));
