@@ -17,12 +17,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.Image;
+
 import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.border.LineBorder;
 
 public class RegistroCandidatoFrame extends JFrame {
 
@@ -48,10 +52,57 @@ public class RegistroCandidatoFrame extends JFrame {
 		contentPane_1.setLayout(null);
 		contentPane_1.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane_1.setBackground(Color.GRAY);
-		contentPane_1.setBounds(0, 0, 542, 469);
+		contentPane_1.setBounds(0, 0, 770, 469);
 		contentPane.add(contentPane_1);
 		
+		JLabel lblNewLabel = new JLabel("Nome");
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setFont(new Font("Consolas", Font.BOLD, 18));
+		lblNewLabel.setBounds(456, 127, 57, 22);
+		contentPane_1.add(lblNewLabel);
+		
+		iptEmail = new JTextField();
+		iptEmail.setColumns(10);
+		iptEmail.setBounds(455, 231, 214, 29);
+		contentPane_1.add(iptEmail);
+		
+		JLabel lblEmail = new JLabel("Email");
+		lblEmail.setForeground(new Color(255, 255, 255));
+		lblEmail.setFont(new Font("Consolas", Font.BOLD, 18));
+		lblEmail.setBounds(456, 206, 57, 22);
+		contentPane_1.add(lblEmail);
+		
+		JLabel lblSenha = new JLabel("Senha");
+		lblSenha.setForeground(new Color(255, 255, 255));
+		lblSenha.setFont(new Font("Consolas", Font.BOLD, 18));
+		lblSenha.setBounds(454, 281, 59, 22);
+		contentPane_1.add(lblSenha);
+		
+		iptSenha = new JPasswordField();
+		iptSenha.setBounds(455, 306, 214, 29);
+		contentPane_1.add(iptSenha);
+		
+		JPanel panel = new JPanel();
+		panel.setOpaque(false);
+		panel.setBackground(new Color(234, 234, 234));
+		panel.setBorder(new LineBorder(new Color(255, 255, 255), 2));
+		panel.setBounds(372, 0, 388, 469);
+		contentPane_1.add(panel);
+		panel.setLayout(null);
+		
+		JLabel lblNewLabel_1 = new JLabel("Registro candidato");
+		lblNewLabel_1.setBorder(new LineBorder(new Color(255, 255, 255), 2));
+		lblNewLabel_1.setForeground(new Color(255, 255, 255));
+		lblNewLabel_1.setBounds(49, 50, 289, 45);
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1.setFont(new Font("Consolas", Font.BOLD, 22));
+		panel.add(lblNewLabel_1);
+		
 		JButton btnRegistrar_1 = new JButton("Registrar");
+		btnRegistrar_1.setBounds(83, 369, 214, 29);
+		panel.add(btnRegistrar_1);
+		btnRegistrar_1.setForeground(new Color(0, 0, 0));
+		btnRegistrar_1.setBackground(new Color(255, 255, 255));
 		btnRegistrar_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Candidato candidato = new Candidato();
@@ -65,49 +116,19 @@ public class RegistroCandidatoFrame extends JFrame {
 				 registrarCandidato(res);
 			}
 		});
-		btnRegistrar_1.setFont(new Font("Unispace", Font.PLAIN, 15));
-		btnRegistrar_1.setBounds(118, 362, 211, 29);
-		contentPane_1.add(btnRegistrar_1);
-		
-		JLabel lblNewLabel = new JLabel("Nome");
-		lblNewLabel.setFont(new Font("Unispace", Font.PLAIN, 13));
-		lblNewLabel.setBounds(118, 148, 57, 14);
-		contentPane_1.add(lblNewLabel);
+		btnRegistrar_1.setFont(new Font("Consolas", Font.PLAIN, 16));
 		
 		iptNome = new JTextField();
-		iptNome.setBounds(118, 167, 214, 29);
-		contentPane_1.add(iptNome);
+		iptNome.setBounds(83, 162, 214, 29);
+		panel.add(iptNome);
 		iptNome.setColumns(10);
 		
-		iptEmail = new JTextField();
-		iptEmail.setColumns(10);
-		iptEmail.setBounds(118, 232, 214, 29);
-		contentPane_1.add(iptEmail);
+		JLabel fundoRegistro = new JLabel("New label");
+		fundoRegistro.setBounds(-143, -107, 963, 576);
+		contentPane_1.add(fundoRegistro);
+		Image img = new ImageIcon(this.getClass().getResource("/plus-size-woman.jpg")).getImage();
+		fundoRegistro.setIcon(new ImageIcon(img));
 		
-		JLabel lblEmail = new JLabel("Email");
-		lblEmail.setFont(new Font("Unispace", Font.PLAIN, 13));
-		lblEmail.setBounds(118, 207, 57, 14);
-		contentPane_1.add(lblEmail);
-		
-		JLabel lblSenha = new JLabel("Senha");
-		lblSenha.setFont(new Font("Unispace", Font.PLAIN, 13));
-		lblSenha.setBounds(118, 272, 59, 14);
-		contentPane_1.add(lblSenha);
-		
-		iptSenha = new JPasswordField();
-		iptSenha.setBounds(118, 297, 214, 29);
-		contentPane_1.add(iptSenha);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 542, 95);
-		contentPane_1.add(panel);
-		panel.setLayout(null);
-		
-		JLabel lblNewLabel_1 = new JLabel("Registro candidato");
-		lblNewLabel_1.setBounds(163, 35, 216, 25);
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setFont(new Font("Unispace", Font.PLAIN, 20));
-		panel.add(lblNewLabel_1);
 	}
 	public void registrarCandidato(JSONObject res) {
 		if(this.cliente == null) {

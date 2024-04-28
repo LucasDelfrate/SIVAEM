@@ -8,12 +8,12 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="Test"/>
 	<classpathentry kind="src" path="imgs"/>
-	<classpathentry kind="lib" path="C:/Users/dudel/Downloads/json-simple-1.1.1.jar">
+	<classpathentry kind="lib" path="C:/Users/delfra/Downloads/mysql-connector-j-8.0.32.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/dudel/Downloads/mysql-connector-j-8.0.32.jar">
+	<classpathentry kind="lib" path="C:/Users/delfra/Downloads/json-simple-1.1.1 (1).jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

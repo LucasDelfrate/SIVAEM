@@ -25,6 +25,10 @@ import javax.swing.border.BevelBorder;
 import javax.swing.JSplitPane;
 import javax.swing.JDesktopPane;
 import javax.swing.ImageIcon;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.LineBorder;
 
 public class HomeFrame extends JFrame {
 
@@ -68,7 +72,7 @@ public class HomeFrame extends JFrame {
 				chamarRegistroCandidato();
 			}
 		});
-		btnRegistrar.setFont(new Font("Unispace", Font.PLAIN, 20));
+		btnRegistrar.setFont(new Font("Consolas", Font.PLAIN, 16));
 		btnRegistrar.setBounds(495, 386, 210, 46);
 		contentPane.add(btnRegistrar);
 		
@@ -78,13 +82,14 @@ public class HomeFrame extends JFrame {
 				chamarLoginCandidato();
 			}
 		});
-		btnLoginCandidato.setFont(new Font("Unispace", Font.PLAIN, 20));
+		btnLoginCandidato.setFont(new Font("Consolas", Font.PLAIN, 16));
 		btnLoginCandidato.setBounds(495, 324, 210, 46);
 		contentPane.add(btnLoginCandidato);
 		
 		JLabel lblCandidato = new JLabel("Candidato");
+		lblCandidato.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		lblCandidato.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCandidato.setFont(new Font("Unispace", Font.PLAIN, 25));
+		lblCandidato.setFont(new Font("Consolas", Font.PLAIN, 23));
 		lblCandidato.setBounds(495, 250, 210, 46);
 		contentPane.add(lblCandidato);
 		
@@ -94,20 +99,21 @@ public class HomeFrame extends JFrame {
 		panel.setLayout(null);
 		
 		JButton btnNewButton_1 = new JButton("Login");
-		btnNewButton_1.setFont(new Font("Unispace", Font.PLAIN, 20));
+		btnNewButton_1.setFont(new Font("Consolas", Font.PLAIN, 16));
 		btnNewButton_1.setBounds(98, 203, 210, 46);
 		panel.add(btnNewButton_1);
 		
 		JLabel lblEmpresa_1 = new JLabel("Empresa");
+		lblEmpresa_1.setBorder(new LineBorder(new Color(255, 255, 255), 2));
 		lblEmpresa_1.setForeground(new Color(255, 255, 255));
 		lblEmpresa_1.setBackground(new Color(221, 221, 221));
 		lblEmpresa_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEmpresa_1.setFont(new Font("Unispace", Font.PLAIN, 25));
+		lblEmpresa_1.setFont(new Font("Consolas", Font.PLAIN, 23));
 		lblEmpresa_1.setBounds(98, 130, 210, 46);
 		panel.add(lblEmpresa_1);
 		
 		JButton btnRegistrarEmpresa_1 = new JButton("Registrar");
-		btnRegistrarEmpresa_1.setFont(new Font("Unispace", Font.PLAIN, 20));
+		btnRegistrarEmpresa_1.setFont(new Font("Consolas", Font.PLAIN, 16));
 		btnRegistrarEmpresa_1.setBounds(98, 265, 210, 46);
 		panel.add(btnRegistrarEmpresa_1);
 		JLabel lblNewLabel_1 = new JLabel("New label");
@@ -125,11 +131,19 @@ public class HomeFrame extends JFrame {
 		panel_1.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("SIVAEM");
+		lblNewLabel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "teste", TitledBorder.LEADING, TitledBorder.BELOW_TOP, null, new Color(0, 0, 0)));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setForeground(new Color(243, 243, 243));
-		lblNewLabel.setFont(new Font("Unispace", Font.PLAIN, 40));
+		lblNewLabel.setFont(new Font("Corbel", Font.PLAIN, 40));
 		lblNewLabel.setBounds(314, 32, 163, 57);
 		panel_1.add(lblNewLabel);
+		
+		JLabel fundoTextura = new JLabel("New label");
+		fundoTextura.setBounds(397, 123, 405, 523);
+		contentPane.add(fundoTextura);
+		Image textura = new ImageIcon(this.getClass().getResource("/novo-fundo.jpg")).getImage();
+		fundoTextura.setIcon(new ImageIcon(textura));
+		
 	
 	}
 	private void chamarLoginCandidato() {

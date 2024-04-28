@@ -198,6 +198,14 @@ public void run()
 		            	  out.println(respostaJSON);
 		            	  break;
 		              }
+		              case "logout":{
+		            	  Resposta response = new Resposta();
+		            	  response.setOperacao("logout");
+		            	  response.setStatus(204);
+		            	  JSONObject respostaJSON = jsonController.changeReponseToJson(response);
+		            	  out.println(respostaJSON);
+		            	  break;
+		              }
 	            }
          
              } 

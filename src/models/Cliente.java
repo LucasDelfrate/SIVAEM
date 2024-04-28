@@ -24,6 +24,7 @@ public class Cliente {
 	private RegistroCandidatoFrame cadastroFrame;
 	private HomeFrame homeFrame;
 	private HomeFrame home;
+	private AplicationHomeFrame app;
 	
 	
     public Cliente(String ip, int porta) throws UnknownHostException, IOException {
@@ -38,6 +39,7 @@ public class Cliente {
 		this.json = new JSONController();
 		this.loginFrame = new LoginCandidatoFrame(this.home, this);
 		this.cadastroFrame = new RegistroCandidatoFrame(this.home, this);
+		this.app = new AplicationHomeFrame(this,  null);
 		
 		// Iniciar uma thread para escutar mensagens do servidor
         threadEscuta = new Thread(new Runnable() {
@@ -102,6 +104,14 @@ public class Cliente {
                         		}
 	                        	break;
 	                        }
+	                        case "logout":{
+	                        	String msg;
+	                        	if(status == 201) {	                        		
+                        			msg = "Você foi deslogado com sucesso!";
+                        			respostaTelaApp(msg);
+	                        	}
+	                        	break;
+	                        }
                        }
                       }
 	                } catch (IOException e) {
@@ -139,12 +149,14 @@ public class Cliente {
 		this.loginFrame.dispose();
 	}
 	public void abrirApp(String token) {
-		AplicationHomeFrame app = new AplicationHomeFrame(this, token);
-		app.setVisible(true);
+		this.app.setToken(token);
+		this.app.setVisible(true);
 	}
 	public void respostaTelaHome(String msg) {
 		HomeFrame home = new HomeFrame(this);
 		home.respostaTela(msg);
 	}
-    
+	public void respostaTelaApp(String msg){
+		this.app.respostaTela(msg);
+	}
 }

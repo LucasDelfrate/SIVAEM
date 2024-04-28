@@ -12,6 +12,6 @@ public class UsuarioDAO {
 		ConexaoBanco.alterarBD(query);
 	}
 	public void removerUsuarioCandidato(Candidato candidato) throws SQLException {
-		String query = "DELETE FROM usuario WHERE id = " + candidato.getId();
+		String query = "DELETE FROM usuario WHERE id = " + candidato.getUUID();
 	}
 }
