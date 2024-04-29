@@ -27,6 +27,7 @@ public class Cliente {
 	private HomeFrame home;
 	private AplicationHomeFrame app;
 	private PerfilFrame perfil;
+	private String email;
 	
 	
     public Cliente(String ip, int porta) throws UnknownHostException, IOException {
@@ -54,7 +55,9 @@ public class Cliente {
                 try {
                     String mensagem;
                     while ((mensagem = in.readLine()) != null) {
+                    	System.out.println("---------------------------------");
                         System.out.println("Mensagem do servidor: " + mensagem);
+                        System.out.println("---------------------------------");
                         
                         Resposta resposta = new Resposta();
                         resposta = json.changeResponseToObjectJSON(mensagem);
@@ -182,8 +185,9 @@ public class Cliente {
 	}
 	public void abrirApp(String token, String email) {
 		System.out.println("abrir app: "+token);
-		AplicationHomeFrame app = new AplicationHomeFrame(this, token, email);
+		AplicationHomeFrame app = new AplicationHomeFrame(this, token, this.email);
 		this.app = app;
+		this.app.getByEmail();
 		this.app.setVisible(true);
 	}
 	public void respostaTelaHome(String msg) {
@@ -195,5 +199,8 @@ public class Cliente {
 	}
 	public void respostaTelaEdit(String msg){
 		this.app.sendoToPerfil(msg);
+	}
+	public void saveEmail(String email) {
+		this.email = email;
 	}
 }

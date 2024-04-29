@@ -13,12 +13,12 @@ public class candidatoDAO {
 	public candidatoDAO(Connection conn) {
 		this.conn = conn;
 	}
-	public Candidato getCandidatoByToken(String token) throws SQLException {
+	public Candidato getCandidatoByEmail(String email) throws SQLException {
 		PreparedStatement st = null;
 		ResultSet rs = null;
             try {
-            	st = conn.prepareStatement("SELECT * FROM candidato WHERE UUID = ?");
-    			st.setString(1, token);
+            	st = conn.prepareStatement("SELECT * FROM candidato WHERE email = ?");
+    			st.setString(1, email);
     			rs = st.executeQuery();
     			if(rs.next()) {
     				System.out.println("Candidato encontrado");
@@ -26,7 +26,7 @@ public class candidatoDAO {
     				candidato.setEmail(rs.getString("email"));
     				candidato.setPassword(rs.getString("senha"));
     				candidato.setUser(rs.getString("nome"));
-    				candidato.setUUID(token);
+    				candidato.setUUID(email);
     				return candidato;
     			}else {		
     				System.out.println("==================================== Candidato não encontrado ========================================");
@@ -49,11 +49,10 @@ public class candidatoDAO {
 			System.out.println("USER EMAIL: "+ cand.getEmail());
 			System.out.println("USER PASSWORD: "+ cand.getPassword());
 			System.out.println("USER TOKEN: "+ cand.getUUID());
-			st = conn.prepareStatement("UPDATE candidato SET nome = ?, senha = ?, email = ? WHERE UUID = ?");
+			st = conn.prepareStatement("UPDATE candidato SET nome = ?, senha = ? WHERE email = ?");
 			st.setString(1, cand.getUser());
 			st.setString(2, cand.getPassword());
 			st.setString(3, cand.getEmail());
-			st.setString(4, cand.getUUID());
 			st.executeUpdate();
 			return true;
 		}catch(SQLException e){
@@ -164,17 +163,12 @@ public class candidatoDAO {
 		}
 	}
 	
-	public Candidato getCandidato(String token) throws SQLException {
-		System.out.println("TOKEN - tela candidatoDao: "+ token);
+	public Candidato getCandidato(String email) throws SQLException {
 		PreparedStatement st = null;
 		ResultSet rs = null;
             try {
-            	st = conn.prepareStatement("SELECT token.UUID, candidato.* " +
-                        "FROM token " +
-                        "LEFT JOIN candidato ON token.UUID = candidato.UUID " +
-                        "WHERE token.UUID = ?");
-    			st.setString(1, token);
-    			System.out.println(token);
+            	st = conn.prepareStatement("SELECT * FROM candidato WHERE email = ?");
+    			st.setString(1, email);
     			rs = st.executeQuery();
     			if(rs.next()) {
     				System.out.println("Candidato encontrado");

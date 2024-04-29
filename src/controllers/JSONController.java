@@ -148,6 +148,25 @@ public class JSONController {
 		
 	}
 	
+	public Candidato changeCandidatoCompletoJSONWithoutChangeUUID(String candidato) {
+		Candidato candidato1 = new Candidato();
+		JSONParser parser = new JSONParser();
+		try {
+			
+			JSONObject jsonObject = (JSONObject) parser.parse(candidato);
+			
+			
+			candidato1.setUser((String) jsonObject.get("user") );
+			candidato1.setPassword((String) jsonObject.get("password"));
+			candidato1.setEmail((String) jsonObject.get("email"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+		return candidato1;
+		
+	}
+	
 	public String getOperacao(String obj) {
 		JSONParser parser = new JSONParser();
 		try {

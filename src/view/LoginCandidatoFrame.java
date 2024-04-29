@@ -81,6 +81,7 @@ public class LoginCandidatoFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				 String email = txtUsername.getText();
 				 String password = txtPassword.getText();
+				 saveEmail(email);
 				 Candidato candidato = new Candidato();
 				 candidato.setOperacao("loginCandidato");
 				 candidato.setPassword(password);
@@ -128,6 +129,8 @@ public class LoginCandidatoFrame extends JFrame {
 	}
 	public void respostaTela(String msg) {
 		JOptionPane.showMessageDialog(null, msg);
-
+	}
+	public void saveEmail(String email) {
+		this.client.saveEmail(email);
 	}
 }

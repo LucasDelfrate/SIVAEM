@@ -25,7 +25,7 @@ public class EdicaoController {
 				}else {
 					try {
 						Connection conn = BancoDados.conectar();
-						Candidato response = new candidatoDAO(conn).getCandidato(cand.getUUID());
+						Candidato response = new candidatoDAO(conn).getCandidato(email);
 						BancoDados.desconectar();
 						if(response == null) {
 							System.out.println("erro get candidato - tela cadastro controller");

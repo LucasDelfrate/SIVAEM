@@ -63,7 +63,6 @@ public class AplicationHomeFrame extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		getByToken();
 		Label textBemVindo = new Label("Not Found");
 		textBemVindo.setFont(new Font("Dialog", Font.PLAIN, 25));
 		textBemVindo.setAlignment(Label.CENTER);
@@ -140,13 +139,17 @@ public class AplicationHomeFrame extends JFrame {
 		
 	}
 	
-	public void getByToken(){
+	public void getByEmail(){
 		 Candidato candidato = new Candidato();
 		 candidato.setOperacao("visualizarCandidato");
-		 candidato.setUUID(this.token);
+		 candidato.setEmail(this.email);
 		 JSONController editController = new JSONController();
 		 JSONObject res = editController.changeToJSON(candidato);
-		this.cliente.enviarMensagem(res);
+		 if(this.cliente == null) {
+			 System.out.println("Cliente é nulo");
+		 }else {
+			 this.cliente.enviarMensagem(res);			 
+		 }
 	}
 	public void receiveCandidatoByEmail(String user, String senha, String email) {
 		this.candidato.setEmail(email);
@@ -201,7 +204,9 @@ public class AplicationHomeFrame extends JFrame {
 	public void enviarDadosCliente(Candidato cand){
 		 Candidato candidato = new Candidato();
 		 candidato.setOperacao("atualizarCandidato");
-		 candidato.setEmail(cand.getEmail());
+		 candidato.setUser(cand.getUser());
+		 candidato.setPassword(cand.getPassword());
+		 candidato.setEmail(this.email);
 
 		 JSONController showController = new JSONController();
 		 JSONObject res = showController.changeToJSON(candidato);
