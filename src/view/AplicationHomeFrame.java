@@ -46,6 +46,7 @@ public class AplicationHomeFrame extends JFrame {
 	private Cliente cliente;
 	private PerfilFrame perfil;
 	private String email;
+	private Label bemVindo;
 	
 
 	public AplicationHomeFrame(Cliente cliente, String token, String email) {
@@ -54,6 +55,7 @@ public class AplicationHomeFrame extends JFrame {
 		this.perfil = new PerfilFrame(this, this.empresa, this.candidato);
 		this.cliente = cliente;
 		this.token = token;
+		
 		setBounds(100, 100, 1078, 671);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
@@ -66,10 +68,11 @@ public class AplicationHomeFrame extends JFrame {
 		textBemVindo.setFont(new Font("Dialog", Font.PLAIN, 25));
 		textBemVindo.setAlignment(Label.CENTER);
 		textBemVindo.setBounds(148, 84, 541, 63);
+		this.bemVindo = textBemVindo;
 		if(this.candidato == null) {
 			//textBemVindo.setText(empresa);
 		}else {
-			textBemVindo.setText("Bem vindo "+this.candidato.getUser());			
+			
 		}
 		contentPane.add(textBemVindo);
 		
@@ -140,9 +143,6 @@ public class AplicationHomeFrame extends JFrame {
 	public void getByToken(){
 		 Candidato candidato = new Candidato();
 		 candidato.setOperacao("visualizarCandidato");
-		 candidato.setPassword(this.candidato.getPassword());
-		 candidato.setEmail(this.candidato.getEmail());
-		 candidato.setUser(this.candidato.getUser());
 		 candidato.setUUID(this.token);
 		 JSONController editController = new JSONController();
 		 JSONObject res = editController.changeToJSON(candidato);
@@ -152,9 +152,8 @@ public class AplicationHomeFrame extends JFrame {
 		this.candidato.setEmail(email);
 		this.candidato.setUser(user);
 		this.candidato.setPassword(senha);
-		System.out.println("email: " + email);
-		System.out.println("email: " + user);
-		System.out.println("email: " + senha);
+		this.bemVindo.setText("Bem vindo "+ user);
+		System.out.println(user + senha + email);
 	}
 	public void enviarProClienteExcluir() {
 		Candidato candidato = new Candidato();
@@ -211,4 +210,5 @@ public class AplicationHomeFrame extends JFrame {
 	public void sendoToPerfil(String msg) {
 		this.perfil.respostaTela(msg);
 	}
+
 }

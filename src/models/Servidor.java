@@ -248,7 +248,6 @@ public void run()
 			            		 try {
 				            			Connection conn = BancoDados.conectar();
 				            			Candidato resGetCand = new candidatoDAO(conn).getCandidatoByToken(token);
-				            			System.out.println("rasagoul" + resGetCand);
 				            			if(resGetCand != null) {
 				            				resposta.setUser(resGetCand.getUser());
 				            				resposta.setPassword(resGetCand.getPassword());
