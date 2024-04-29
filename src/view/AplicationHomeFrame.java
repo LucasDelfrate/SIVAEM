@@ -45,13 +45,15 @@ public class AplicationHomeFrame extends JFrame {
 	private Empresa empresa;
 	private Cliente cliente;
 	private PerfilFrame perfil;
+	private String email;
 	
 
-	public AplicationHomeFrame(Cliente cliente, String token) {
-		this.perfil = new PerfilFrame(this, this.candidato, this.empresa);
+	public AplicationHomeFrame(Cliente cliente, String token, String email) {
+		this.candidato = new Candidato();
+		this.email = email;
+		this.perfil = new PerfilFrame(this, this.empresa, this.candidato);
 		this.cliente = cliente;
 		this.token = token;
-		getByToken();
 		setBounds(100, 100, 1078, 671);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
@@ -59,7 +61,7 @@ public class AplicationHomeFrame extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+		getByToken();
 		Label textBemVindo = new Label("Not Found");
 		textBemVindo.setFont(new Font("Dialog", Font.PLAIN, 25));
 		textBemVindo.setAlignment(Label.CENTER);
@@ -136,18 +138,23 @@ public class AplicationHomeFrame extends JFrame {
 	}
 	
 	public void getByToken(){
-		AplicationController appControll = new AplicationController();
-		try {
-			this.candidato = appControll.getCandidatoByToken(this.token);
-			if(this.candidato == null) {
-				this.empresa = appControll.getEmpresaByToken(this.token);
-				if(empresa == null) {
-					System.out.println("ID não encontrado");
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		 Candidato candidato = new Candidato();
+		 candidato.setOperacao("visualizarCandidato");
+		 candidato.setPassword(this.candidato.getPassword());
+		 candidato.setEmail(this.candidato.getEmail());
+		 candidato.setUser(this.candidato.getUser());
+		 candidato.setUUID(this.token);
+		 JSONController editController = new JSONController();
+		 JSONObject res = editController.changeToJSON(candidato);
+		this.cliente.enviarMensagem(res);
+	}
+	public void receiveCandidatoByEmail(String user, String senha, String email) {
+		this.candidato.setEmail(email);
+		this.candidato.setUser(user);
+		this.candidato.setPassword(senha);
+		System.out.println("email: " + email);
+		System.out.println("email: " + user);
+		System.out.println("email: " + senha);
 	}
 	public void enviarProClienteExcluir() {
 		Candidato candidato = new Candidato();
@@ -159,7 +166,8 @@ public class AplicationHomeFrame extends JFrame {
 		dispose();
 	}
 	public void abrirPerfil() {
-		PerfilFrame perfil = new PerfilFrame(this, this.candidato, this.empresa);
+		
+		PerfilFrame perfil = new PerfilFrame(this , this.empresa, this.candidato);
 		this.perfil = perfil;
 		this.perfil.setVisible(true);
 	}
@@ -194,12 +202,10 @@ public class AplicationHomeFrame extends JFrame {
 	public void enviarDadosCliente(Candidato cand){
 		 Candidato candidato = new Candidato();
 		 candidato.setOperacao("atualizarCandidato");
-		 candidato.setPassword(cand.getPassword());
 		 candidato.setEmail(cand.getEmail());
-		 candidato.setUser(cand.getUser());
-		 candidato.setUUID(this.token);
-		 JSONController editController = new JSONController();
-		 JSONObject res = editController.changeToJSON(candidato);
+
+		 JSONController showController = new JSONController();
+		 JSONObject res = showController.changeToJSON(candidato);
 		this.cliente.enviarMensagem(res);
 	}
 	public void sendoToPerfil(String msg) {

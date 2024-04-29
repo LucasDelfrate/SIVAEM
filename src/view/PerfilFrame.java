@@ -29,9 +29,14 @@ public class PerfilFrame extends JFrame {
 	private Candidato candidato;
 	private EditFrame edit;
 
-	public PerfilFrame(AplicationHomeFrame app, Candidato candidato, Empresa empresa) {
+	public PerfilFrame(AplicationHomeFrame app, Empresa empresa, Candidato candidato) {
+		this.candidato = new Candidato();;
+		if(candidato == null) {
+			
+		}else {
+			this.candidato = candidato;			
+		}
 		this.edit = new EditFrame(this, candidato);
-		this.candidato = candidato;
 		this.app = app;
 		setBounds(100, 100, 450, 385);
 		contentPane = new JPanel();
@@ -87,7 +92,7 @@ public class PerfilFrame extends JFrame {
 		nomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		nomeLabel.setBounds(194, 143, 141, 14);
 		contentPane.add(nomeLabel);
-		nomeLabel.setText(candidato != null ? candidato.getUser() : "Empresa");
+		nomeLabel.setText(this.candidato.getUser());
 		
 		JLabel lblNewLabel_1_1_1 = new JLabel("Email:");
 		lblNewLabel_1_1_1.setFont(new Font("Consolas", Font.PLAIN, 12));
@@ -99,7 +104,7 @@ public class PerfilFrame extends JFrame {
 		emailLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		emailLabel.setBounds(194, 168, 141, 14);
 		contentPane.add(emailLabel);
-		emailLabel.setText((candidato != null ? candidato.getEmail() : "Empresa"));
+		emailLabel.setText(this.candidato.getEmail());
 		
 		JLabel lblNewLabel_1_1_1_1 = new JLabel("Senha:");
 		lblNewLabel_1_1_1_1.setFont(new Font("Consolas", Font.PLAIN, 12));
@@ -111,7 +116,7 @@ public class PerfilFrame extends JFrame {
 		senhaLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		senhaLabel.setBounds(194, 193, 141, 14);
 		contentPane.add(senhaLabel);
-		senhaLabel.setText((candidato != null ? candidato.getPassword() : "Empresa"));
+		senhaLabel.setText(this.candidato.getPassword());
 		
 		JLabel perfilLogo = new JLabel("");
 		perfilLogo.setBounds(110, 10, 74, 99);

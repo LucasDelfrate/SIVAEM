@@ -13,6 +13,34 @@ public class candidatoDAO {
 	public candidatoDAO(Connection conn) {
 		this.conn = conn;
 	}
+	public Candidato getCandidatoByToken(String token) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+            try {
+            	st = conn.prepareStatement("SELECT * FROM candidato WHERE UUID = ?");
+    			st.setString(1, token);
+    			rs = st.executeQuery();
+    			if(rs.next()) {
+    				System.out.println("Candidato encontrado");
+    				Candidato candidato = new Candidato();
+    				candidato.setEmail(rs.getString("email"));
+    				candidato.setPassword(rs.getString("senha"));
+    				candidato.setUser(rs.getString("nome"));
+    				candidato.setUUID(token);
+    				return candidato;
+    			}else {		
+    				System.out.println("==================================== Candidato não encontrado ========================================");
+    				return null;
+    			}
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    			return null;
+    		}	finally {
+    			BancoDados.finalizarStatement(st);
+    			BancoDados.desconectar();
+    		}
+	}
+
 	
 	public Boolean atualizarCandidato(Candidato cand) throws SQLException {
 		PreparedStatement st = null;

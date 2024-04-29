@@ -26,6 +26,9 @@ public class JSONController {
 			res.put("status", resposta.getStatus());
 			res.put("mensagem", resposta.getMsg());
 			res.put("token", resposta.getToken());
+			res.put("email", resposta.getEmail());
+			res.put("user", resposta.getUser());
+			res.put("password", resposta.getPassword());
 			return res;
 			
 	}
@@ -65,6 +68,14 @@ public class JSONController {
 			
 			String token = (String) jsonObject.get("token");
 			resposta1.setToken(token);
+			
+			String email = (String) jsonObject.get("email");
+			resposta1.setEmail(email);
+			
+			String user = (String) jsonObject.get("user");
+			resposta1.setUser(user);
+			String password = (String) jsonObject.get("password");
+			resposta1.setPassword(password);
 			
 			return resposta1;
 			
@@ -110,8 +121,6 @@ public class JSONController {
 		
 	}
 	public Candidato changeCandidatoCompletoJSON(String candidato) {
-		System.out.println("=================================================================");
-		System.out.println("Res: "+ candidato);
 		Candidato candidato1 = new Candidato();
 		UUIDController uuidController = new UUIDController();
 		JSONParser parser = new JSONParser();
@@ -127,10 +136,8 @@ public class JSONController {
 			String oldUUID = (String) jsonObject.get("token");
 			System.out.println("oldUUID: "+ oldUUID);
 			if(oldUUID == null) {
-				System.out.println("entrou no olduuid ou seja, length é 0");
 				candidato1.setUUID(stringUUID);			
 			}else {
-				System.out.println("entrou no currentUUID ou seja, length nao é 0");
 				candidato1.setUUID(oldUUID);	
 			}		
         } catch (ParseException e) {

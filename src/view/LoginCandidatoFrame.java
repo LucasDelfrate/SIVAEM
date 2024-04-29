@@ -79,7 +79,6 @@ public class LoginCandidatoFrame extends JFrame {
 		btnNewButton.setFont(new Font("Consolas", Font.PLAIN, 14));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				 String email = txtUsername.getText();
 				 String password = txtPassword.getText();
 				 Candidato candidato = new Candidato();

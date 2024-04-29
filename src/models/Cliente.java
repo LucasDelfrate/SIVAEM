@@ -9,6 +9,7 @@ import enums.StatusEnum;
 import view.AplicationHomeFrame;
 import view.HomeFrame;
 import view.LoginCandidatoFrame;
+import view.PerfilFrame;
 import view.RegistroCandidatoFrame;
 
 public class Cliente {
@@ -25,6 +26,7 @@ public class Cliente {
 	private HomeFrame homeFrame;
 	private HomeFrame home;
 	private AplicationHomeFrame app;
+	private PerfilFrame perfil;
 	
 	
     public Cliente(String ip, int porta) throws UnknownHostException, IOException {
@@ -39,7 +41,8 @@ public class Cliente {
 		this.json = new JSONController();
 		this.loginFrame = new LoginCandidatoFrame(this.home, this);
 		this.cadastroFrame = new RegistroCandidatoFrame(this.home, this);
-		this.app = new AplicationHomeFrame(this,  null);
+		this.app = new AplicationHomeFrame(this,  null, null);
+		this.perfil = new PerfilFrame(this.app, null, null);
 		
 		// Iniciar uma thread para escutar mensagens do servidor
         threadEscuta = new Thread(new Runnable() {
@@ -56,6 +59,9 @@ public class Cliente {
                         Resposta resposta = new Resposta();
                         resposta = json.changeResponseToObjectJSON(mensagem);
                         String token = resposta.getToken();
+                        String email = resposta.getEmail();
+                        String senha = resposta.getPassword();
+                        String user = resposta.getUser();
                         int status = resposta.getStatus();
                         if(status == 0) {
                         	System.out.println("Não foi informado nenhum status");
@@ -65,7 +71,7 @@ public class Cliente {
                         	case "loginCandidato":{
                         		String msg;
 	                        		if(status == 200) {
-	                        			abrirApp(token);
+	                        			abrirApp(token, email);
 	                        			fecharTelaLogin();
 	                        		}else if(status == 401) {
 	                        			msg = "Login inválido";
@@ -77,7 +83,7 @@ public class Cliente {
                         	}case "cadastrarCandidato":{
                         		String msg;
 	                        		if(status == 200) {
-	                        			AplicationHomeFrame app = new AplicationHomeFrame(this.cliente, token);
+	                        			AplicationHomeFrame app = new AplicationHomeFrame(this.cliente, token, email);
 	                        			msg = "Cadastro realizado com sucesso!";
 	                        			respostaTelaCadastro(msg);
 	                        		}else if(status == 404) {
@@ -124,6 +130,16 @@ public class Cliente {
 	                        	}
 	                        	break;
 	                        }
+	                        case "visualizarCandidato":{
+	                        	if(status == 201) {	         
+	                        		System.out.println("Usuario e senha: " + user + senha);
+                        			retornoGet(user, senha, email);
+	                        	}
+	                        	else if(status == 404){
+	                        		System.out.println("Email não encontrado");
+	                        	}
+	                        	break;
+	                        }
                        }
                       }
 	                } catch (IOException e) {
@@ -134,7 +150,11 @@ public class Cliente {
         threadEscuta.start();
     }
 
+    public void retornoGet(String user, String senha, String email) {
+    	this.app.receiveCandidatoByEmail(user ,senha, email);
+    }
     public void enviarMensagem(JSONObject msg) {
+    	System.out.println("==================================================================");
     	this.out.println(msg);
     }
     
@@ -160,9 +180,9 @@ public class Cliente {
 	public void fecharTelaLogin() {
 		this.loginFrame.dispose();
 	}
-	public void abrirApp(String token) {
+	public void abrirApp(String token, String email) {
 		System.out.println("abrir app: "+token);
-		AplicationHomeFrame app = new AplicationHomeFrame(this, token);
+		AplicationHomeFrame app = new AplicationHomeFrame(this, token, email);
 		this.app = app;
 		this.app.setVisible(true);
 	}

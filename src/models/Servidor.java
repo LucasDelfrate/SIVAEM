@@ -54,7 +54,7 @@ public void ligarServidor() {
 	        } 
 	    catch (IOException e) 
 	        { 
-	         System.err.println("Could not listen on port: 10008."); 
+	         System.err.println("Could not listen on port:"); 
 	         System.exit(1); 
 	        } 
 	    finally
@@ -65,7 +65,7 @@ public void ligarServidor() {
 	             }
 	         catch (IOException e)
 	             { 
-	              System.err.println("Could not close port: 10008."); 
+	              System.err.println("Could not close port:"); 
 	              System.exit(1); 
 	             } 
 	        }
@@ -220,14 +220,7 @@ public void run()
 				            		 System.out.println("Sucesso ao buscar candidato");
 				            		 try {
 					            			Connection conn = BancoDados.conectar();
-					            			System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
-					            			System.out.println("EMAIL ANTES DE UPDATE: " + candidato.getEmail());
-					            			Boolean trueOrFalse = new candidatoDAO(conn).atualizarCandidato(candidato);
-					            			if(trueOrFalse) {
-					            				System.out.println("true");
-					            			}else {
-					            				System.out.println("false");
-					            			}
+					            			new candidatoDAO(conn).atualizarCandidato(candidato);	
 					            			resposta.setMsg("Edição realizada com sucesso!");
 						            		resposta.setStatus(201);
 											JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
@@ -246,7 +239,40 @@ public void run()
 				            	 }
 			              }
 		              }
-	            }
+		              case "visualizarCandidato":{
+		            	  	 Candidato candidato = jsonController.changeCandidatoCompletoJSON(res);
+		            	  	 Resposta resposta = new Resposta();
+		            	  	 String token = candidato.getUUID();
+			            	 resposta.setOperacao("visualizarCandidato");
+			            	
+			            		 try {
+				            			Connection conn = BancoDados.conectar();
+				            			Candidato resGetCand = new candidatoDAO(conn).getCandidatoByToken(token);
+				            			System.out.println("rasagoul" + resGetCand);
+				            			if(resGetCand != null) {
+				            				resposta.setUser(resGetCand.getUser());
+				            				resposta.setPassword(resGetCand.getPassword());
+				            				resposta.setEmail(resGetCand.getEmail());
+				            				resposta.setMsg("Email encontrado e informações buscadas");
+				            				resposta.setOperacao("visualizarCandidato");
+				            				resposta.setStatus(201);
+				            				resposta.setToken(token);
+				            				JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+				            				out.println(respostaJSON);
+				            			}else{				            				
+				            				resposta.setMsg("Email nao encontrado");
+				            				resposta.setStatus(404);
+				            				JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+				            				out.println(respostaJSON);
+				            			}
+				            			BancoDados.desconectar();
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}	 
+			            		 break;	 
+			              }
+		              }
+	            
          
              } 
 	         out.close(); 
