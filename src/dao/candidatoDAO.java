@@ -14,6 +14,29 @@ public class candidatoDAO {
 		this.conn = conn;
 	}
 	
+	public Boolean atualizarCandidato(Candidato cand) throws SQLException {
+		PreparedStatement st = null;
+		try {
+			System.out.println("USER CAND: "+ cand.getUser());
+			System.out.println("USER EMAIL: "+ cand.getEmail());
+			System.out.println("USER PASSWORD: "+ cand.getPassword());
+			System.out.println("USER TOKEN: "+ cand.getUUID());
+			st = conn.prepareStatement("UPDATE candidato SET nome = ?, senha = ?, email = ? WHERE UUID = ?");
+			st.setString(1, cand.getUser());
+			st.setString(2, cand.getPassword());
+			st.setString(3, cand.getEmail());
+			st.setString(4, cand.getUUID());
+			st.executeUpdate();
+			return true;
+		}catch(SQLException e){
+			System.out.println(e);
+			return false;
+		}finally {
+			BancoDados.finalizarStatement(st);
+			BancoDados.desconectar();
+		}
+	}
+	
 	public int deleteUser(String email) throws SQLException {
 		PreparedStatement st = null;
 		try {
@@ -98,6 +121,7 @@ public class candidatoDAO {
 			if(rs.next()) {
 				System.out.println("UUID ENCONTRADO");
 				String uuid = rs.getString("UUID");
+				System.out.println("uuid: " + uuid);
 				return uuid;
 			}else {		
 				System.out.println("==================================== UUID NÃO ENCONTRADO ========================================");
@@ -113,10 +137,14 @@ public class candidatoDAO {
 	}
 	
 	public Candidato getCandidato(String token) throws SQLException {
+		System.out.println("TOKEN - tela candidatoDao: "+ token);
 		PreparedStatement st = null;
 		ResultSet rs = null;
             try {
-    			st = conn.prepareStatement("SELECT * FROM candidato WHERE UUID = ?");
+            	st = conn.prepareStatement("SELECT token.UUID, candidato.* " +
+                        "FROM token " +
+                        "LEFT JOIN candidato ON token.UUID = candidato.UUID " +
+                        "WHERE token.UUID = ?");
     			st.setString(1, token);
     			System.out.println(token);
     			rs = st.executeQuery();

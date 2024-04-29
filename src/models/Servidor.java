@@ -7,11 +7,13 @@ import org.json.simple.JSONObject;
 
 import controllers.CadastroController;
 import controllers.DeleteController;
+import controllers.EdicaoController;
 import controllers.JSONController;
 import controllers.LoginController;
 import dao.BancoDados;
 import dao.candidatoDAO;
 import enums.CadastroEnum;
+import enums.EdicaoEnum;
 import enums.EmailEnum;
 import enums.LoginEnum;
 
@@ -94,6 +96,7 @@ public void run()
          String res; 
          JSONController jsonController = new JSONController();
          CadastroController cadastroController = new CadastroController();
+         EdicaoController editController = new EdicaoController();
          LoginController loginController = new LoginController();
          
          
@@ -115,11 +118,12 @@ public void run()
 									try {
 										uuid = loginController.getUUID(candidato.getEmail());
 										resposta.setToken(uuid);
+										JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+										System.out.println("Resposta para o cliente: "+ respostaJSON);
+										out.println(respostaJSON);
 									} catch (SQLException e) {
 										e.printStackTrace();
 									}
-				            		JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
-			            		    out.println(respostaJSON);
 			            		 break;
 			            	 	}
 			            	 case ERRO_USUARIO_E_SENHA:{
@@ -205,6 +209,42 @@ public void run()
 		            	  JSONObject respostaJSON = jsonController.changeReponseToJson(response);
 		            	  out.println(respostaJSON);
 		            	  break;
+		              }
+		              case "atualizarCandidato":{
+		            	  	 Candidato candidato = jsonController.changeCandidatoCompletoJSON(res);
+		            	  	 Resposta resposta = new Resposta();
+		            	  	 EdicaoEnum response = editController.validarEdicao(candidato);
+			            	 resposta.setOperacao("atualizarCandidato");
+			            	 switch(response) {
+				            	 case SUCESSO:{
+				            		 System.out.println("Sucesso ao buscar candidato");
+				            		 try {
+					            			Connection conn = BancoDados.conectar();
+					            			System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+					            			System.out.println("EMAIL ANTES DE UPDATE: " + candidato.getEmail());
+					            			Boolean trueOrFalse = new candidatoDAO(conn).atualizarCandidato(candidato);
+					            			if(trueOrFalse) {
+					            				System.out.println("true");
+					            			}else {
+					            				System.out.println("false");
+					            			}
+					            			resposta.setMsg("Edição realizada com sucesso!");
+						            		resposta.setStatus(201);
+											JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+						            		out.println(respostaJSON);
+					            			BancoDados.desconectar();
+										} catch (SQLException e) {
+											e.printStackTrace();
+										}	 
+				            		 break;
+				            	 }case ERRO: {
+				            		 resposta.setMsg("Dados inválidos");
+				            		 resposta.setStatus(404);
+				            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+				            		 out.println(respostaJSON);
+				            		 break;
+				            	 }
+			              }
 		              }
 	            }
          

@@ -44,9 +44,11 @@ public class AplicationHomeFrame extends JFrame {
 	private Candidato candidato;
 	private Empresa empresa;
 	private Cliente cliente;
+	private PerfilFrame perfil;
 	
 
 	public AplicationHomeFrame(Cliente cliente, String token) {
+		this.perfil = new PerfilFrame(this, this.candidato, this.empresa);
 		this.cliente = cliente;
 		this.token = token;
 		getByToken();
@@ -61,7 +63,7 @@ public class AplicationHomeFrame extends JFrame {
 		Label textBemVindo = new Label("Not Found");
 		textBemVindo.setFont(new Font("Dialog", Font.PLAIN, 25));
 		textBemVindo.setAlignment(Label.CENTER);
-		textBemVindo.setBounds(80, 84, 541, 63);
+		textBemVindo.setBounds(148, 84, 541, 63);
 		if(this.candidato == null) {
 			//textBemVindo.setText(empresa);
 		}else {
@@ -158,7 +160,8 @@ public class AplicationHomeFrame extends JFrame {
 	}
 	public void abrirPerfil() {
 		PerfilFrame perfil = new PerfilFrame(this, this.candidato, this.empresa);
-		perfil.setVisible(true);
+		this.perfil = perfil;
+		this.perfil.setVisible(true);
 	}
 	public void deslogar() {
 		Candidato candidato = new Candidato();
@@ -188,5 +191,18 @@ public class AplicationHomeFrame extends JFrame {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-	
+	public void enviarDadosCliente(Candidato cand){
+		 Candidato candidato = new Candidato();
+		 candidato.setOperacao("atualizarCandidato");
+		 candidato.setPassword(cand.getPassword());
+		 candidato.setEmail(cand.getEmail());
+		 candidato.setUser(cand.getUser());
+		 candidato.setUUID(this.token);
+		 JSONController editController = new JSONController();
+		 JSONObject res = editController.changeToJSON(candidato);
+		this.cliente.enviarMensagem(res);
+	}
+	public void sendoToPerfil(String msg) {
+		this.perfil.respostaTela(msg);
+	}
 }

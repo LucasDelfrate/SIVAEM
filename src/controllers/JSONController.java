@@ -76,11 +76,13 @@ public class JSONController {
 
 	public JSONObject changeToJSON(Candidato candidato){
 		
+		System.out.println("candidato no JSON CONTROLLER: "+ candidato);
 		JSONObject cand = new JSONObject();
 		cand.put("operacao", candidato.getOperacao());
 		cand.put("user", candidato.getUser());
 		cand.put("password", candidato.getPassword());
 		cand.put("email", candidato.getEmail());
+		cand.put("token", candidato.getUUID());
 		return cand;
 		
 	}
@@ -108,26 +110,34 @@ public class JSONController {
 		
 	}
 	public Candidato changeCandidatoCompletoJSON(String candidato) {
+		System.out.println("=================================================================");
+		System.out.println("Res: "+ candidato);
 		Candidato candidato1 = new Candidato();
 		UUIDController uuidController = new UUIDController();
 		JSONParser parser = new JSONParser();
 		try {
 			
 			JSONObject jsonObject = (JSONObject) parser.parse(candidato);
+			String stringUUID = uuidController.generateUUID();
 			
 			
 			candidato1.setUser((String) jsonObject.get("user") );
 			candidato1.setPassword((String) jsonObject.get("password"));
 			candidato1.setEmail((String) jsonObject.get("email"));
-			String stringUUID = uuidController.generateUUID();
-			candidato1.setUUID(stringUUID);
-			
-			return candidato1;
-			
+			String oldUUID = (String) jsonObject.get("token");
+			System.out.println("oldUUID: "+ oldUUID);
+			if(oldUUID == null) {
+				System.out.println("entrou no olduuid ou seja, length é 0");
+				candidato1.setUUID(stringUUID);			
+			}else {
+				System.out.println("entrou no currentUUID ou seja, length nao é 0");
+				candidato1.setUUID(oldUUID);	
+			}		
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
         }
+		return candidato1;
 		
 	}
 	

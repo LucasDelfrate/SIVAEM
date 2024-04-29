@@ -11,6 +11,7 @@ import models.Cliente;
 import models.Empresa;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.Image;
@@ -25,8 +26,12 @@ public class PerfilFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private AplicationHomeFrame app;
+	private Candidato candidato;
+	private EditFrame edit;
 
 	public PerfilFrame(AplicationHomeFrame app, Candidato candidato, Empresa empresa) {
+		this.edit = new EditFrame(this, candidato);
+		this.candidato = candidato;
 		this.app = app;
 		setBounds(100, 100, 450, 385);
 		contentPane = new JPanel();
@@ -42,6 +47,11 @@ public class PerfilFrame extends JFrame {
 		contentPane.add(lblNewLabel);
 		
 		JButton btnNewButton = new JButton("Editar perfil");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				abrirEditar();
+			}
+		});
 		btnNewButton.setBounds(248, 244, 131, 38);
 		contentPane.add(btnNewButton);
 		
@@ -77,7 +87,7 @@ public class PerfilFrame extends JFrame {
 		nomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		nomeLabel.setBounds(194, 143, 141, 14);
 		contentPane.add(nomeLabel);
-		nomeLabel.setText("nome");
+		nomeLabel.setText(candidato != null ? candidato.getUser() : "Empresa");
 		
 		JLabel lblNewLabel_1_1_1 = new JLabel("Email:");
 		lblNewLabel_1_1_1.setFont(new Font("Consolas", Font.PLAIN, 12));
@@ -89,19 +99,19 @@ public class PerfilFrame extends JFrame {
 		emailLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		emailLabel.setBounds(194, 168, 141, 14);
 		contentPane.add(emailLabel);
-		emailLabel.setText("email");
+		emailLabel.setText((candidato != null ? candidato.getEmail() : "Empresa"));
 		
 		JLabel lblNewLabel_1_1_1_1 = new JLabel("Senha:");
 		lblNewLabel_1_1_1_1.setFont(new Font("Consolas", Font.PLAIN, 12));
 		lblNewLabel_1_1_1_1.setBounds(138, 195, 46, 14);
 		contentPane.add(lblNewLabel_1_1_1_1);
 		
-		JLabel emailLabel_1 = new JLabel("New Label");
-		emailLabel_1.setFont(new Font("Consolas", Font.PLAIN, 12));
-		emailLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		emailLabel_1.setBounds(194, 193, 141, 14);
-		contentPane.add(emailLabel_1);
-		emailLabel_1.setText("senha");
+		JLabel senhaLabel = new JLabel("New Label");
+		senhaLabel.setFont(new Font("Consolas", Font.PLAIN, 12));
+		senhaLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		senhaLabel.setBounds(194, 193, 141, 14);
+		contentPane.add(senhaLabel);
+		senhaLabel.setText((candidato != null ? candidato.getPassword() : "Empresa"));
 		
 		JLabel perfilLogo = new JLabel("");
 		perfilLogo.setBounds(110, 10, 74, 99);
@@ -116,6 +126,24 @@ public class PerfilFrame extends JFrame {
 	public void excluirPerfil() {
 		app.enviarProClienteExcluir();
 		dispose();
+	}
+	public void abrirEditar(){
+		EditFrame edit = new EditFrame(this,this.candidato);
+		this.edit = edit;
+		this.edit.setVisible(true);
+		this.setVisible(false);
+	}
+	public void enviarDadosEdição(Candidato cand){
+		if(cand == null) {
+			
+			
+		}else {
+			this.app.enviarDadosCliente(cand);
+		}
+	}
+	public void respostaTela(String msg){
+		this.edit.dispose();
+		JOptionPane.showMessageDialog(null, msg);
 	}
 		
 }

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import dao.BancoDados;
 import dao.candidatoDAO;
 import enums.CadastroEnum;
+import enums.EdicaoEnum;
 import enums.EmailEnum;
 import models.Candidato;
 
@@ -30,6 +31,7 @@ public class CadastroController {
 		}
 	}
 	public boolean validarUsername(String username) throws IOException {
+		System.out.println("Usuario: "+ username);
 		if(username == null || username.length() == 0 || username.length()<6 || username.length()>30) {
 			return false;
 		}else return true;

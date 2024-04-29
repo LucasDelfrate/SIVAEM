@@ -112,6 +112,18 @@ public class Cliente {
 	                        	}
 	                        	break;
 	                        }
+	                        case "atualizarCandidato":{
+	                        	String msg;
+	                        	if(status == 201) {	                        		
+                        			msg = "Edição realizado com sucesso!";
+                        			respostaTelaEdit(msg);
+	                        	}
+	                        	else if(status == 404){
+	                        		msg = "Erro ao editar";
+	                        		respostaTelaEdit(msg);
+	                        	}
+	                        	break;
+	                        }
                        }
                       }
 	                } catch (IOException e) {
@@ -149,7 +161,9 @@ public class Cliente {
 		this.loginFrame.dispose();
 	}
 	public void abrirApp(String token) {
-		this.app.setToken(token);
+		System.out.println("abrir app: "+token);
+		AplicationHomeFrame app = new AplicationHomeFrame(this, token);
+		this.app = app;
 		this.app.setVisible(true);
 	}
 	public void respostaTelaHome(String msg) {
@@ -158,5 +172,8 @@ public class Cliente {
 	}
 	public void respostaTelaApp(String msg){
 		this.app.respostaTela(msg);
+	}
+	public void respostaTelaEdit(String msg){
+		this.app.sendoToPerfil(msg);
 	}
 }
