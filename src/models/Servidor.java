@@ -115,7 +115,7 @@ public void run()
 		            	  switch(response) {
 			            	 case SUCESSO: {
 				            		resposta.setMsg("Login realizado com sucesso!");
-				            		resposta.setStatus(200);
+				            		resposta.setStatus(201);
 				            		String uuid;
 									try {
 										uuid = loginController.getUUID(candidato.getEmail());

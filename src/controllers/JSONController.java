@@ -27,8 +27,8 @@ public class JSONController {
 			res.put("mensagem", resposta.getMsg());
 			res.put("token", resposta.getToken());
 			res.put("email", resposta.getEmail());
-			res.put("user", resposta.getUser());
-			res.put("password", resposta.getPassword());
+			res.put("nome", resposta.getUser());
+			res.put("senha", resposta.getPassword());
 			return res;
 			
 	}
@@ -72,9 +72,9 @@ public class JSONController {
 			String email = (String) jsonObject.get("email");
 			resposta1.setEmail(email);
 			
-			String user = (String) jsonObject.get("user");
+			String user = (String) jsonObject.get("nome");
 			resposta1.setUser(user);
-			String password = (String) jsonObject.get("password");
+			String password = (String) jsonObject.get("senha");
 			resposta1.setPassword(password);
 			
 			return resposta1;
@@ -87,13 +87,21 @@ public class JSONController {
 
 	public JSONObject changeToJSON(Candidato candidato){
 		
-		System.out.println("candidato no JSON CONTROLLER: "+ candidato);
 		JSONObject cand = new JSONObject();
 		cand.put("operacao", candidato.getOperacao());
-		cand.put("user", candidato.getUser());
-		cand.put("password", candidato.getPassword());
-		cand.put("email", candidato.getEmail());
-		cand.put("token", candidato.getUUID());
+		if(candidato.getUser() != null) {
+			cand.put("nome", candidato.getUser());			
+		}
+		if(candidato.getPassword() != null) {
+			cand.put("senha", candidato.getPassword());			
+		}
+		if(candidato.getEmail() != null) {
+			cand.put("email", candidato.getEmail());			
+		}
+		if(candidato.getUUID() != null) {
+			cand.put("token", candidato.getUUID());			
+		}
+		System.out.println("cand na tela JSON controll: "+ cand);
 		return cand;
 		
 	}
@@ -109,7 +117,7 @@ public class JSONController {
 			String email = (String) jsonObject.get("email");
 			candidato1.setEmail(email);
 			
-			String password = (String) jsonObject.get("password");
+			String password = (String) jsonObject.get("senha");
 			candidato1.setPassword(password);
 			
 			return candidato1;
@@ -130,8 +138,8 @@ public class JSONController {
 			String stringUUID = uuidController.generateUUID();
 			
 			
-			candidato1.setUser((String) jsonObject.get("user") );
-			candidato1.setPassword((String) jsonObject.get("password"));
+			candidato1.setUser((String) jsonObject.get("nome") );
+			candidato1.setPassword((String) jsonObject.get("senha"));
 			candidato1.setEmail((String) jsonObject.get("email"));
 			String oldUUID = (String) jsonObject.get("token");
 			System.out.println("oldUUID: "+ oldUUID);
@@ -156,8 +164,8 @@ public class JSONController {
 			JSONObject jsonObject = (JSONObject) parser.parse(candidato);
 			
 			
-			candidato1.setUser((String) jsonObject.get("user") );
-			candidato1.setPassword((String) jsonObject.get("password"));
+			candidato1.setUser((String) jsonObject.get("nome") );
+			candidato1.setPassword((String) jsonObject.get("senha"));
 			candidato1.setEmail((String) jsonObject.get("email"));
         } catch (ParseException e) {
             e.printStackTrace();

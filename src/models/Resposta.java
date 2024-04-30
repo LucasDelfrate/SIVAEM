@@ -7,8 +7,8 @@ public class Resposta {
 	private String msg;
 	private String token;
 	private String email;
-	private String user;
-	private String password;
+	private String nome;
+	private String senha;
 	
 	public Resposta() {
 		this.status = 0;
@@ -44,16 +44,16 @@ public class Resposta {
 		this.email = email;
 	}
 	public String getUser() {
-		return user;
+		return nome;
 	}
 	public void setUser(String user) {
-		this.user = user;
+		this.nome = user;
 	}
 	public String getPassword() {
-		return password;
+		return senha;
 	}
 	public void setPassword(String password) {
-		this.password = password;
+		this.senha = password;
 	}
 	
 	

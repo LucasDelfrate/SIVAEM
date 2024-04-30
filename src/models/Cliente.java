@@ -85,7 +85,7 @@ public class Cliente {
 	                        	break;
                         	}case "cadastrarCandidato":{
                         		String msg;
-	                        		if(status == 200) {
+	                        		if(status == 201) {
 	                        			AplicationHomeFrame app = new AplicationHomeFrame(this.cliente, token, email);
 	                        			msg = "Cadastro realizado com sucesso!";
 	                        			respostaTelaCadastro(msg);

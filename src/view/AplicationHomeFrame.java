@@ -160,7 +160,7 @@ public class AplicationHomeFrame extends JFrame {
 	}
 	public void enviarProClienteExcluir() {
 		Candidato candidato = new Candidato();
-		candidato.setEmail(this.candidato.getEmail());
+		candidato.setEmail(this.email);
 		candidato.setOperacao("apagarCandidato");
 		JSONController deleteController = new JSONController();
 		JSONObject res = deleteController.changeToJSON(candidato);
