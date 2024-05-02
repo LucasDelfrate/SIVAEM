@@ -114,14 +114,12 @@ public void run()
 		            	  resposta.setOperacao("loginCandidato");
 		            	  switch(response) {
 			            	 case SUCESSO: {
-				            		resposta.setMsg("Login realizado com sucesso!");
-				            		resposta.setStatus(201);
+				            		resposta.setStatus(200);
 				            		String uuid;
 									try {
 										uuid = loginController.getUUID(candidato.getEmail());
 										resposta.setToken(uuid);
 										JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
-										System.out.println("Resposta para o cliente: "+ respostaJSON);
 										out.println(respostaJSON);
 									} catch (SQLException e) {
 										e.printStackTrace();
@@ -131,7 +129,6 @@ public void run()
 			            	 case ERRO_USUARIO_E_SENHA:{
 			            		 resposta.setMsg("Login ou senha incorreto");
 			            		 resposta.setStatus(401);
-			            		 resposta.setToken(candidato.getUUID());
 			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 			            		 out.println(respostaJSON);
 			            		 break;
@@ -151,7 +148,7 @@ public void run()
 				            			Connection conn = BancoDados.conectar();
 				            			new candidatoDAO(conn).cadastrarUsuario(candidato);
 				            			resposta.setMsg("Cadastro realizado com sucesso!");
-					            		resposta.setStatus(200);
+					            		resposta.setStatus(201);
 					            		String uuid;
 										try {
 											uuid = loginController.getUUID(candidato.getEmail());
@@ -252,13 +249,10 @@ public void run()
 				            			Connection conn = BancoDados.conectar();
 				            			Candidato resGetCand = new candidatoDAO(conn).getCandidatoByEmail(email);
 				            			if(resGetCand != null) {
+				            				resposta.setOperacao("visualizarCandidato");
 				            				resposta.setUser(resGetCand.getUser());
 				            				resposta.setPassword(resGetCand.getPassword());
-				            				resposta.setEmail(email);
-				            				resposta.setMsg("Email encontrado e informações buscadas");
-				            				resposta.setOperacao("visualizarCandidato");
 				            				resposta.setStatus(201);
-				            				resposta.setToken(resGetCand.getUUID());
 				            				JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 				            				out.println(respostaJSON);
 				            			}else{				            				

@@ -143,7 +143,6 @@ public class PerfilFrame extends JFrame {
 			
 			
 		}else {
-			System.out.println("cand tela perfil: " + cand);
 			this.app.enviarDadosCliente(cand);
 		}
 	}

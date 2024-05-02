@@ -24,11 +24,20 @@ public class JSONController {
 			JSONObject res = new JSONObject();
 			res.put("operacao", resposta.getOperacao());
 			res.put("status", resposta.getStatus());
-			res.put("mensagem", resposta.getMsg());
-			res.put("token", resposta.getToken());
-			res.put("email", resposta.getEmail());
-			res.put("nome", resposta.getUser());
-			res.put("senha", resposta.getPassword());
+			if(resposta.getMsg() != null) {
+				res.put("mensagem", resposta.getMsg());				
+			}
+			if(resposta.getToken() != null) {
+				res.put("token", resposta.getToken());				
+			}
+			if(resposta.getUser() != null) {
+				res.put("nome", resposta.getUser());
+			}if(resposta.getEmail() != null) {
+				res.put("email", resposta.getEmail());								
+			}
+			if(resposta.getPassword() != null) {
+				res.put("senha", resposta.getPassword());				
+			}
 			return res;
 			
 	}
@@ -39,7 +48,6 @@ public class JSONController {
 		try {
 			
 			JSONObject jsonObject = (JSONObject) parser.parse(resposta);
-			System.out.println(jsonObject);
 			
 			String operacao = (String) jsonObject.get("operacao");
 			resposta1.setOperacao(operacao);
@@ -101,7 +109,6 @@ public class JSONController {
 		if(candidato.getUUID() != null) {
 			cand.put("token", candidato.getUUID());			
 		}
-		System.out.println("cand na tela JSON controll: "+ cand);
 		return cand;
 		
 	}
@@ -112,7 +119,6 @@ public class JSONController {
 		try {
 			
 			JSONObject jsonObject = (JSONObject) parser.parse(candidato);
-			System.out.println(jsonObject);
 			
 			String email = (String) jsonObject.get("email");
 			candidato1.setEmail(email);
@@ -142,7 +148,6 @@ public class JSONController {
 			candidato1.setPassword((String) jsonObject.get("senha"));
 			candidato1.setEmail((String) jsonObject.get("email"));
 			String oldUUID = (String) jsonObject.get("token");
-			System.out.println("oldUUID: "+ oldUUID);
 			if(oldUUID == null) {
 				candidato1.setUUID(stringUUID);			
 			}else {

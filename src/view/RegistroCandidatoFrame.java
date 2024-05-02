@@ -135,7 +135,6 @@ public class RegistroCandidatoFrame extends JFrame {
 			System.out.println("O cliente está nulo, você deve primeiro inicializar o cliente e o servidor");
 			
 		}else {			
-			System.out.println(res);
 			this.cliente.setHomeFrame(this.home);
 			this.cliente.enviarMensagem(res);
 		}

@@ -123,10 +123,10 @@ public class candidatoDAO {
 			st.setString(2, senha);
 			rs = st.executeQuery();
 			if(rs.next()) {
-				System.out.println("A busca retornou resultados");
+				System.out.println("=== A busca retornou resultados ===");
 				return true;
 			}else {		
-				System.out.println("==================================== LOGIN INCORRETO ========================================");
+				System.out.println("=== Login Incorreto ===");
 				return false;
 			}
 		} catch (SQLException e) {
@@ -146,12 +146,11 @@ public class candidatoDAO {
 			st.setString(1, email);
 			rs = st.executeQuery();
 			if(rs.next()) {
-				System.out.println("UUID ENCONTRADO");
+				System.out.println("=== UUID Encontrado ===");
 				String uuid = rs.getString("UUID");
-				System.out.println("uuid: " + uuid);
 				return uuid;
 			}else {		
-				System.out.println("==================================== UUID NÃO ENCONTRADO ========================================");
+				System.out.println("=== UUID Não Encontrado ===");
 				return null;
 			}
 		} catch (SQLException e) {
@@ -171,7 +170,7 @@ public class candidatoDAO {
     			st.setString(1, email);
     			rs = st.executeQuery();
     			if(rs.next()) {
-    				System.out.println("Candidato encontrado");
+    				System.out.println("=== Candidato encontrado ===");
     				Candidato candidato = new Candidato();
     				candidato.setEmail(rs.getString("email"));
     				candidato.setPassword(rs.getString("senha"));
@@ -179,7 +178,7 @@ public class candidatoDAO {
     				candidato.setUUID(rs.getString("UUID"));
     				return candidato;
     			}else {		
-    				System.out.println("==================================== Candidato não encontrado ========================================");
+    				System.out.println("=== Candidato não encontrado ===");
     				return null;
     			}
     		} catch (SQLException e) {

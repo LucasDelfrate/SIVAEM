@@ -151,12 +151,11 @@ public class AplicationHomeFrame extends JFrame {
 			 this.cliente.enviarMensagem(res);			 
 		 }
 	}
-	public void receiveCandidatoByEmail(String user, String senha, String email) {
-		this.candidato.setEmail(email);
+	public void receiveCandidatoByEmail(String user, String senha) {
+		this.candidato.setEmail(this.email);
 		this.candidato.setUser(user);
 		this.candidato.setPassword(senha);
 		this.bemVindo.setText("Bem vindo "+ user);
-		System.out.println(user + senha + email);
 	}
 	public void enviarProClienteExcluir() {
 		Candidato candidato = new Candidato();

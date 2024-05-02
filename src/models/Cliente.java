@@ -56,7 +56,7 @@ public class Cliente {
                     String mensagem;
                     while ((mensagem = in.readLine()) != null) {
                     	System.out.println("---------------------------------");
-                        System.out.println("Mensagem do servidor: " + mensagem);
+                        System.out.println("Cliente: " + mensagem);
                         System.out.println("---------------------------------");
                         
                         Resposta resposta = new Resposta();
@@ -73,7 +73,7 @@ public class Cliente {
                         switch(operacao){                           
                         	case "loginCandidato":{
                         		String msg;
-	                        		if(status == 200) {
+	                        		if(status == 201 || status == 200) {
 	                        			abrirApp(token, email);
 	                        			fecharTelaLogin();
 	                        		}else if(status == 401) {
@@ -85,7 +85,7 @@ public class Cliente {
 	                        	break;
                         	}case "cadastrarCandidato":{
                         		String msg;
-	                        		if(status == 201) {
+	                        		if(status == 201 || status == 200) {
 	                        			AplicationHomeFrame app = new AplicationHomeFrame(this.cliente, token, email);
 	                        			msg = "Cadastro realizado com sucesso!";
 	                        			respostaTelaCadastro(msg);
@@ -135,8 +135,7 @@ public class Cliente {
 	                        }
 	                        case "visualizarCandidato":{
 	                        	if(status == 201) {	         
-	                        		System.out.println("Usuario e senha: " + user + senha);
-                        			retornoGet(user, senha, email);
+                        			retornoGet(user, senha);
 	                        	}
 	                        	else if(status == 404){
 	                        		System.out.println("Email não encontrado");
@@ -153,11 +152,10 @@ public class Cliente {
         threadEscuta.start();
     }
 
-    public void retornoGet(String user, String senha, String email) {
-    	this.app.receiveCandidatoByEmail(user ,senha, email);
+    public void retornoGet(String user, String senha) {
+    	this.app.receiveCandidatoByEmail(user ,senha);
     }
     public void enviarMensagem(JSONObject msg) {
-    	System.out.println("==================================================================");
     	this.out.println(msg);
     }
     
@@ -184,7 +182,6 @@ public class Cliente {
 		this.loginFrame.dispose();
 	}
 	public void abrirApp(String token, String email) {
-		System.out.println("abrir app: "+token);
 		AplicationHomeFrame app = new AplicationHomeFrame(this, token, this.email);
 		this.app = app;
 		this.app.getByEmail();
