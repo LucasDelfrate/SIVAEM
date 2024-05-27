@@ -9,8 +9,10 @@ import enums.StatusEnum;
 import view.AplicationHomeFrame;
 import view.HomeFrame;
 import view.LoginCandidatoFrame;
+import view.LoginEmpresaFrame;
 import view.PerfilFrame;
 import view.RegistroCandidatoFrame;
+import view.RegistroEmpresaFrame;
 
 public class Cliente {
 	
@@ -22,6 +24,8 @@ public class Cliente {
 	private Thread threadEscuta;
 	private JSONController json;
 	private LoginCandidatoFrame loginFrame;
+	private RegistroEmpresaFrame registroEmpFrame;
+	private LoginEmpresaFrame loginEmpresaFrame;
 	private RegistroCandidatoFrame cadastroFrame;
 	private HomeFrame homeFrame;
 	private HomeFrame home;
@@ -43,7 +47,7 @@ public class Cliente {
 		this.loginFrame = new LoginCandidatoFrame(this.home, this);
 		this.cadastroFrame = new RegistroCandidatoFrame(this.home, this);
 		this.app = new AplicationHomeFrame(this,  null, null);
-		this.perfil = new PerfilFrame(this.app, null, null);
+		this.perfil = new PerfilFrame(this.app);
 		
 		// Iniciar uma thread para escutar mensagens do servidor
         threadEscuta = new Thread(new Runnable() {
@@ -61,10 +65,15 @@ public class Cliente {
                         
                         Resposta resposta = new Resposta();
                         resposta = json.changeResponseToObjectJSON(mensagem);
+                        String message = resposta.getMsg();
                         String token = resposta.getToken();
                         String email = resposta.getEmail();
-                        String senha = resposta.getPassword();
+                        String senha = resposta.getSenha();
                         String user = resposta.getUser();
+                        String cnpj = resposta.getCnpj();
+                        String descricao = resposta.getDescricao();
+                        String ramo = resposta.getRamo();
+                        String razaoSocial = resposta.getRazaoSocial();
                         int status = resposta.getStatus();
                         if(status == 0) {
                         	System.out.println("Não foi informado nenhum status");
@@ -74,7 +83,7 @@ public class Cliente {
                         	case "loginCandidato":{
                         		String msg;
 	                        		if(status == 201 || status == 200) {
-	                        			abrirApp(token, email);
+	                        			abrirApp(token);
 	                        			fecharTelaLogin();
 	                        		}else if(status == 401) {
 	                        			msg = "Login inválido";
@@ -142,7 +151,68 @@ public class Cliente {
 	                        	}
 	                        	break;
 	                        }
-                       }
+	                        case "registrarEmpresa":{
+	                        	String msg;
+	                        	if(status == 201) {
+	                        		
+                        			msg = "Empresa cadastrada com sucesso!";
+                        			respostaTelaRegistroEmpresa(msg);
+                        		}else if(status == 422) {
+                        			msg = message;
+                        			respostaTelaRegistroEmpresa(msg);
+                        		}else {
+                        			System.out.println("Status informado não está cadastrado");
+                        		}
+	                        	break;
+	                        }
+	                        case "loginEmpresa":{
+                        		String msg;
+	                        		if(status == 201 || status == 200) {
+	                        			abrirAppEmpresa(token);
+	                        			fecharTelaLoginEmpresa();
+	                        		}else if(status == 401) {
+	                        			msg = "Login inválido";
+	                        			respostaTelaLoginEmpresa(msg);
+	                        		}else {
+	                        			System.out.println("Status informado não está cadastrado");
+	                        		}
+	                        	break;
+	                        }
+	                        case "visualizarEmpresa":{
+	                        	if(status == 201) {	         
+                        			retornoGetEmpresa(razaoSocial, descricao, ramo, senha , cnpj );
+	                        	}
+	                        	else if(status == 404){
+	                        		System.out.println("Email não encontrado");
+	                        	}
+	                        	break;
+	                        }
+	                        case "apagarEmpresa":{
+	                        	String msg;
+	                        	if(status == 201) {
+	                        		
+                        			msg = "Empresa deletado com sucesso!";
+                        			respostaTelaHome(msg);
+                        		}else if(status == 404) {
+                        			msg = "Email não encontrado";
+                        		}else {
+                        			System.out.println("Status informado não está cadastrado");
+                        		}
+	                        	break;
+	                        }
+	                        case "atualizarEmpresa":{
+	                        	String msg;
+	                        	if(status == 201) {	                        		
+                        			msg = "Edição realizado com sucesso!";
+                        			respostaTelaEdit(msg);
+	                        	}
+	                        	else if(status == 404){
+	                        		msg = "Erro ao editar";
+	                        		respostaTelaEdit(msg);
+	                        	}
+	                        	break;
+	                        }
+                        }
                       }
 	                } catch (IOException e) {
 	                    e.printStackTrace();
@@ -154,6 +224,10 @@ public class Cliente {
 
     public void retornoGet(String user, String senha) {
     	this.app.receiveCandidatoByEmail(user ,senha);
+    }
+    public void retornoGetEmpresa(String razaoSocial, String descricao, String ramo, String senha, String cnpj) {
+    	this.app.receiveEmpresaByEmail(razaoSocial, descricao, ramo, senha , cnpj );
+    	System.out.println("caiu no receive");
     }
     public void enviarMensagem(JSONObject msg) {
     	this.out.println(msg);
@@ -168,6 +242,12 @@ public class Cliente {
 	public void setLoginFrame(LoginCandidatoFrame loginFrame) {
 		this.loginFrame = loginFrame;
 	}
+	public void setLoginEmpresaFrame(LoginEmpresaFrame loginEmpresaFrame) {
+		this.loginEmpresaFrame = loginEmpresaFrame;
+	}
+	public void setEmpresaFrame(RegistroEmpresaFrame registro) {
+		this.registroEmpFrame = registro;
+	}
 	public void setHomeFrame(HomeFrame home) {
 		this.home = home;
 	}
@@ -181,10 +261,19 @@ public class Cliente {
 	public void fecharTelaLogin() {
 		this.loginFrame.dispose();
 	}
-	public void abrirApp(String token, String email) {
+	public void fecharTelaLoginEmpresa() {
+		this.loginEmpresaFrame.dispose();
+	}
+	public void abrirApp(String token) {
 		AplicationHomeFrame app = new AplicationHomeFrame(this, token, this.email);
 		this.app = app;
-		this.app.getByEmail();
+		this.app.getByEmail(true, this.email);
+		this.app.setVisible(true);
+	}
+	public void abrirAppEmpresa(String token) {
+		AplicationHomeFrame app = new AplicationHomeFrame(this, token, this.email);
+		this.app = app;
+		this.app.getByEmail(false, this.email);
 		this.app.setVisible(true);
 	}
 	public void respostaTelaHome(String msg) {
@@ -199,5 +288,11 @@ public class Cliente {
 	}
 	public void saveEmail(String email) {
 		this.email = email;
+	}
+	public void respostaTelaRegistroEmpresa(String msg) {
+		this.registroEmpFrame.mostrarRespota(msg);
+	}
+	public void respostaTelaLoginEmpresa(String msg) {
+		this.loginEmpresaFrame.mostrarRespota(msg);
 	}
 }

@@ -52,15 +52,10 @@ public class EdicaoController {
 		}else return true;
 	}
 	public Boolean validarSenha(String password) {
-		if(password == null || password.length()==0) {				
+		if(password == null || password.length()==0 || password.length() > 8) {				
 			return false;
 		}else {
-			for (int i = 0; i < password.length(); i++) {
-	            if (!Character.isDigit(password.charAt(i))) {
-	                return false; 
-	            }
-	        }
+			return true;
 		}
-	return true;
 }
 }

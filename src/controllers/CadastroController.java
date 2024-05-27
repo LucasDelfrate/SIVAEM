@@ -5,11 +5,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import dao.BancoDados;
+import dao.EmpresaDao;
 import dao.candidatoDAO;
 import enums.CadastroEnum;
+import enums.CnpjEnum;
 import enums.EdicaoEnum;
 import enums.EmailEnum;
 import models.Candidato;
+import models.Empresa;
 
 public class CadastroController {
 	
@@ -30,6 +33,28 @@ public class CadastroController {
 			return CadastroEnum.SUCESSO;
 		}
 	}
+	public CadastroEnum validarCadastroEmpresa(Empresa empresa) throws IOException {
+		EmailEnum isEmailValid = validarEmail(empresa.getEmail());
+		Boolean isPasswordValid = validarSenha(empresa.getSenha());
+		CnpjEnum isCnpjValid = validarCnpj(empresa.getCnpj());
+		
+		
+		System.out.println("Email:  |"+ isEmailValid + " Password:  |"+ isPasswordValid+ " cnpj:  |"+ isCnpjValid);
+		if(isEmailValid == EmailEnum.JA_CADASTRADO) {
+			return CadastroEnum.EMAIL_CADASTRADO;
+		}else if(isEmailValid == EmailEnum.CARACTERES_INVALIDOS) {
+			return CadastroEnum.ERRO;
+		}else if(!isPasswordValid) {
+			return CadastroEnum.ERRO;
+		}else if(isCnpjValid == CnpjEnum.ERRO) {
+			return CadastroEnum.ERRO;
+		}else if(isCnpjValid == CnpjEnum.JA_CADASTRADO) {
+			return CadastroEnum.CNPJ_CADASTRADO;
+		}else {
+			return CadastroEnum.SUCESSO;
+		}
+	}
+	
 	public boolean validarUsername(String username) throws IOException {
 		System.out.println("Usuario: "+ username);
 		if(username == null || username.length() == 0 || username.length()<6 || username.length()>30) {
@@ -56,15 +81,48 @@ public class CadastroController {
 	}
 	
 	public Boolean validarSenha(String password) {
-			if(password == null || password.length()==0) {				
+			if(password == null || password.length()==0 || password.length() > 8) {				
 				return false;
-			}else {
-				for (int i = 0; i < password.length(); i++) {
-		            if (!Character.isDigit(password.charAt(i))) {
-		                return false; 
-		            }
-		        }
+			}else {				
+				return true;
 			}
-		return true;
+	}
+	public CnpjEnum validarCnpj(String cnpj) throws IOException {
+	    if (cnpj == null) {
+	        return CnpjEnum.ERRO;
+	    }
+	    if (cnpj.length() != 14) {
+	        return CnpjEnum.ERRO;
+	    }
+	    if (!cnpj.matches("\\d+")) {
+	        return CnpjEnum.ERRO;
+	    }else {
+	    	try {
+				Connection conn = BancoDados.conectar();
+				Boolean response = new EmpresaDao(conn).validarCnpj(cnpj);
+				BancoDados.desconectar();
+				if(response == true) {
+					return CnpjEnum.SUCESSO;
+				}else return CnpjEnum.JA_CADASTRADO;
+			}catch (SQLException e) {
+				e.printStackTrace();
+				return CnpjEnum.ERRO;
+			}
+	    }
+	}
+	public CadastroEnum validarEdicao(Empresa emp) throws IOException {
+		Boolean isPasswordValid = validarSenha(emp.getSenha());
+		CnpjEnum isCnpjValid = validarCnpj(emp.getCnpj());
+		
+	
+		 if(!isPasswordValid) {
+			return CadastroEnum.ERRO;
+		}else if(isCnpjValid == CnpjEnum.ERRO) {
+			return CadastroEnum.ERRO;
+		}else if(isCnpjValid == CnpjEnum.JA_CADASTRADO) {
+			return CadastroEnum.CNPJ_CADASTRADO;
+		}else {
+			return CadastroEnum.SUCESSO;
+		}
 	}
 }

@@ -24,7 +24,7 @@ public class AplicationController {
 		}
 	}
 	public Empresa getEmpresaByToken(String token){
-		return new Empresa();
+		return null;
 		
 	}
 }

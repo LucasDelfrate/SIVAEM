@@ -86,7 +86,7 @@ public class EditFrame extends JFrame {
 		contentPane.add(btnNewButton_1);
 	}
 	public void editar(Candidato cand){
-		this.perfil.enviarDadosEdição(cand);
+		this.perfil.enviarDadosEdição(cand, null);
 		
 	}
 }

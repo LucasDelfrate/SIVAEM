@@ -10,7 +10,9 @@ import controllers.DeleteController;
 import controllers.EdicaoController;
 import controllers.JSONController;
 import controllers.LoginController;
+import controllers.LoginEmpresaController;
 import dao.BancoDados;
+import dao.EmpresaDao;
 import dao.candidatoDAO;
 import enums.CadastroEnum;
 import enums.EdicaoEnum;
@@ -98,6 +100,7 @@ public void run()
          CadastroController cadastroController = new CadastroController();
          EdicaoController editController = new EdicaoController();
          LoginController loginController = new LoginController();
+         LoginEmpresaController loginEmpresaController = new LoginEmpresaController();
          
          
          while ((res = in.readLine()) != null) 
@@ -251,7 +254,7 @@ public void run()
 				            			if(resGetCand != null) {
 				            				resposta.setOperacao("visualizarCandidato");
 				            				resposta.setUser(resGetCand.getUser());
-				            				resposta.setPassword(resGetCand.getPassword());
+				            				resposta.setSenha(resGetCand.getPassword());
 				            				resposta.setStatus(201);
 				            				JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 				            				out.println(respostaJSON);
@@ -267,7 +270,160 @@ public void run()
 									}	 
 			            		 break;	 
 			              }
+		              case "cadastrarEmpresa":{
+		            	  	 Empresa empresa = jsonController.changeEmpresaCompletoJSON(res);
+		            	  	 CadastroEnum response = cadastroController.validarCadastroEmpresa(empresa);
+		            	  	 Resposta resposta = new Resposta();
+		            	  	 String email = empresa.getEmail();
+			            	 resposta.setOperacao("registrarEmpresa");
+			            	 switch(response) {
+			            	 case SUCESSO:{
+			            		 try {
+				            			Connection conn = BancoDados.conectar();
+				            			new EmpresaDao(conn).cadastrarEmpresa(empresa);
+				            			resposta.setMsg("Cadastro realizado com sucesso!");
+					            		resposta.setStatus(201);
+					            		String uuid;
+										uuid = empresa.getUUID();
+										resposta.setToken(uuid);
+										JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+					            		out.println(respostaJSON);
+				            			BancoDados.desconectar();
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}	 
+			            		 break;
+			            	 }case CNPJ_CADASTRADO: {
+			            		 resposta.setMsg("Cnpj já cadastrado");
+			            		 resposta.setStatus(422);
+			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+			            		 out.println(respostaJSON);
+			            		 break;
+			            		 
+			            	 }case EMAIL_CADASTRADO: {
+			            		 resposta.setMsg("Email já cadastrado");
+			            		 resposta.setStatus(422);
+			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+			            		 out.println(respostaJSON);
+			            		 break;
+		            	}case ERRO: {
+		            		 System.out.println("Erro");
+		            		break;
+		            	}
+		            			
 		              }
+			            			 break;	 
+			              }
+		              case "loginEmpresa":{
+		            	  Empresa empresa = jsonController.changeEmpresaLoginToJSON(res);
+		            	  LoginEnum response = loginEmpresaController.validarLoginEmpresa(empresa);
+		            	  Resposta resposta = new Resposta();
+		            	  resposta.setOperacao("loginEmpresa");
+		            	  switch(response) {
+			            	 case SUCESSO: {
+				            		resposta.setStatus(200);
+				            		String uuid;
+									try {
+										uuid = loginController.getUUID(empresa.getEmail());
+										resposta.setToken(uuid);
+										JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+										out.println(respostaJSON);
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}
+			            		 break;
+			            	 	}
+			            	 case ERRO_USUARIO_E_SENHA:{
+			            		 resposta.setMsg("Login ou senha incorreto");
+			            		 resposta.setStatus(401);
+			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+			            		 out.println(respostaJSON);
+			            		 break;
+			            	 }
+		            	  }
+		            	  break;
+		              }
+		              case "visualizarEmpresa":{
+		            	  Empresa empresa = jsonController.changeEmpresaCompletoJSON(res);
+		            	  	 Resposta resposta = new Resposta();
+		            	  	 String email = empresa.getEmail();
+			            	 resposta.setOperacao("visualizarEmpresa");
+			            	
+			            		 try {
+				            			Connection conn = BancoDados.conectar();
+				            			Empresa resGetEmp = new EmpresaDao(conn).getEmpresaByEmail(email);
+				            			if(resGetEmp != null) {
+				            				resposta.setOperacao("visualizarEmpresa");
+				            				resposta.setCnpj(resGetEmp.getCnpj());
+				            				resposta.setSenha(resGetEmp.getSenha());
+				            				resposta.setDescricao(resGetEmp.getDescricao());
+				            				resposta.setRamo(resGetEmp.getRamo());
+				            				resposta.setRazaoSocial(resGetEmp.getRazaoSocial());
+				            				resposta.setStatus(201);
+				            				JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+				            				out.println(respostaJSON);
+				            			}else{				            				
+				            				resposta.setMsg("Email nao encontrado");
+				            				resposta.setStatus(404);
+				            				JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+				            				out.println(respostaJSON);
+				            			}
+				            			BancoDados.desconectar();
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}	 
+			            		 break;	 
+			              }
+		              case "apagarEmpresa":{
+		            	  Resposta response = new Resposta();
+		            	  response.setOperacao("apagarEmpresa");
+		            	  Empresa empresa = jsonController.changeEmpresaCompletoJSON(res);
+		            	  String email = empresa.getEmail();
+		            	  DeleteController delControll = new DeleteController();
+		            	  EmailEnum resposta = delControll.validarEmailToDeleteEmpresa(email);
+		            	  System.out.println(resposta);
+		            	  if(resposta == EmailEnum.SUCESSO) {
+		            		  response.setMsg("Candidato deletado com sucesso!");
+		            		  response.setStatus(201);
+		            	  }else if(resposta == EmailEnum.NAO_ENCONTRADO) {
+		            		  response.setStatus(404);
+		            		  response.setMsg("Email não encontrado");
+		            	  }
+		            	  JSONObject respostaJSON = jsonController.changeReponseToJson(response);
+		            	  out.println(respostaJSON);
+		            	  break;
+		              }
+		              case "atualizarEmpresa":{
+		            	  	 Empresa emp = jsonController.changeEmpresaCompletoJSONWithoutChangeUUID(res);
+		            	  	 System.out.println("CANDIDATO ANTES DE EDITAR: "+ emp);
+		            	  	 Resposta resposta = new Resposta();
+		            	  	 CadastroEnum response = cadastroController.validarEdicao(emp);
+			            	 resposta.setOperacao("atualizarCandidato");
+			            	 switch(response) {
+				            	 case SUCESSO:{
+				            		 System.out.println("Sucesso ao buscar candidato");
+				            		 try {
+					            			Connection conn = BancoDados.conectar();
+					            			new EmpresaDao(conn).atualizarEmpresa(emp);	
+					            			resposta.setMsg("Edição realizada com sucesso!");
+						            		resposta.setStatus(201);
+											JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+						            		out.println(respostaJSON);
+					            			BancoDados.desconectar();
+										} catch (SQLException e) {
+											e.printStackTrace();
+										}	 
+				            		 break;
+				            	 }case ERRO: {
+				            		 resposta.setMsg("Dados inválidos");
+				            		 resposta.setStatus(404);
+				            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+				            		 out.println(respostaJSON);
+				            		 break;
+				            	 }
+			              }
+		              }
+		            }
 	            
          
              } 

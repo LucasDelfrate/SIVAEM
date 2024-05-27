@@ -38,7 +38,6 @@ public class HomeFrame extends JFrame {
 
 	public HomeFrame(Cliente cliente) {
 		this.cliente = cliente;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 801, 685);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(233, 233, 233));
@@ -80,6 +79,11 @@ public class HomeFrame extends JFrame {
 		panel.setLayout(null);
 		
 		JButton btnNewButton_1 = new JButton("Login");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				abrirLoginEmpresa();
+			}
+		});
 		btnNewButton_1.setFont(new Font("Consolas", Font.PLAIN, 16));
 		btnNewButton_1.setBounds(98, 203, 210, 46);
 		panel.add(btnNewButton_1);
@@ -94,6 +98,11 @@ public class HomeFrame extends JFrame {
 		panel.add(lblEmpresa_1);
 		
 		JButton btnRegistrarEmpresa_1 = new JButton("Registrar");
+		btnRegistrarEmpresa_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				iniciarRegistroEmpresa();
+			}
+		});
 		btnRegistrarEmpresa_1.setFont(new Font("Consolas", Font.PLAIN, 16));
 		btnRegistrarEmpresa_1.setBounds(98, 265, 210, 46);
 		panel.add(btnRegistrarEmpresa_1);
@@ -131,6 +140,10 @@ public class HomeFrame extends JFrame {
 		LoginCandidatoFrame login = new LoginCandidatoFrame(this, this.cliente);
 		login.setVisible(true);
 	}
+	private void abrirLoginEmpresa() {
+		LoginEmpresaFrame loginEmpresa = new LoginEmpresaFrame(this.cliente);
+		loginEmpresa.setVisible(true);
+	}
 	private void chamarRegistroCandidato(){
 		RegistroCandidatoFrame regFrame = new RegistroCandidatoFrame(this, this.cliente);
 		regFrame.setVisible(true);
@@ -138,4 +151,9 @@ public class HomeFrame extends JFrame {
 	public void respostaTela(String msg) {
 		JOptionPane.showMessageDialog(null, msg);
 	}
+	public void iniciarRegistroEmpresa() {
+		RegistroEmpresaFrame regEmp = new RegistroEmpresaFrame(this.cliente);
+		regEmp.setVisible(true);
+	}
+	
 }

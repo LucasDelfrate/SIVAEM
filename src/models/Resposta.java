@@ -9,10 +9,63 @@ public class Resposta {
 	private String email;
 	private String nome;
 	private String senha;
+	private String cnpj;
+	private String descricao;
+	private String ramo;
+	private String razaoSocial;
 	
 	public Resposta() {
 		this.status = 0;
 	}
+	
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public String getCnpj() {
+		return cnpj;
+	}
+
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public String getRamo() {
+		return ramo;
+	}
+
+	public void setRamo(String ramo) {
+		this.ramo = ramo;
+	}
+
+	public String getRazaoSocial() {
+		return razaoSocial;
+	}
+
+	public void setRazaoSocial(String razaoSocial) {
+		this.razaoSocial = razaoSocial;
+	}
+
 	public String getOperacao() {
 		return operacao;
 	}
@@ -49,13 +102,5 @@ public class Resposta {
 	public void setUser(String user) {
 		this.nome = user;
 	}
-	public String getPassword() {
-		return senha;
-	}
-	public void setPassword(String password) {
-		this.senha = password;
-	}
-	
-	
 
 }

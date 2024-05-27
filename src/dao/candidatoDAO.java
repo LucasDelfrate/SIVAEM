@@ -26,7 +26,7 @@ public class candidatoDAO {
     				candidato.setEmail(rs.getString("email"));
     				candidato.setPassword(rs.getString("senha"));
     				candidato.setUser(rs.getString("nome"));
-    				candidato.setUUID(email);
+  
     				return candidato;
     			}else {		
     				System.out.println("==================================== Candidato não encontrado ========================================");

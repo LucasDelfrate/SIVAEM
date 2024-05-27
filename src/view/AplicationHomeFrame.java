@@ -51,8 +51,9 @@ public class AplicationHomeFrame extends JFrame {
 
 	public AplicationHomeFrame(Cliente cliente, String token, String email) {
 		this.candidato = new Candidato();
+		this.empresa = new Empresa();
 		this.email = email;
-		this.perfil = new PerfilFrame(this, this.empresa, this.candidato);
+		this.perfil = new PerfilFrame(this);
 		this.cliente = cliente;
 		this.token = token;
 		
@@ -68,11 +69,6 @@ public class AplicationHomeFrame extends JFrame {
 		textBemVindo.setAlignment(Label.CENTER);
 		textBemVindo.setBounds(148, 84, 541, 63);
 		this.bemVindo = textBemVindo;
-		if(this.candidato == null) {
-			//textBemVindo.setText(empresa);
-		}else {
-			
-		}
 		contentPane.add(textBemVindo);
 		
 		JPanel panel = new JPanel();
@@ -139,17 +135,28 @@ public class AplicationHomeFrame extends JFrame {
 		
 	}
 	
-	public void getByEmail(){
-		 Candidato candidato = new Candidato();
-		 candidato.setOperacao("visualizarCandidato");
-		 candidato.setEmail(this.email);
-		 JSONController editController = new JSONController();
-		 JSONObject res = editController.changeToJSON(candidato);
-		 if(this.cliente == null) {
+	public void getByEmail(Boolean isCandidato, String email){
+		this.email = email;
+		if(this.cliente == null) {
 			 System.out.println("Cliente é nulo");
-		 }else {
-			 this.cliente.enviarMensagem(res);			 
-		 }
+		}else {
+			if(isCandidato) {
+				Candidato candidato = new Candidato();
+				candidato.setOperacao("visualizarCandidato");
+				candidato.setEmail(this.email);
+				JSONController showController = new JSONController();
+				JSONObject res = showController.changeToJSON(candidato);
+				this.cliente.enviarMensagem(res);	
+			}else {
+				Empresa empresa = new Empresa();
+				empresa.setOperacao("visualizarEmpresa");
+				empresa.setEmail(this.email);
+				JSONController showController = new JSONController();
+				JSONObject res = showController.changeEmpresaToJSON(empresa);
+				this.cliente.enviarMensagem(res);	
+			}	
+		}
+		 
 	}
 	public void receiveCandidatoByEmail(String user, String senha) {
 		this.candidato.setEmail(this.email);
@@ -157,19 +164,38 @@ public class AplicationHomeFrame extends JFrame {
 		this.candidato.setPassword(senha);
 		this.bemVindo.setText("Bem vindo "+ user);
 	}
+	public void receiveEmpresaByEmail(String razaoSocial, String descricao, String ramo, String senha, String cnpj) {
+		this.empresa.setCnpj(cnpj);
+		this.empresa.setDescricao(descricao);
+		this.empresa.setEmail(this.email);
+		this.empresa.setRamo(ramo);
+		this.empresa.setRazaoSocial(razaoSocial);
+		this.empresa.setSenha(senha);
+		this.bemVindo.setText("Bem vindo "+ razaoSocial);
+	}
 	public void enviarProClienteExcluir() {
 		Candidato candidato = new Candidato();
 		candidato.setEmail(this.email);
 		candidato.setOperacao("apagarCandidato");
 		JSONController deleteController = new JSONController();
 		JSONObject res = deleteController.changeToJSON(candidato);
-		cliente.enviarMensagem(res);
+		this.cliente.enviarMensagem(res);
+		dispose();
+	}
+	public void enviarProClienteExcluirEmpresa() {
+		Empresa empresa = new Empresa();
+		empresa.setEmail(this.email);
+		empresa.setOperacao("apagarEmpresa");
+		JSONController deleteController = new JSONController();
+		JSONObject res = deleteController.changeToJSONEmpresa(empresa);
+		this.cliente.enviarMensagem(res);
 		dispose();
 	}
 	public void abrirPerfil() {
 		
-		PerfilFrame perfil = new PerfilFrame(this , this.empresa, this.candidato);
+		PerfilFrame perfil = new PerfilFrame(this);
 		this.perfil = perfil;
+		this.perfil.receiveInfo(this.empresa, this.candidato);
 		this.perfil.setVisible(true);
 	}
 	public void deslogar() {
@@ -200,16 +226,31 @@ public class AplicationHomeFrame extends JFrame {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-	public void enviarDadosCliente(Candidato cand){
-		 Candidato candidato = new Candidato();
-		 candidato.setOperacao("atualizarCandidato");
-		 candidato.setUser(cand.getUser());
-		 candidato.setPassword(cand.getPassword());
-		 candidato.setEmail(this.email);
-
-		 JSONController showController = new JSONController();
-		 JSONObject res = showController.changeToJSON(candidato);
-		this.cliente.enviarMensagem(res);
+	public void enviarDadosCliente(Candidato cand, Empresa emp){
+		if(emp == null) {
+			Candidato candidato = new Candidato();
+			candidato.setOperacao("atualizarCandidato");
+			candidato.setUser(cand.getUser());
+			candidato.setPassword(cand.getPassword());
+			candidato.setEmail(this.email);
+			
+			JSONController showController = new JSONController();
+			JSONObject res = showController.changeToJSON(candidato);
+			this.cliente.enviarMensagem(res);
+			
+		}else {
+			Empresa empresa = new Empresa();
+			empresa.setOperacao("atualizarEmpresa");
+			empresa.setCnpj(emp.getCnpj());
+			empresa.setDescricao(emp.getDescricao());
+			empresa.setRamo(emp.getRamo());
+			empresa.setRazaoSocial(emp.getRazaoSocial());
+			empresa.setSenha(emp.getSenha());
+			
+			JSONController showController = new JSONController();
+			JSONObject res = showController.changeEmpresaToJSON(empresa);
+			this.cliente.enviarMensagem(res);
+		}
 	}
 	public void sendoToPerfil(String msg) {
 		this.perfil.respostaTela(msg);

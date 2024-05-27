@@ -21,7 +21,7 @@ public class ConfirmationModal extends JFrame {
 	private PerfilFrame perfil;
 
 
-	public ConfirmationModal(PerfilFrame perfil) {
+	public ConfirmationModal(PerfilFrame perfil, Boolean isCandidato) {
 		this.perfil = perfil;
 		setBounds(100, 100, 450, 215);
 		contentPane = new JPanel();
@@ -38,7 +38,7 @@ public class ConfirmationModal extends JFrame {
 		JButton cancelBtn = new JButton("Cancelar");
 		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				retornar(false);
+				retornar(false, isCandidato);
 			}
 		});
 		cancelBtn.setBounds(88, 91, 118, 33);
@@ -47,16 +47,20 @@ public class ConfirmationModal extends JFrame {
 		JButton confirmBtn = new JButton("Confirmar");
 		confirmBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				retornar(true);
+				retornar(true, isCandidato);
 			}
 		});
 		confirmBtn.setBounds(228, 91, 118, 33);
 		contentPane.add(confirmBtn);
 	}
-	public void retornar(Boolean response){
+	public void retornar(Boolean response, Boolean isCandidato){
 		if(response) {
 			dispose();
-			perfil.excluirPerfil();			
+			if(isCandidato) {
+				perfil.excluirPerfilCandidato();							
+			}else {
+				perfil.excluirPerfilEmpresa();
+			}
 		}else dispose();
 	}
 }
