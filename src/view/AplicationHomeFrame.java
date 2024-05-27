@@ -245,6 +245,7 @@ public class AplicationHomeFrame extends JFrame {
 			empresa.setDescricao(emp.getDescricao());
 			empresa.setRamo(emp.getRamo());
 			empresa.setRazaoSocial(emp.getRazaoSocial());
+			empresa.setEmail(emp.getEmail());
 			empresa.setSenha(emp.getSenha());
 			
 			JSONController showController = new JSONController();

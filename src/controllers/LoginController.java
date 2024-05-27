@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import dao.BancoDados;
+import dao.EmpresaDao;
 import dao.candidatoDAO;
 import enums.CadastroEnum;
 import enums.LoginEnum;
@@ -37,6 +38,16 @@ public class LoginController {
 	public String getUUID(String email) throws SQLException, IOException{
 		Connection conn = BancoDados.conectar();
 		String uuid = new candidatoDAO(conn).getUUID(email);
+		if(uuid == null) {
+			System.out.println("UUID NULO");
+		}
+		BancoDados.desconectar();
+		
+		return uuid;
+	}
+	public String getUUIDEmpresa(String email) throws SQLException, IOException{
+		Connection conn = BancoDados.conectar();
+		String uuid = new EmpresaDao(conn).getUUID(email);
 		if(uuid == null) {
 			System.out.println("UUID NULO");
 		}

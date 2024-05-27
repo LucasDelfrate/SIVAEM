@@ -151,7 +151,7 @@ public class Cliente {
 	                        	}
 	                        	break;
 	                        }
-	                        case "registrarEmpresa":{
+	                        case "cadastrarEmpresa":{
 	                        	String msg;
 	                        	if(status == 201) {
 	                        		

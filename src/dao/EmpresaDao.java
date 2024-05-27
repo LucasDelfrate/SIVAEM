@@ -140,4 +140,28 @@ public class EmpresaDao {
 		}
 	}
 	
+	public String getUUID(String email) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement("SELECT * FROM empresa WHERE email = ?");
+			st.setString(1, email);
+			rs = st.executeQuery();
+			if(rs.next()) {
+				System.out.println("=== UUID Encontrado ===");
+				String uuid = rs.getString("UUID");
+				return uuid;
+			}else {		
+				System.out.println("=== UUID Não Encontrado ===");
+				return null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}finally {
+			BancoDados.finalizarStatement(st);
+			BancoDados.desconectar();
+		}
+	}
+	
 }

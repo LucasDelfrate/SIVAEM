@@ -307,7 +307,10 @@ public void run()
 			            		 out.println(respostaJSON);
 			            		 break;
 		            	}case ERRO: {
-		            		 System.out.println("Erro");
+		            		 resposta.setMsg("Caracteres inválidos...");
+		            		 resposta.setStatus(404);
+		            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+		            		 out.println(respostaJSON);
 		            		break;
 		            	}
 		            			
@@ -324,8 +327,9 @@ public void run()
 				            		resposta.setStatus(200);
 				            		String uuid;
 									try {
-										uuid = loginController.getUUID(empresa.getEmail());
+										uuid = loginController.getUUIDEmpresa(empresa.getEmail());
 										resposta.setToken(uuid);
+										System.out.println(resposta.getToken());
 										JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 										out.println(respostaJSON);
 									} catch (SQLException e) {
