@@ -82,7 +82,7 @@ public class EmpresaDao {
     			st.setString(1, email);
     			rs = st.executeQuery();
     			if(rs.next()) {
-    				System.out.println("Candidato encontrado");
+    				System.out.println("Empresa encontrado");
     				Empresa empresa = new Empresa();
     				empresa.setEmail(rs.getString("email"));
     				empresa.setCnpj(rs.getString("cnpj"));
@@ -121,6 +121,11 @@ public class EmpresaDao {
 	}
 	public Boolean atualizarEmpresa(Empresa emp) throws SQLException {
 		PreparedStatement st = null;
+		System.out.println("EMAIL: " + emp.getEmail());
+		System.out.println("RAMO: " + emp.getRamo());
+		System.out.println("RAZAO: " + emp.getRazaoSocial());
+		System.out.println("DESCRICAO: " + emp.getDescricao());
+		System.out.println("CNPJ: " + emp.getCnpj());
 		try {
 			st = conn.prepareStatement("UPDATE empresa SET razaoSocial = ?, senha = ?, ramo = ?, descricao = ?, cnpj = ? WHERE email = ?");
 			st.setString(1, emp.getRazaoSocial());

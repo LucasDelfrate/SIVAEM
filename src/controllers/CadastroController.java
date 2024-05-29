@@ -110,9 +110,23 @@ public class CadastroController {
 			}
 	    }
 	}
+	public CnpjEnum validarCnpjEdicao(String cnpj) throws IOException {
+	    if (cnpj == null) {
+	        return CnpjEnum.ERRO;
+	    }
+	    if (cnpj.length() != 14) {
+	        return CnpjEnum.ERRO;
+	    }
+	    if (!cnpj.matches("\\d+")) {
+	        return CnpjEnum.ERRO;
+	    }else {
+	    	return CnpjEnum.SUCESSO;
+	    }
+	}
 	public CadastroEnum validarEdicao(Empresa emp) throws IOException {
+		System.out.println("Validando edição empresa");
 		Boolean isPasswordValid = validarSenha(emp.getSenha());
-		CnpjEnum isCnpjValid = validarCnpj(emp.getCnpj());
+		CnpjEnum isCnpjValid = validarCnpjEdicao(emp.getCnpj());
 		
 	
 		 if(!isPasswordValid) {

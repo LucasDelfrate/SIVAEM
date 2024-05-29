@@ -231,6 +231,7 @@ public class Cliente {
     }
     public void enviarMensagem(JSONObject msg) {
     	this.out.println(msg);
+    	System.out.println("MENSAGEM ENVIADA AO SERVIDOR: " + msg);
     }
     
     public void fecharTerminal() throws IOException {

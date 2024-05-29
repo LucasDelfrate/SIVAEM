@@ -247,7 +247,7 @@ public JSONObject changeToJSONEmpresa(Empresa empresa){
 			
 			JSONObject jsonObject = (JSONObject) parser.parse(empresa);
 			
-			
+			empresa1.setEmail((String) jsonObject.get("email") );
 			empresa1.setCnpj((String) jsonObject.get("cnpj") );
 			empresa1.setRamo((String) jsonObject.get("ramo"));
 			empresa1.setRazaoSocial((String) jsonObject.get("razaoSocial"));

@@ -161,6 +161,7 @@ public void run()
 										}
 										JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 					            		out.println(respostaJSON);
+					            		System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 				            			BancoDados.desconectar();
 									} catch (SQLException e) {
 										e.printStackTrace();
@@ -172,6 +173,7 @@ public void run()
 			            		 resposta.setToken(candidato.getUUID());
 			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 			            		 out.println(respostaJSON);
+			            		 System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 			            		 break;
 			            		 
 			            	 }case EMAIL_CADASTRADO: {
@@ -180,6 +182,7 @@ public void run()
 			            		 resposta.setToken(candidato.getUUID());
 			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 			            		 out.println(respostaJSON);
+			            		 System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 			            		 break;
 		            	}
 		            			
@@ -202,6 +205,7 @@ public void run()
 		            	  }
 		            	  JSONObject respostaJSON = jsonController.changeReponseToJson(response);
 		            	  out.println(respostaJSON);
+		            	  System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 		            	  break;
 		              }
 		              case "logout":{
@@ -210,6 +214,7 @@ public void run()
 		            	  response.setStatus(204);
 		            	  JSONObject respostaJSON = jsonController.changeReponseToJson(response);
 		            	  out.println(respostaJSON);
+		            	  System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 		            	  break;
 		              }
 		              case "atualizarCandidato":{
@@ -228,6 +233,7 @@ public void run()
 						            		resposta.setStatus(201);
 											JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 						            		out.println(respostaJSON);
+						            		System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 					            			BancoDados.desconectar();
 										} catch (SQLException e) {
 											e.printStackTrace();
@@ -238,6 +244,7 @@ public void run()
 				            		 resposta.setStatus(404);
 				            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 				            		 out.println(respostaJSON);
+				            		 System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 				            		 break;
 				            	 }
 			              }
@@ -258,11 +265,13 @@ public void run()
 				            				resposta.setStatus(201);
 				            				JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 				            				out.println(respostaJSON);
+				            				System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 				            			}else{				            				
 				            				resposta.setMsg("Email nao encontrado");
 				            				resposta.setStatus(404);
 				            				JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 				            				out.println(respostaJSON);
+				            				System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 				            			}
 				            			BancoDados.desconectar();
 									} catch (SQLException e) {
@@ -275,7 +284,7 @@ public void run()
 		            	  	 CadastroEnum response = cadastroController.validarCadastroEmpresa(empresa);
 		            	  	 Resposta resposta = new Resposta();
 		            	  	 String email = empresa.getEmail();
-			            	 resposta.setOperacao("registrarEmpresa");
+			            	 resposta.setOperacao("cadastrarEmpresa");
 			            	 switch(response) {
 			            	 case SUCESSO:{
 			            		 try {
@@ -288,6 +297,7 @@ public void run()
 										resposta.setToken(uuid);
 										JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 					            		out.println(respostaJSON);
+					            		System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 				            			BancoDados.desconectar();
 									} catch (SQLException e) {
 										e.printStackTrace();
@@ -298,6 +308,7 @@ public void run()
 			            		 resposta.setStatus(422);
 			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 			            		 out.println(respostaJSON);
+			            		 System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 			            		 break;
 			            		 
 			            	 }case EMAIL_CADASTRADO: {
@@ -305,12 +316,14 @@ public void run()
 			            		 resposta.setStatus(422);
 			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 			            		 out.println(respostaJSON);
+			            		 System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 			            		 break;
 		            	}case ERRO: {
 		            		 resposta.setMsg("Caracteres inválidos...");
 		            		 resposta.setStatus(404);
 		            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 		            		 out.println(respostaJSON);
+		            		 System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 		            		break;
 		            	}
 		            			
@@ -332,6 +345,7 @@ public void run()
 										System.out.println(resposta.getToken());
 										JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 										out.println(respostaJSON);
+										System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 									} catch (SQLException e) {
 										e.printStackTrace();
 									}
@@ -342,6 +356,7 @@ public void run()
 			            		 resposta.setStatus(401);
 			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 			            		 out.println(respostaJSON);
+			            		 System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 			            		 break;
 			            	 }
 		            	  }
@@ -366,11 +381,13 @@ public void run()
 				            				resposta.setStatus(201);
 				            				JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 				            				out.println(respostaJSON);
+				            				System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 				            			}else{				            				
 				            				resposta.setMsg("Email nao encontrado");
 				            				resposta.setStatus(404);
 				            				JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 				            				out.println(respostaJSON);
+				            				System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 				            			}
 				            			BancoDados.desconectar();
 									} catch (SQLException e) {
@@ -387,7 +404,7 @@ public void run()
 		            	  EmailEnum resposta = delControll.validarEmailToDeleteEmpresa(email);
 		            	  System.out.println(resposta);
 		            	  if(resposta == EmailEnum.SUCESSO) {
-		            		  response.setMsg("Candidato deletado com sucesso!");
+		            		  response.setMsg("Empresa deletada com sucesso!");
 		            		  response.setStatus(201);
 		            	  }else if(resposta == EmailEnum.NAO_ENCONTRADO) {
 		            		  response.setStatus(404);
@@ -395,17 +412,18 @@ public void run()
 		            	  }
 		            	  JSONObject respostaJSON = jsonController.changeReponseToJson(response);
 		            	  out.println(respostaJSON);
+		            	  System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 		            	  break;
 		              }
 		              case "atualizarEmpresa":{
 		            	  	 Empresa emp = jsonController.changeEmpresaCompletoJSONWithoutChangeUUID(res);
-		            	  	 System.out.println("CANDIDATO ANTES DE EDITAR: "+ emp);
+		            	  	 System.out.println("EMPRESA ANTES DE EDITAR: "+ emp.getEmail());
 		            	  	 Resposta resposta = new Resposta();
 		            	  	 CadastroEnum response = cadastroController.validarEdicao(emp);
-			            	 resposta.setOperacao("atualizarCandidato");
+			            	 resposta.setOperacao("atualizarEmpresa");
 			            	 switch(response) {
 				            	 case SUCESSO:{
-				            		 System.out.println("Sucesso ao buscar candidato");
+				            		 System.out.println("Sucesso ao buscar empresa");
 				            		 try {
 					            			Connection conn = BancoDados.conectar();
 					            			new EmpresaDao(conn).atualizarEmpresa(emp);	
@@ -413,16 +431,27 @@ public void run()
 						            		resposta.setStatus(201);
 											JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 						            		out.println(respostaJSON);
+						            		System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 					            			BancoDados.desconectar();
 										} catch (SQLException e) {
 											e.printStackTrace();
 										}	 
 				            		 break;
 				            	 }case ERRO: {
+				            		 System.out.println("erro");
 				            		 resposta.setMsg("Dados inválidos");
 				            		 resposta.setStatus(404);
 				            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
 				            		 out.println(respostaJSON);
+				            		 System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
+				            		 break;
+				            	 }
+				            	 case CNPJ_CADASTRADO: {
+				            		 resposta.setMsg("CNPJ já cadastrado");
+				            		 resposta.setStatus(422);
+				            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+				            		 out.println(respostaJSON);
+				            		 System.out.println("REPOSTA AO CLIENTE: " + respostaJSON);
 				            		 break;
 				            	 }
 			              }
