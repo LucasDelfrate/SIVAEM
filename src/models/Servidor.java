@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
+import controllers.AplicationController;
 import controllers.CadastroController;
 import controllers.DeleteController;
 import controllers.EdicaoController;
@@ -456,9 +457,148 @@ public void run()
 				            	 }
 			              }
 		              }
+		              case "cadastrarCompetenciaExperiencia": {
+		            	     CompetenciaExperiencia comp = jsonController.changeCompetenciaCompletoJSON(res);
+		            	  	 Resposta resposta = new Resposta();
+			            	 resposta.setOperacao("cadastrarCompetenciaExperiencia");
+			            	 AplicationController app = new AplicationController();
+			            	 Boolean response = app.cadastrarCompetencia(comp);
+			            	 if(response == true) {
+			            		 resposta.setStatus(201);
+			            		 resposta.setMsg("Competencia cadastrada com sucesso!");
+			            	 }else {
+			            		 resposta.setStatus(422);
+			            		 resposta.setMsg("Erro");
+			            	 }
+		            		 break;
+		            	 }
+		              case "cadastrarVaga": {
+		            	  	 Resposta resposta = new Resposta();
+			            	 resposta.setOperacao("cadastrarVaga");
+			            	 AplicationController app = new AplicationController();
+			            	 Boolean response = true;
+			            	 if(response == true) {
+			            		 resposta.setStatus(201);
+			            		 resposta.setMsg("Vaga cadastrada com sucesso!");
+			            	 }else {
+			            		 resposta.setStatus(422);
+			            		 resposta.setMsg("Erro");
+			            	 }
+		            		 break;
+		            	 }
+		              case "atualizarCompetenciaExperiencia": {
+		            	  	 Resposta resposta = new Resposta();
+			            	 resposta.setOperacao("atualizarCompetenciaExperiencia");
+			            	 AplicationController app = new AplicationController();
+			            	 Boolean response = true;
+			            	 if(response == true) {
+			            		 resposta.setStatus(201);
+			            		 resposta.setMsg("Vaga atualizada com sucesso!");
+			            	 }else {
+			            		 resposta.setStatus(422);
+			            		 resposta.setMsg("Erro");
+			            	 }
+		            		 break;
+		            	 }
+		              case "atualizarVaga": {
+		            	  	 Resposta resposta = new Resposta();
+			            	 resposta.setOperacao("atualizarVaga");
+			            	 AplicationController app = new AplicationController();
+			            	 Boolean response = true;
+			            	 if(response == true) {
+			            		 resposta.setStatus(201);
+			            		 resposta.setMsg("Vaga atualizada com sucesso!");
+			            	 }else {
+			            		 resposta.setStatus(422);
+			            		 resposta.setMsg("Erro");
+			            	 }
+		            		 break;
+		            	 }
+		              case "apagarCompetenciaExperiencia": {
+		            	  	 Resposta resposta = new Resposta();
+			            	 resposta.setOperacao("apagarCompetenciaExperiencia");
+			            	 AplicationController app = new AplicationController();
+			            	 Boolean response = true;
+			            	 if(response == true) {
+			            		 resposta.setStatus(201);
+			            		 resposta.setMsg("Competencia apagada com sucesso!");
+			            	 }else {
+			            		 resposta.setStatus(422);
+			            		 resposta.setMsg("Erro");
+			            	 }
+		            		 break;
+		            	 }
+		              case "apagarVaga": {
+		            	  	 Resposta resposta = new Resposta();
+			            	 resposta.setOperacao("apagarVaga");
+			            	 AplicationController app = new AplicationController();
+			            	 Boolean response = true;
+			            	 if(response == true) {
+			            		 resposta.setStatus(201);
+			            		 resposta.setMsg("Vaga apagada com sucesso!");
+			            	 }else {
+			            		 resposta.setStatus(422);
+			            		 resposta.setMsg("Erro");
+			            	 }
+		            		 break;
+		            	 }
+		              case "visualizarCompetenciaExperiencia": {
+		            	  	 Resposta resposta = new Resposta();
+			            	 resposta.setOperacao("visualizarCompetenciaExperiencia");
+			            	 AplicationController app = new AplicationController();
+			            	 Boolean response = true;
+			            	 if(response == true) {
+			            		 resposta.setStatus(201);
+			            		 resposta.setMsg("não implementado ainda rs");
+			            	 }else {
+			            		 resposta.setStatus(422);
+			            		 resposta.setMsg("Erro");
+			            	 }
+		            		 break;
+		            	 }
+		              case "visualizarVaga": {
+		            	  	 Resposta resposta = new Resposta();
+			            	 resposta.setOperacao("visualizarVaga");
+			            	 AplicationController app = new AplicationController();
+			            	 Boolean response = true;
+			            	 if(response == true) {
+			            		 resposta.setStatus(201);
+			            		 resposta.setMsg("não implementado ainda rs");
+			            	 }else {
+			            		 resposta.setStatus(422);
+			            		 resposta.setMsg("Erro");
+			            	 }
+		            		 break;
+		            	 }
+		              case "listarVagas": {
+		            	  	 Resposta resposta = new Resposta();
+			            	 resposta.setOperacao("listarVagas");
+			            	 AplicationController app = new AplicationController();
+			            	 Boolean response = true;
+			            	 if(response == true) {
+			            		 resposta.setStatus(201);
+			            		 resposta.setMsg("não implementado ainda rs");
+			            	 }else {
+			            		 resposta.setStatus(422);
+			            		 resposta.setMsg("Erro");
+			            	 }
+		            		 break;
+		            	 }
+		              case "filtrarVagas": {
+		            	  	 Resposta resposta = new Resposta();
+			            	 resposta.setOperacao("filtrarVagas");
+			            	 AplicationController app = new AplicationController();
+			            	 Boolean response = true;
+			            	 if(response == true) {
+			            		 resposta.setStatus(201);
+			            		 resposta.setMsg("não implementado ainda rs");
+			            	 }else {
+			            		 resposta.setStatus(422);
+			            		 resposta.setMsg("Erro");
+			            	 }
+		            		 break;
+		            	 }
 		            }
-	            
-         
              } 
 	         out.close(); 
 	         in.close(); 

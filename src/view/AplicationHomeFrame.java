@@ -47,7 +47,8 @@ public class AplicationHomeFrame extends JFrame {
 	private PerfilFrame perfil;
 	private String email;
 	private Label bemVindo;
-	
+	private JButton botaoVagaCompetencia1;
+	private JButton botaoVagaCompetencia2;
 
 	public AplicationHomeFrame(Cliente cliente, String token, String email) {
 		this.candidato = new Candidato();
@@ -67,7 +68,7 @@ public class AplicationHomeFrame extends JFrame {
 		Label textBemVindo = new Label("Not Found");
 		textBemVindo.setFont(new Font("Dialog", Font.PLAIN, 25));
 		textBemVindo.setAlignment(Label.CENTER);
-		textBemVindo.setBounds(148, 84, 541, 63);
+		textBemVindo.setBounds(66, 87, 686, 63);
 		this.bemVindo = textBemVindo;
 		contentPane.add(textBemVindo);
 		
@@ -132,6 +133,19 @@ public class AplicationHomeFrame extends JFrame {
 		panel_1.add(lblNewLabel_1);
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setFont(new Font("Consolas", Font.PLAIN, 40));
+		
+		this.botaoVagaCompetencia1 = new JButton("Cadastrar competências");
+		this.botaoVagaCompetencia1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cadastrarVagaEmpresa();
+			}
+		});
+		this.botaoVagaCompetencia1.setBounds(66, 169, 689, 30);
+		contentPane.add(this.botaoVagaCompetencia1);
+		
+		JButton botaoVagaCompetencia2 = new JButton("Editar competências");
+		botaoVagaCompetencia2.setBounds(66, 210, 689, 30);
+		contentPane.add(botaoVagaCompetencia2);
 		
 	}
 	
@@ -256,5 +270,17 @@ public class AplicationHomeFrame extends JFrame {
 	public void sendoToPerfil(String msg) {
 		this.perfil.respostaTela(msg);
 	}
-
+	public void cadastrarVagaEmpresa() {
+		if(this.candidato.getEmail() == null) {
+			this.botaoVagaCompetencia1.setText("Cadastrar vaga");
+			this.botaoVagaCompetencia2.setText("Editar vaga");
+		}else {
+			CadastrarCompetenciasFrame comps = new CadastrarCompetenciasFrame(this, this.email, this.token);
+			comps.setVisible(true);
+		}
+	}
+	public void enviarDadosClienteCompetencia(JSONObject comp) {
+		//this.cliente.enviarMensagem(comp);
+		System.out.println(comp);
+	}
 }

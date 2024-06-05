@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.util.List;
 
 import org.json.simple.JSONArray;
 
@@ -14,6 +15,8 @@ import org.json.simple.JSONArray;
 
 
 import models.Candidato;
+import models.Competencia;
+import models.CompetenciaExperiencia;
 import models.Empresa;
 import models.Resposta;
 
@@ -54,6 +57,23 @@ public class JSONController {
 			return res;
 			
 	}
+	
+	public JSONObject changeReponseToJsonCompetencia(CompetenciaExperiencia competencia){
+		
+		JSONObject comp = new JSONObject();
+		comp.put("operacao", competencia.getOperacao());
+		if(competencia.getCompetencias() != null) {
+			comp.put("competencias", competencia.getCompetencias());			
+		}
+		if(competencia.getEmail() != null) {
+			comp.put("email", competencia.getEmail());			
+		}
+		if(competencia.getToken() != null) {
+			comp.put("token", competencia.getToken());			
+		}
+		return comp;
+		
+}
 	
 	
 	public Resposta changeResponseToObjectJSON(String resposta) {
@@ -288,6 +308,32 @@ public JSONObject changeToJSONEmpresa(Empresa empresa){
             return null;
         }
 		return empresa1;
+		
+	}
+	
+	public CompetenciaExperiencia changeCompetenciaCompletoJSON(String compExp) {
+		CompetenciaExperiencia compExp1 = new CompetenciaExperiencia();
+		UUIDController uuidController = new UUIDController();
+		JSONParser parser = new JSONParser();
+		try {
+			
+			JSONObject jsonObject = (JSONObject) parser.parse(compExp);
+			String stringUUID = uuidController.generateUUID();
+				
+			compExp1.setEmail((String) jsonObject.get("email") );
+			compExp1.setCompetencias((List) jsonObject.get("competencias"));
+			String oldUUID = (String) jsonObject.get("token");
+			
+			if(oldUUID == null) {
+				compExp1.setToken(stringUUID);			
+			}else {
+				compExp1.setToken(oldUUID);	
+			}		
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+		return compExp1;
 		
 	}
 	
