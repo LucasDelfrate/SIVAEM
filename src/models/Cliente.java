@@ -269,12 +269,14 @@ public class Cliente {
 		AplicationHomeFrame app = new AplicationHomeFrame(this, token, this.email);
 		this.app = app;
 		this.app.getByEmail(true, this.email);
+		this.app.setarIsCandidato(true);
 		this.app.setVisible(true);
 	}
 	public void abrirAppEmpresa(String token) {
 		AplicationHomeFrame app = new AplicationHomeFrame(this, token, this.email);
 		this.app = app;
 		this.app.getByEmail(false, this.email);
+		this.app.setarIsCandidato(false);
 		this.app.setVisible(true);
 	}
 	public void respostaTelaHome(String msg) {

@@ -27,6 +27,8 @@ import controllers.AplicationController;
 import controllers.JSONController;
 import models.Candidato;
 import models.Cliente;
+import models.Competencia;
+import models.CompetenciaExperiencia;
 import models.Empresa;
 
 import java.awt.Dimension;
@@ -49,6 +51,9 @@ public class AplicationHomeFrame extends JFrame {
 	private Label bemVindo;
 	private JButton botaoVagaCompetencia1;
 	private JButton botaoVagaCompetencia2;
+	private JButton btnExc;
+	private JButton btnVisu;
+	private Boolean isCandidato = false;
 
 	public AplicationHomeFrame(Cliente cliente, String token, String email) {
 		this.candidato = new Candidato();
@@ -143,10 +148,33 @@ public class AplicationHomeFrame extends JFrame {
 		this.botaoVagaCompetencia1.setBounds(66, 169, 689, 30);
 		contentPane.add(this.botaoVagaCompetencia1);
 		
-		JButton botaoVagaCompetencia2 = new JButton("Editar competências");
-		botaoVagaCompetencia2.setBounds(66, 210, 689, 30);
-		contentPane.add(botaoVagaCompetencia2);
+		this.botaoVagaCompetencia2 = new JButton("Editar competências");
+		botaoVagaCompetencia2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editarCompetencia();
+			}
+		});
+		this.botaoVagaCompetencia2.setBounds(66, 210, 689, 30);
+		contentPane.add(this.botaoVagaCompetencia2);
 		
+		this.btnExc = new JButton("Excluir competências");
+		this.btnExc.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				excluirCompetencia();
+			}
+		});
+		this.btnExc.setBounds(66, 250, 689, 30);
+		contentPane.add(this.btnExc);
+		
+		this.btnVisu = new JButton("Visualizar competências");
+		btnVisu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				visualizarCompetencia();
+			}
+		});
+		this.btnVisu.setBounds(68, 291, 689, 30);
+		contentPane.add(this.btnVisu);
+		this.setarLabel();
 	}
 	
 	public void getByEmail(Boolean isCandidato, String email){
@@ -271,16 +299,72 @@ public class AplicationHomeFrame extends JFrame {
 		this.perfil.respostaTela(msg);
 	}
 	public void cadastrarVagaEmpresa() {
-		if(this.candidato.getEmail() == null) {
-			this.botaoVagaCompetencia1.setText("Cadastrar vaga");
-			this.botaoVagaCompetencia2.setText("Editar vaga");
+		if(!this.isCandidato) {
+			CadastrarVaga cadastVaga = new CadastrarVaga(this);
+			cadastVaga.setVisible(true);
+			//Vaga vaga1 = new Vaga();
+			
 		}else {
-			CadastrarCompetenciasFrame comps = new CadastrarCompetenciasFrame(this, this.email, this.token);
+			CadastrarCompetenciasFrame comps = new CadastrarCompetenciasFrame(this, this.email, this.token, false);
 			comps.setVisible(true);
 		}
 	}
 	public void enviarDadosClienteCompetencia(JSONObject comp) {
-		//this.cliente.enviarMensagem(comp);
+		this.cliente.enviarMensagem(comp);
 		System.out.println(comp);
+	}
+	public void setarLabel() {
+		if(!this.isCandidato) {
+			this.botaoVagaCompetencia1.setText("Cadastrar vaga");
+			this.botaoVagaCompetencia2.setText("Editar vaga");
+			this.btnVisu.setText("Visualizar vagas");
+			this.btnExc.setText("Excluir vagas");
+		}else {
+			this.botaoVagaCompetencia1.setText("Cadastrar competencia");
+			this.botaoVagaCompetencia2.setText("Editar competências");
+			this.btnVisu.setText("Visualizar competências");
+			this.btnExc.setText("Excluir competências");
+		}
+	}
+	public void editarCompetencia() {
+		if(this.candidato.getEmail() == null) {
+			
+		}else {
+			CadastrarCompetenciasFrame comps = new CadastrarCompetenciasFrame(this, this.email, this.token, true);
+			comps.setVisible(true);
+		}
+	}
+	public void excluirCompetencia() {
+		if(this.isCandidato) {
+			CompetenciaExperiencia compExp = new CompetenciaExperiencia();
+			Competencia comp = new Competencia();
+			compExp.setToken(this.token);
+			compExp.setEmail(this.email);
+			compExp.setOperacao("apagarCompetenciaExperiencia");
+			compExp.adicionarCompetencia(comp);
+			JSONController json = new JSONController();
+			JSONObject obj = json.changeReponseToJsonCompetencia(compExp);
+			enviarDadosClienteCompetencia(obj);			
+		}else {
+			
+		}
+		
+	}
+	public void visualizarCompetencia() {
+		if(this.isCandidato) {
+			CompetenciaExperiencia compExp = new CompetenciaExperiencia();
+			compExp.setToken(this.token);
+			compExp.setEmail(this.email);
+			compExp.setOperacao("vizualizarCompetenciaExperiencia");
+			JSONController json = new JSONController();
+			JSONObject obj = json.changeReponseToJsonCompetencia(compExp);
+			enviarDadosClienteCompetencia(obj);			
+		}else {
+			
+		}
+		
+	}
+	public void setarIsCandidato(Boolean is) {
+		this.isCandidato = is;
 	}
 }

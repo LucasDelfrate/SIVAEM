@@ -26,13 +26,13 @@ public class CadastrarCompetenciasFrame extends JFrame {
 	private AplicationHomeFrame app;
 	private String email;
 	private String token;
+	private JButton btn;
 
-	public CadastrarCompetenciasFrame(AplicationHomeFrame app, String email, String token) {
+	public CadastrarCompetenciasFrame(AplicationHomeFrame app, String email, String token, Boolean isEdicao) {
 		this.compExp = new CompetenciaExperiencia();
 		this.email = email;
 		this.app = app;
 		this.token = token;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 190);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -56,21 +56,21 @@ public class CadastrarCompetenciasFrame extends JFrame {
 		JList list = new JList();
 		list.setBounds(140, 89, 101, 0);
 		contentPane.add(list);
-		
-		JButton btnNewButton_1 = new JButton("Enviar competências");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		this.btn = new JButton("Enviar competências");
+		this.btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				enviarCompetencias();
+				enviarCompetencias(isEdicao);
 			}
 		});
-		btnNewButton_1.setBounds(80, 104, 268, 23);
-		contentPane.add(btnNewButton_1);
+		this.btn.setBounds(80, 104, 268, 23);
+		contentPane.add(this.btn);
 		
 		JLabel num = new JLabel("New label");
 		num.setBounds(96, 64, 244, 14);
 		contentPane.add(num);
 		int num1 = this.compExp.competencias.size();
 		num.setText("Competências adicionadas "+ num1);
+		this.verificarEdicao(isEdicao, btnNewButton);
 	}
 	
 	public void receberCompetencia(Competencia comp){
@@ -83,13 +83,30 @@ public class CadastrarCompetenciasFrame extends JFrame {
 		CadastrarCompetencia comp = new CadastrarCompetencia(this);
 		comp.setVisible(true);
 	}
-	public void enviarCompetencias() {
-		this.compExp = new CompetenciaExperiencia();
-		this.compExp.setOperacao("cadastrarCompetenciaExperiencia");
-		this.compExp.setEmail(this.email);
-		this.compExp.setToken(this.token);
-		JSONController json = new JSONController();
-		JSONObject obj = json.changeReponseToJsonCompetencia(this.compExp);
-		this.app.enviarDadosClienteCompetencia(obj);
+	public void enviarCompetencias(Boolean isEdicao) {
+		if(!isEdicao) {
+			this.compExp = new CompetenciaExperiencia();
+			this.compExp.setOperacao("cadastrarCompetenciaExperiencia");
+			this.compExp.setEmail(this.email);
+			this.compExp.setToken(this.token);
+			JSONController json = new JSONController();
+			JSONObject obj = json.changeReponseToJsonCompetencia(this.compExp);
+			this.app.enviarDadosClienteCompetencia(obj);			
+		}else {
+			this.compExp = new CompetenciaExperiencia();
+			this.compExp.setOperacao("editarCompetenciaExperiencia");
+			this.compExp.setEmail(this.email);
+			this.compExp.setToken(this.token);
+			JSONController json = new JSONController();
+			JSONObject obj = json.changeReponseToJsonCompetencia(this.compExp);
+			this.app.enviarDadosClienteCompetencia(obj);
+		}
+	}
+	public void verificarEdicao(Boolean isEdicao, JButton btn) {
+		if(isEdicao) {
+			this.btn.setText("Editar competências");
+		}else {
+			this.btn.setText("Cadastrar competências");
+		}
 	}
 }
