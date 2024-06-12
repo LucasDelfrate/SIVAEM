@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import java.awt.Color;
@@ -30,6 +31,7 @@ import models.Cliente;
 import models.Competencia;
 import models.CompetenciaExperiencia;
 import models.Empresa;
+import models.Vaga;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -50,7 +52,6 @@ public class AplicationHomeFrame extends JFrame {
 	private String email;
 	private Label bemVindo;
 	private JButton botaoVagaCompetencia1;
-	private JButton botaoVagaCompetencia2;
 	private JButton btnExc;
 	private JButton btnVisu;
 	private Boolean isCandidato = false;
@@ -148,22 +149,13 @@ public class AplicationHomeFrame extends JFrame {
 		this.botaoVagaCompetencia1.setBounds(66, 169, 689, 30);
 		contentPane.add(this.botaoVagaCompetencia1);
 		
-		this.botaoVagaCompetencia2 = new JButton("Editar competências");
-		botaoVagaCompetencia2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				editarCompetencia();
-			}
-		});
-		this.botaoVagaCompetencia2.setBounds(66, 210, 689, 30);
-		contentPane.add(this.botaoVagaCompetencia2);
-		
 		this.btnExc = new JButton("Excluir competências");
 		this.btnExc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				excluirCompetencia();
 			}
 		});
-		this.btnExc.setBounds(66, 250, 689, 30);
+		this.btnExc.setBounds(66, 292, 689, 30);
 		contentPane.add(this.btnExc);
 		
 		this.btnVisu = new JButton("Visualizar competências");
@@ -172,9 +164,18 @@ public class AplicationHomeFrame extends JFrame {
 				visualizarCompetencia();
 			}
 		});
-		this.btnVisu.setBounds(68, 291, 689, 30);
+		this.btnVisu.setBounds(66, 210, 689, 30);
 		contentPane.add(this.btnVisu);
-		this.setarLabel();
+		
+		JButton btnVisualizarPorId = new JButton("Visualizar por ID");
+		btnVisualizarPorId.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				visualizarUmaVaga();
+			}
+		});
+		btnVisualizarPorId.setBounds(66, 251, 689, 30);
+		contentPane.add(btnVisualizarPorId);
+
 	}
 	
 	public void getByEmail(Boolean isCandidato, String email){
@@ -300,7 +301,7 @@ public class AplicationHomeFrame extends JFrame {
 	}
 	public void cadastrarVagaEmpresa() {
 		if(!this.isCandidato) {
-			CadastrarVaga cadastVaga = new CadastrarVaga(this);
+			CadastrarVaga cadastVaga = new CadastrarVaga(this, this.email, this.token);
 			cadastVaga.setVisible(true);
 			//Vaga vaga1 = new Vaga();
 			
@@ -309,29 +310,19 @@ public class AplicationHomeFrame extends JFrame {
 			comps.setVisible(true);
 		}
 	}
-	public void enviarDadosClienteCompetencia(JSONObject comp) {
-		this.cliente.enviarMensagem(comp);
-		System.out.println(comp);
+	public void enviarDadosClienteCompetencia(JSONObject obj) {
+		this.cliente.enviarMensagem(obj);
 	}
+	
 	public void setarLabel() {
-		if(!this.isCandidato) {
-			this.botaoVagaCompetencia1.setText("Cadastrar vaga");
-			this.botaoVagaCompetencia2.setText("Editar vaga");
-			this.btnVisu.setText("Visualizar vagas");
-			this.btnExc.setText("Excluir vagas");
-		}else {
-			this.botaoVagaCompetencia1.setText("Cadastrar competencia");
-			this.botaoVagaCompetencia2.setText("Editar competências");
+		if(this.isCandidato) {
+			this.botaoVagaCompetencia1.setText("Cadastrar competências");
 			this.btnVisu.setText("Visualizar competências");
 			this.btnExc.setText("Excluir competências");
-		}
-	}
-	public void editarCompetencia() {
-		if(this.candidato.getEmail() == null) {
-			
 		}else {
-			CadastrarCompetenciasFrame comps = new CadastrarCompetenciasFrame(this, this.email, this.token, true);
-			comps.setVisible(true);
+			this.botaoVagaCompetencia1.setText("Cadastrar vaga");
+			this.btnVisu.setText("Visualizar vagas");
+			this.btnExc.setText("Excluir vagas");
 		}
 	}
 	public void excluirCompetencia() {
@@ -341,7 +332,7 @@ public class AplicationHomeFrame extends JFrame {
 			compExp.setToken(this.token);
 			compExp.setEmail(this.email);
 			compExp.setOperacao("apagarCompetenciaExperiencia");
-			compExp.adicionarCompetencia(comp);
+
 			JSONController json = new JSONController();
 			JSONObject obj = json.changeReponseToJsonCompetencia(compExp);
 			enviarDadosClienteCompetencia(obj);			
@@ -360,11 +351,24 @@ public class AplicationHomeFrame extends JFrame {
 			JSONObject obj = json.changeReponseToJsonCompetencia(compExp);
 			enviarDadosClienteCompetencia(obj);			
 		}else {
-			
+			Vaga vaga = new Vaga();
+			vaga.setToken(this.token);
+			vaga.setEmail(this.email);
+			vaga.setOperacao("listarVagas");
+			JSONController json = new JSONController();
+			JSONObject obj = json.changeReponseToJsonVagaVisualizar(vaga);
+			enviarDadosClienteCompetencia(obj);
 		}
 		
 	}
 	public void setarIsCandidato(Boolean is) {
+		System.out.println("É CANDIDATO? "+is);
 		this.isCandidato = is;
+		this.setarLabel();
 	}
+	public void visualizarUmaVaga() {
+		VisualizarUmaVaga visu = new VisualizarUmaVaga(this, this.cliente, this.email, this.token);
+		visu.setVisible(true);
+	}
+
 }

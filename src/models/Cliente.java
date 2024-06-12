@@ -1,18 +1,21 @@
 package models;
 import java.io.*;
 import java.net.*;
+import java.util.List;
 
 import org.json.simple.JSONObject;
 
 import controllers.JSONController;
 import enums.StatusEnum;
 import view.AplicationHomeFrame;
+import view.EditarCompetencias;
 import view.HomeFrame;
 import view.LoginCandidatoFrame;
 import view.LoginEmpresaFrame;
 import view.PerfilFrame;
 import view.RegistroCandidatoFrame;
 import view.RegistroEmpresaFrame;
+import view.VisualizarVagas;
 
 public class Cliente {
 	
@@ -212,6 +215,78 @@ public class Cliente {
 	                        	}
 	                        	break;
 	                        }
+	                        case "cadastrarCompetenciaExperiencia":{
+	                        	String msg;
+	                        	if(status == 201) {	                        		
+                        			msg = "Cadastro de competências realizado com sucesso!";
+                        			respostaTelaEdit(msg);
+	                        	}
+	                        	else if(status == 404){
+	                        		msg = "Erro ao cadastrar";
+	                        		respostaTelaEdit(msg);
+	                        	}
+	                        	break;
+	                        }
+	                        case "visualizarCompetenciaExperiencia":{
+	                        	String msg;
+	                        	if(status == 201) {	         
+	                        		
+                        			abrirEditComp(resposta.getCompetencias(), token);
+	                        	}
+	                        	else if(status == 404){
+	                        		msg = "Erro ao buscar";
+	                        		respostaTelaEdit(msg);
+	                        	}
+	                        	break;
+	                        }
+	                        case "atualizarCompetenciaExperiencia":{
+	                        	String msg;
+	                        	if(status == 201) {	                        		
+                        			msg = "Atualização realizada com sucesso!";
+                        			respostaTelaEdit(msg);
+	                        	}
+	                        	else if(status == 404){
+	                        		msg = "Erro ao cadastrar";
+	                        		respostaTelaEdit(msg);
+	                        	}
+	                        	break;
+	                        }
+	                        case "apagarCompetenciaExperiencia":{
+	                        	String msg;
+	                        	if(status == 201) {	                        		
+                        			msg = "Remoção realizada com sucesso!";
+                        			respostaTelaEdit(msg);
+                        			attLista();
+	                        	}
+	                        	else if(status == 404){
+	                        		msg = "Erro ao remover competencia";
+	                        		respostaTelaEdit(msg);
+	                        	}
+	                        	break;
+	                        }
+	                        case "cadastrarVaga":{
+	                        	String msg;
+	                        	if(status == 201) {	                        		
+                        			msg = "Cadastro de vaga realizado com sucesso!";
+                        			respostaTelaEdit(msg);
+	                        	}
+	                        	else if(status == 404){
+	                        		msg = "Erro ao cadastrar";
+	                        		respostaTelaEdit(msg);
+	                        	}
+	                        	break;
+	                        }
+	                        case "listarVagas":{
+	                        	String msg;
+	                        	if(status == 201) {	                        		
+                        			abrirVisuVagas(resposta.getVagas());
+	                        	}
+	                        	else if(status == 404){
+	                        		msg = "Erro ao listar";
+	                        		respostaTelaEdit(msg);
+	                        	}
+	                        	break;
+	                        }
                         }
                       }
 	                } catch (IOException e) {
@@ -297,5 +372,18 @@ public class Cliente {
 	}
 	public void respostaTelaLoginEmpresa(String msg) {
 		this.loginEmpresaFrame.mostrarRespota(msg);
+	}
+	public void abrirEditComp(List<Competencia> competencias, String token) {
+		EditarCompetencias edit = new EditarCompetencias(competencias, this , token, email);
+		edit.setVisible(true);
+	}
+	public void attLista() {
+		this.app.visualizarCompetencia();
+	}
+	public void abrirVisuVagas(List<Vaga> vagas) {
+		System.out.println(vagas.get(0).getNome());
+		VisualizarVagas visuVaga = new VisualizarVagas();
+		visuVaga.setarCompetencias(vagas);
+		visuVaga.setVisible(true);
 	}
 }

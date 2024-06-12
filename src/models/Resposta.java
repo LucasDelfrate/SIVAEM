@@ -1,5 +1,7 @@
 package models;
 
+import java.util.List;
+
 public class Resposta {
 	
 	private String operacao;
@@ -13,7 +15,27 @@ public class Resposta {
 	private String descricao;
 	private String ramo;
 	private String razaoSocial;
+	private List<Vaga> vagas;
+	private List<Competencia> competencias;
 	
+	
+	
+	public List<Vaga> getVagas() {
+		return vagas;
+	}
+
+	public void setVagas(List<Vaga> vagas) {
+		this.vagas = vagas;
+	}
+
+	public List<Competencia> getCompetencias() {
+		return competencias;
+	}
+
+	public void setCompetencias(List<Competencia> competencias) {
+		this.competencias = competencias;
+	}
+
 	public Resposta() {
 		this.status = 0;
 	}

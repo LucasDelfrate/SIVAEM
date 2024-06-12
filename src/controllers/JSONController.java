@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -19,6 +20,8 @@ import models.Competencia;
 import models.CompetenciaExperiencia;
 import models.Empresa;
 import models.Resposta;
+import models.Vaga;
+import models.Vagas;
 
 public class JSONController {
 	
@@ -58,21 +61,165 @@ public class JSONController {
 			
 	}
 	
-	public JSONObject changeReponseToJsonCompetencia(CompetenciaExperiencia competencia){
+	public JSONObject changeVagasToJson(Vagas vagas) {
+		JSONObject res = new JSONObject();
+		res.put("operacao", vagas.getOperacao());
+		res.put("status", vagas.getStatus());
+		
+		if(vagas.getVagas() != null) {
+			vagas.getVagas().forEach(vaga -> {
+				JSONArray vagasArray = new JSONArray();
+				for (Vaga c : vagas.getVagas()) {
+	                JSONObject competenciaJson = new JSONObject();
+	                competenciaJson.put("nome", c.getNome());
+	                competenciaJson.put("idVaga", c.getId());
+	                vagasArray.add(competenciaJson);
+	            }
+	            
+	            res.put("vagas", vagasArray);
+			});
+		
+        }
+		return res;
+	}
+	
+	public JSONObject changeReponseToJsonCompetencia(CompetenciaExperiencia compExp){
 		
 		JSONObject comp = new JSONObject();
-		comp.put("operacao", competencia.getOperacao());
-		if(competencia.getCompetencias() != null) {
-			comp.put("competencias", competencia.getCompetencias());			
+		comp.put("operacao", compExp.getOperacao());
+		
+		compExp.getCompetencias().forEach(competencia -> {
+		});
+		
+		if (compExp.getCompetencias().size()!= 0) {
+            JSONArray competenciasArray = new JSONArray();
+            
+            for (Competencia c : compExp.getCompetencias()) {
+                JSONObject competenciaJson = new JSONObject();
+                competenciaJson.put("competencia", c.getDescricao());
+                competenciaJson.put("experiencia", c.getExperiencia());
+                competenciasArray.add(competenciaJson);
+            }
+            
+            comp.put("competenciaExperiencia", competenciasArray);
+        }
+		if(compExp.getEmail() != null) {
+			comp.put("email", compExp.getEmail());			
 		}
-		if(competencia.getEmail() != null) {
-			comp.put("email", competencia.getEmail());			
-		}
-		if(competencia.getToken() != null) {
-			comp.put("token", competencia.getToken());			
+		if(compExp.getToken() != null) {
+			comp.put("token", compExp.getToken());			
 		}
 		return comp;
 		
+}
+	
+public JSONObject changeReponseToJsonCompetenciaWithStatus(CompetenciaExperiencia compExp){
+		
+		JSONObject comp = new JSONObject();
+		comp.put("operacao", compExp.getOperacao());
+		
+		compExp.getCompetencias().forEach(competencia -> {
+		});
+		
+		if (compExp.getCompetencias() != null) {
+            JSONArray competenciasArray = new JSONArray();
+            
+            for (Competencia c : compExp.getCompetencias()) {
+                JSONObject competenciaJson = new JSONObject();
+                competenciaJson.put("competencia", c.getDescricao());
+                competenciaJson.put("experiencia", c.getExperiencia());
+                competenciasArray.add(competenciaJson);
+            }
+            
+            comp.put("competenciaExperiencia", competenciasArray);
+        }
+		if(compExp.getEmail() != null) {
+			comp.put("email", compExp.getEmail());			
+		}
+		if(compExp.getToken() != null) {
+			comp.put("token", compExp.getToken());			
+		}
+		comp.put("status", 201);
+		return comp;
+		
+}
+
+public JSONObject changeReponseToJsonVaga(Vaga vaga){
+	
+	JSONObject vaga1 = new JSONObject();
+	vaga1.put("operacao", vaga.getOperacao());
+	
+	vaga.getCompetencias().forEach(competencia -> {
+	});
+	
+	if (vaga.getCompetencias().size()!= 0) {
+        JSONArray competenciasArray = new JSONArray();
+        
+        for (Competencia c : vaga.getCompetencias()) {
+            JSONObject competenciaJson = new JSONObject();
+            competenciaJson.put("competencia", c.getDescricao());
+            competenciasArray.add(competenciaJson);
+        }
+        
+        vaga1.put("competencias", competenciasArray);
+    }
+	if(vaga.getEmail() != null) {
+		vaga1.put("email", vaga.getEmail());			
+	}
+	if(vaga.getToken() != null) {
+		vaga1.put("token", vaga.getToken());			
+	}
+	if(vaga.getEstado() != null) {
+		vaga1.put("estado", vaga.getEstado());			
+	}
+	if(vaga.getFaixaSalarial() != null) {
+		vaga1.put("faixaSalarial", vaga.getFaixaSalarial());			
+	}
+	if(vaga.getNome() != null) {
+		vaga1.put("nome", vaga.getNome());			
+	}
+	if(vaga.getDescricao() != null) {
+		vaga1.put("descricao", vaga.getDescricao());			
+	}
+	return vaga1;
+	
+}
+
+public JSONObject changeReponseToJsonVagaListar(Vaga vaga){
+	
+	JSONObject vaga1 = new JSONObject();
+	vaga1.put("operacao", vaga.getOperacao());
+	
+	
+	if(vaga.getEmail() != null) {
+		vaga1.put("email", vaga.getEmail());			
+	}
+	if(vaga.getToken() != null) {
+		vaga1.put("token", vaga.getToken());			
+	}
+	return vaga1;
+	
+}
+
+public JSONObject changeReponseToJsonVagaVisualizar(Vaga vaga){
+	
+	JSONObject vaga1 = new JSONObject();
+	vaga1.put("operacao", vaga.getOperacao());
+	
+	
+	if(vaga.getEmail() != null) {
+		vaga1.put("email", vaga.getEmail());			
+	}
+	if(vaga.getToken() != null) {
+		vaga1.put("token", vaga.getToken());			
+	}
+	
+	Long idLong = Long.valueOf(vaga.getId());
+	if(idLong != null) {
+		vaga1.put("idVaga", idLong);			
+	}			
+	return vaga1;
+	
 }
 	
 	
@@ -132,6 +279,46 @@ public class JSONController {
 			String cnpj  = (String) jsonObject.get("cnpj");
 			resposta1.setCnpj(cnpj);
 			
+			JSONArray competenciasArray = (JSONArray) jsonObject.get("competenciaExperiencia");
+			if(competenciasArray != null) {
+				List<Competencia> competencias = new ArrayList<>();
+				
+				for (Object obj : competenciasArray) {
+					JSONObject competenciaJson = (JSONObject) obj;
+					
+					String experiencia = (String) competenciaJson.get("experiencia");
+					String competencia = (String) competenciaJson.get("competencia");
+					
+					Competencia comp = new Competencia();
+					comp.setDescricao(competencia);;
+					comp.setExperiencia(experiencia);
+					
+					competencias.add(comp);
+					resposta1.setCompetencias(competencias);
+				}
+				
+			}
+			
+			JSONArray vagasArray = (JSONArray) jsonObject.get("vagas");
+			if(vagasArray != null) {
+				List<Vaga> vagas = new ArrayList<>();
+				
+				for (Object obj : vagasArray) {
+					JSONObject vagaObj = (JSONObject) obj;
+					
+					Long idVaga = (Long) vagaObj.get("idVaga");
+					String nome = (String) vagaObj.get("nome");
+					
+					Vaga vaga = new Vaga();
+					vaga.setId(idVaga.intValue());;
+					vaga.setNome(nome);
+					
+					vagas.add(vaga);
+					resposta1.setVagas(vagas);;
+				}
+				
+			}
+				
 			return resposta1;
 			
         } catch (ParseException e) {
@@ -312,30 +499,86 @@ public JSONObject changeToJSONEmpresa(Empresa empresa){
 	}
 	
 	public CompetenciaExperiencia changeCompetenciaCompletoJSON(String compExp) {
+		System.out.println("entrou no change competencia ");
 		CompetenciaExperiencia compExp1 = new CompetenciaExperiencia();
-		UUIDController uuidController = new UUIDController();
 		JSONParser parser = new JSONParser();
 		try {
 			
 			JSONObject jsonObject = (JSONObject) parser.parse(compExp);
-			String stringUUID = uuidController.generateUUID();
 				
 			compExp1.setEmail((String) jsonObject.get("email") );
-			compExp1.setCompetencias((List) jsonObject.get("competencias"));
 			String oldUUID = (String) jsonObject.get("token");
-			
-			if(oldUUID == null) {
-				compExp1.setToken(stringUUID);			
-			}else {
-				compExp1.setToken(oldUUID);	
-			}		
+			 JSONArray competenciasArray = (JSONArray) jsonObject.get("competenciaExperiencia");
+			 if(competenciasArray != null) {
+				 List<Competencia> competencias = new ArrayList<>();
+				 for (Object obj : competenciasArray) {
+					 JSONObject competenciaJson = (JSONObject) obj;
+					 String experiencia = (String) competenciaJson.get("experiencia");
+					 String descricao = (String) competenciaJson.get("competencia");
+					 Competencia compAux = new Competencia();
+					 compAux.setDescricao(descricao);
+					 compAux.setExperiencia(experiencia);
+					 competencias.add(compAux);
+				 }
+				 compExp1.setCompetencias(competencias);
+				 
+			 }
+				
         } catch (ParseException e) {
             e.printStackTrace();
+            System.out.println("erro ao transformar pra objeto");
             return null;
         }
 		return compExp1;
 		
 	}
+	
+	public Vaga changeVagaCompletoJSON(String compExp) {
+		Vaga vaga = new Vaga();
+		JSONParser parser = new JSONParser();
+		try {
+			
+			JSONObject jsonObject = (JSONObject) parser.parse(compExp);
+				
+			vaga.setEmail((String) jsonObject.get("email") );
+			vaga.setEstado((String) jsonObject.get("estado") );
+			vaga.setFaixaSalarial((String) jsonObject.get("faixaSalarial") );
+			vaga.setNome((String) jsonObject.get("nome") );
+			vaga.setDescricao((String) jsonObject.get("descricao") );
+			String oldUUID = (String) jsonObject.get("token");
+			 JSONArray competenciasArray = (JSONArray) jsonObject.get("competencias");
+			 if(competenciasArray != null) {
+				 List<Competencia> competencias = new ArrayList<>();
+				 for (Object obj : competenciasArray) {
+					 JSONObject competenciaJson = (JSONObject) obj;
+					 String descricao = (String) competenciaJson.get("competencia");
+					 Competencia compAux = new Competencia();
+					 compAux.setDescricao(descricao);
+					 competencias.add(compAux);
+				 }
+				 vaga.setCompetencias(competencias);
+				 
+			 }
+				
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("erro ao transformar pra objeto");
+            return null;
+        }
+		return vaga;
+		
+	}
+	
+	public CompetenciaExperiencia changeCompetenciaCompletoJSONGetEmail(String compExp) throws ParseException {
+		System.out.println("entrou no change competencia ");
+		CompetenciaExperiencia compExp1 = new CompetenciaExperiencia();
+		JSONParser parser = new JSONParser();
+		JSONObject jsonObject = (JSONObject) parser.parse(compExp);
+		compExp1.setEmail((String) jsonObject.get("email") );
+		return compExp1;
+		
+	}
+	
 	
 	public Empresa changeEmpresaLoginToJSON(String emp) {
 		Empresa empresa = new Empresa();

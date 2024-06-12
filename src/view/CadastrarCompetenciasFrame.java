@@ -15,6 +15,8 @@ import models.CompetenciaExperiencia;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
 
@@ -27,8 +29,13 @@ public class CadastrarCompetenciasFrame extends JFrame {
 	private String email;
 	private String token;
 	private JButton btn;
+	private List<Competencia> competencias;
+	private Integer numComp;
+	private JLabel label;
 
 	public CadastrarCompetenciasFrame(AplicationHomeFrame app, String email, String token, Boolean isEdicao) {
+		this.numComp = 0;
+		this.competencias = new ArrayList();
 		this.compExp = new CompetenciaExperiencia();
 		this.email = email;
 		this.app = app;
@@ -65,18 +72,18 @@ public class CadastrarCompetenciasFrame extends JFrame {
 		this.btn.setBounds(80, 104, 268, 23);
 		contentPane.add(this.btn);
 		
-		JLabel num = new JLabel("New label");
-		num.setBounds(96, 64, 244, 14);
-		contentPane.add(num);
-		int num1 = this.compExp.competencias.size();
-		num.setText("Competências adicionadas "+ num1);
+		label = new JLabel("New label");
+		label.setBounds(96, 64, 244, 14);
+		label.setText("Competências adicionadas "+ this.numComp);
+		contentPane.add(label);
 		this.verificarEdicao(isEdicao, btnNewButton);
 	}
 	
 	public void receberCompetencia(Competencia comp){
-		System.out.println("receber comp: " + comp.getDescricao());
-		this.compExp.adicionarCompetencia(comp);
-		//preciso ver porque meu array ta indo vazio
+		this.competencias.add(comp);
+		this.numComp = this.competencias.size();
+		System.out.println("SIZE: "+ this.competencias.size());
+		label.setText("Competências adicionadas "+ this.numComp);
 	}
 	
 	public void abrirCadastroCompetencia(){
@@ -84,23 +91,15 @@ public class CadastrarCompetenciasFrame extends JFrame {
 		comp.setVisible(true);
 	}
 	public void enviarCompetencias(Boolean isEdicao) {
-		if(!isEdicao) {
-			this.compExp = new CompetenciaExperiencia();
+	
 			this.compExp.setOperacao("cadastrarCompetenciaExperiencia");
 			this.compExp.setEmail(this.email);
 			this.compExp.setToken(this.token);
+			this.compExp.setCompetencias(this.competencias);
 			JSONController json = new JSONController();
 			JSONObject obj = json.changeReponseToJsonCompetencia(this.compExp);
 			this.app.enviarDadosClienteCompetencia(obj);			
-		}else {
-			this.compExp = new CompetenciaExperiencia();
-			this.compExp.setOperacao("editarCompetenciaExperiencia");
-			this.compExp.setEmail(this.email);
-			this.compExp.setToken(this.token);
-			JSONController json = new JSONController();
-			JSONObject obj = json.changeReponseToJsonCompetencia(this.compExp);
-			this.app.enviarDadosClienteCompetencia(obj);
-		}
+
 	}
 	public void verificarEdicao(Boolean isEdicao, JButton btn) {
 		if(isEdicao) {

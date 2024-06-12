@@ -2,8 +2,10 @@ package models;
 import java.net.*;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 import controllers.AplicationController;
 import controllers.CadastroController;
@@ -13,7 +15,9 @@ import controllers.JSONController;
 import controllers.LoginController;
 import controllers.LoginEmpresaController;
 import dao.BancoDados;
+import dao.CompetenciaDao;
 import dao.EmpresaDao;
+import dao.VagaDao;
 import dao.candidatoDAO;
 import enums.CadastroEnum;
 import enums.EdicaoEnum;
@@ -458,46 +462,53 @@ public void run()
 			              }
 		              }
 		              case "cadastrarCompetenciaExperiencia": {
-		            	     CompetenciaExperiencia comp = jsonController.changeCompetenciaCompletoJSON(res);
+		            	     AplicationController app = new AplicationController();
+		            	     CompetenciaExperiencia compExp = jsonController.changeCompetenciaCompletoJSON(res);
 		            	  	 Resposta resposta = new Resposta();
 			            	 resposta.setOperacao("cadastrarCompetenciaExperiencia");
-			            	 AplicationController app = new AplicationController();
-			            	 Boolean response = app.cadastrarCompetencia(comp);
+			            	 Boolean response = app.loopPraCadastrarCompetencia(compExp);
 			            	 if(response == true) {
 			            		 resposta.setStatus(201);
 			            		 resposta.setMsg("Competencia cadastrada com sucesso!");
+			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+			            		 out.println(respostaJSON);
 			            	 }else {
 			            		 resposta.setStatus(422);
 			            		 resposta.setMsg("Erro");
+			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+			            		 out.println(respostaJSON);
 			            	 }
 		            		 break;
 		            	 }
 		              case "cadastrarVaga": {
+		            	     AplicationController app = new AplicationController();
+		            	     Vaga vaga = jsonController.changeVagaCompletoJSON(res);
 		            	  	 Resposta resposta = new Resposta();
 			            	 resposta.setOperacao("cadastrarVaga");
-			            	 AplicationController app = new AplicationController();
-			            	 Boolean response = true;
+			            	 Boolean response = app.loopPraCadastrarVaga(vaga);
 			            	 if(response == true) {
 			            		 resposta.setStatus(201);
 			            		 resposta.setMsg("Vaga cadastrada com sucesso!");
+			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+			            		 out.println(respostaJSON);
 			            	 }else {
 			            		 resposta.setStatus(422);
 			            		 resposta.setMsg("Erro");
+			            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+			            		 out.println(respostaJSON);
 			            	 }
 		            		 break;
 		            	 }
 		              case "atualizarCompetenciaExperiencia": {
+		            	     AplicationController app = new AplicationController();
+		            	     CompetenciaExperiencia compExp = jsonController.changeCompetenciaCompletoJSON(res);
 		            	  	 Resposta resposta = new Resposta();
 			            	 resposta.setOperacao("atualizarCompetenciaExperiencia");
-			            	 AplicationController app = new AplicationController();
-			            	 Boolean response = true;
-			            	 if(response == true) {
-			            		 resposta.setStatus(201);
-			            		 resposta.setMsg("Vaga atualizada com sucesso!");
-			            	 }else {
-			            		 resposta.setStatus(422);
-			            		 resposta.setMsg("Erro");
-			            	 }
+			            	 app.loopPraAtualizarCompetencia(compExp);
+			            	 resposta.setStatus(201);
+			            	 resposta.setMsg("Competencia atualizada com sucesso!");
+			            	 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+		            		 out.println(respostaJSON);
 		            		 break;
 		            	 }
 		              case "atualizarVaga": {
@@ -517,15 +528,13 @@ public void run()
 		              case "apagarCompetenciaExperiencia": {
 		            	  	 Resposta resposta = new Resposta();
 			            	 resposta.setOperacao("apagarCompetenciaExperiencia");
+			            	 CompetenciaExperiencia compExp = jsonController.changeCompetenciaCompletoJSON(res);
 			            	 AplicationController app = new AplicationController();
-			            	 Boolean response = true;
-			            	 if(response == true) {
-			            		 resposta.setStatus(201);
-			            		 resposta.setMsg("Competencia apagada com sucesso!");
-			            	 }else {
-			            		 resposta.setStatus(422);
-			            		 resposta.setMsg("Erro");
-			            	 }
+			            	 app.loopPraApagarCompetencia(compExp);
+		            		 resposta.setStatus(201);
+		            		 resposta.setMsg("Competencia apagada com sucesso!");
+		            		 JSONObject respostaJSON = jsonController.changeReponseToJson(resposta);
+		            		 out.println(respostaJSON);
 		            		 break;
 		            	 }
 		              case "apagarVaga": {
@@ -542,18 +551,26 @@ public void run()
 			            	 }
 		            		 break;
 		            	 }
-		              case "visualizarCompetenciaExperiencia": {
+		              case "vizualizarCompetenciaExperiencia": {
+		            	  System.out.println("entrei no visualizar");
+		            	     AplicationController app = new AplicationController();
 		            	  	 Resposta resposta = new Resposta();
-			            	 resposta.setOperacao("visualizarCompetenciaExperiencia");
-			            	 AplicationController app = new AplicationController();
-			            	 Boolean response = true;
-			            	 if(response == true) {
-			            		 resposta.setStatus(201);
-			            		 resposta.setMsg("não implementado ainda rs");
-			            	 }else {
-			            		 resposta.setStatus(422);
-			            		 resposta.setMsg("Erro");
-			            	 }
+			            	 try {
+			            		 CompetenciaExperiencia compExp = jsonController.changeCompetenciaCompletoJSONGetEmail(res);
+			            		 String email = compExp.getEmail();
+			            		 System.out.println("entrei no try");
+			         			Connection conn = BancoDados.conectar();
+			         			List<Competencia> response = new CompetenciaDao(conn).getCompetencias(email);
+			         			compExp.setCompetencias(response);
+			         			compExp.setOperacao("visualizarCompetenciaExperiencia");
+			         			JSONObject respostaJSON = jsonController.changeReponseToJsonCompetenciaWithStatus(compExp);
+				            	out.println(respostaJSON);
+				            	System.out.println("ENVIANDO PRO CLIENTE: "+ respostaJSON);
+			         			BancoDados.desconectar();
+			         		} catch (SQLException | ParseException e) {
+			         			e.printStackTrace();
+			         		}
+			            	 
 		            		 break;
 		            	 }
 		              case "visualizarVaga": {
@@ -571,18 +588,24 @@ public void run()
 		            		 break;
 		            	 }
 		              case "listarVagas": {
-		            	  	 Resposta resposta = new Resposta();
-			            	 resposta.setOperacao("listarVagas");
 			            	 AplicationController app = new AplicationController();
-			            	 Boolean response = true;
-			            	 if(response == true) {
-			            		 resposta.setStatus(201);
-			            		 resposta.setMsg("não implementado ainda rs");
-			            	 }else {
-			            		 resposta.setStatus(422);
-			            		 resposta.setMsg("Erro");
-			            	 }
-		            		 break;
+			            	 Vaga vaga = jsonController.changeVagaCompletoJSON(res);
+			            	 Connection conn;
+							try {
+								conn = BancoDados.conectar();
+								VagaDao vagaDao = new VagaDao(conn);
+								List<Vaga> vagas;
+								vagas = vagaDao.listarVagas(vaga);
+								Vagas vagas2 = new Vagas();
+								vagas2.setVagas(vagas);
+								vagas2.setOperacao("listarVagas");
+								vagas2.setStatus(201);
+								JSONObject respostaJSON = jsonController.changeVagasToJson(vagas2);
+								out.println(respostaJSON);
+								
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
 		            	 }
 		              case "filtrarVagas": {
 		            	  	 Resposta resposta = new Resposta();

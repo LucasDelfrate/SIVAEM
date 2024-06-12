@@ -14,10 +14,6 @@ public class CompetenciaExperiencia {
         this.competencias = new ArrayList<>();
     }
 	
-	public void adicionarCompetencia(Competencia comp){
-		this.competencias.add(comp);
-	}
-	
 	public List<Competencia> getCompetencias() {
 		return competencias;
 	}
