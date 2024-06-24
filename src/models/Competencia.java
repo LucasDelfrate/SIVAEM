@@ -2,7 +2,7 @@ package models;
 
 public class Competencia {
 	private String descricao;
-	private String experiencia;
+	private int experiencia;
 
 	public String getDescricao() {
 		return descricao;
@@ -10,10 +10,10 @@ public class Competencia {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	public String getExperiencia() {
+	public int getExperiencia() {
 		return experiencia;
 	}
-	public void setExperiencia(String experiencia) {
+	public void setExperiencia(int experiencia) {
 		this.experiencia = experiencia;
 	}
 	

@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 import controllers.JSONController;
 import enums.StatusEnum;
 import view.AplicationHomeFrame;
+import view.CandidatosFiltrados;
 import view.EditarCompetencias;
 import view.HomeFrame;
 import view.LoginCandidatoFrame;
@@ -15,6 +16,7 @@ import view.LoginEmpresaFrame;
 import view.PerfilFrame;
 import view.RegistroCandidatoFrame;
 import view.RegistroEmpresaFrame;
+import view.UmaVagaFrame;
 import view.VisualizarVagas;
 
 public class Cliente {
@@ -35,6 +37,8 @@ public class Cliente {
 	private AplicationHomeFrame app;
 	private PerfilFrame perfil;
 	private String email;
+	private int idVaga;
+	private String token;
 	
 	
     public Cliente(String ip, int porta) throws UnknownHostException, IOException {
@@ -173,6 +177,7 @@ public class Cliente {
 	                        		if(status == 201 || status == 200) {
 	                        			abrirAppEmpresa(token);
 	                        			fecharTelaLoginEmpresa();
+	                        			setarToken(token);
 	                        		}else if(status == 401) {
 	                        			msg = "Login inválido";
 	                        			respostaTelaLoginEmpresa(msg);
@@ -287,6 +292,29 @@ public class Cliente {
 	                        	}
 	                        	break;
 	                        }
+	                        case "visualizarVaga":{
+	                        	String msg;
+	                        	if(status == 201) {	                        		
+                        			abrirUmaVaga(resposta);
+	                        	}
+	                        	else if(status == 404){
+	                        		msg = "Vaga não encontrada";
+	                        		respostaTelaEdit(msg);
+	                        	}
+	                        	break;
+	                        }
+	                        case "filtrarCandidatos":{
+	                        	String msg;
+	                        	if(status == 201) {	                        		
+                        			System.out.println("MOSTRANDO O RESULTADO DO FILTRO: ");
+                        			abrirCandidatosFiltrados();
+	                        	}
+	                        	else if(status == 404){
+	                        		msg = "Vaga não encontrada";
+	                        		respostaTelaEdit(msg);
+	                        	}
+	                        	break;
+	                        }
                         }
                       }
 	                } catch (IOException e) {
@@ -299,6 +327,9 @@ public class Cliente {
 
     public void retornoGet(String user, String senha) {
     	this.app.receiveCandidatoByEmail(user ,senha);
+    }
+    public void setarToken(String token) {
+    	this.token = token;
     }
     public void retornoGetEmpresa(String razaoSocial, String descricao, String ramo, String senha, String cnpj) {
     	this.app.receiveEmpresaByEmail(razaoSocial, descricao, ramo, senha , cnpj );
@@ -341,11 +372,19 @@ public class Cliente {
 		this.loginEmpresaFrame.dispose();
 	}
 	public void abrirApp(String token) {
+		this.token = token;
 		AplicationHomeFrame app = new AplicationHomeFrame(this, token, this.email);
 		this.app = app;
 		this.app.getByEmail(true, this.email);
 		this.app.setarIsCandidato(true);
 		this.app.setVisible(true);
+		Mensagem msg = new Mensagem();
+		msg.setOperacao("receberMensagem");
+		msg.setEmail(this.email);
+		msg.setToken(this.token);
+		JSONController json = new JSONController();
+		JSONObject response = json.changeMsgToJson(msg);
+		this.enviarMensagem(response);
 	}
 	public void abrirAppEmpresa(String token) {
 		AplicationHomeFrame app = new AplicationHomeFrame(this, token, this.email);
@@ -381,9 +420,19 @@ public class Cliente {
 		this.app.visualizarCompetencia();
 	}
 	public void abrirVisuVagas(List<Vaga> vagas) {
-		System.out.println(vagas.get(0).getNome());
-		VisualizarVagas visuVaga = new VisualizarVagas();
+		VisualizarVagas visuVaga = new VisualizarVagas(this, this.token);
 		visuVaga.setarCompetencias(vagas);
 		visuVaga.setVisible(true);
+	}
+	public void abrirUmaVaga(Resposta res) {
+		UmaVagaFrame uma = new UmaVagaFrame();
+		uma.setVariables(this, res.getFaixaSalarial(), res.getDescricao(), res.getEstado(), res.getCompetenciasString(), this.idVaga, res.getNome(), this.email, this.token);
+		uma.setVisible(true);
+	}
+	public void setIdVaga(int id) {
+		this.idVaga = id;
+	}
+	public void abrirCandidatosFiltrados(){
+		CandidatosFiltrados candFilt = new CandidatosFiltrados(this.email, this.token, this);
 	}
 }

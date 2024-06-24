@@ -21,7 +21,7 @@ public class CompetenciaDao {
 		try {
 			st = conn.prepareStatement("INSERT INTO competencia (descricao, experiencia, email) values (?,?,?)");
 			st.setString(1, comp.getDescricao());
-			st.setString(2, comp.getExperiencia());
+			st.setInt(2, comp.getExperiencia());
 			st.setString(3, email);
 			st.executeUpdate();
 		}finally {
@@ -48,7 +48,7 @@ public class CompetenciaDao {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement("UPDATE competencia SET experiencia = ? WHERE email = ? AND descricao = ?");
-			st.setString(1, comp.getExperiencia());
+			st.setInt(1, comp.getExperiencia());
 			st.setString(2, email);
 			st.setString(3, comp.getDescricao());
 			st.executeUpdate();
@@ -75,7 +75,7 @@ public class CompetenciaDao {
 	            System.out.println("=== competencias encontradas ===");
 	            Competencia comp = new Competencia();
 	            comp.setDescricao(rs.getString("descricao"));
-	            comp.setExperiencia(rs.getString("experiencia")); 
+	            comp.setExperiencia(rs.getInt("experiencia")); 
 	            competencias.add(comp);
 	        }
 	    } catch (SQLException e) {

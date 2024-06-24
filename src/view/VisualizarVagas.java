@@ -15,7 +15,11 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
+import models.Cliente;
 import models.Vaga;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VisualizarVagas extends JFrame {
 
@@ -24,9 +28,13 @@ public class VisualizarVagas extends JFrame {
 	private JTable table;
 	private List<Vaga> vagas;
 	private DefaultTableModel tableModel;
+	private String token;
+	private Cliente cliente;
 
 
-	public VisualizarVagas() {
+	public VisualizarVagas(Cliente cliente, String token) {
+		this.cliente = cliente;
+		this.token = token;
 		vagas = new ArrayList();
 		this.vagas = vagas;
 		setBounds(100, 100, 549, 592);
@@ -46,45 +54,37 @@ public class VisualizarVagas extends JFrame {
 		scrollPane.setBounds(37, 70, 448, 337);
 		contentPane.add(scrollPane);
 		
+		this.tableModel = new DefaultTableModel(new Object[][] {
+		},
+				new String[] {
+						"Id", "Nome"
+		});
 		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Id", "Nome"
-			}
-		));
+		table.setModel(this.tableModel);
 		table.getColumnModel().getColumn(0).setPreferredWidth(55);
 		table.getColumnModel().getColumn(1).setPreferredWidth(130);
 		scrollPane.setViewportView(table);
 		
-		this.tableModel = new DefaultTableModel(new Object[][] {
-		},
-		new String[] {
-				"Id", "Nome"
+		JButton btnNewButton = new JButton("Filtrar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				filtrarVaga();
+			}
 		});
-		table = new JTable(this.tableModel) {
-			 @Override
-	            public Class<?> getColumnClass(int column) {
-	                switch (column) {
-	                    case 0:
-	                        return String.class; 
-	                    case 1:
-	                        return String.class; 
-	                    case 2:
-	                    	return Boolean.class; 
-	                    default:
-	                        return String.class;
-	                }
-	            }
-		};
+		btnNewButton.setBounds(396, 418, 89, 23);
+		contentPane.add(btnNewButton);
+		
 	}
 	public void setarCompetencias(List<Vaga> vagas){
-		if(this.vagas != null) {
-			this.vagas.forEach(vaga -> {
-				System.out.println(vaga.getNome());
+		if(vagas != null) {
+			vagas.forEach(vaga -> {
+				System.out.println("NOME: " + vaga.getNome());
 				this.tableModel.addRow(new Object[]{vaga.getId(), vaga.getNome(), false});
 			});			
 		}
+	}
+	public void filtrarVaga() {
+		FiltrarVagasFrame filt = new FiltrarVagasFrame(this.token, this.cliente);
+		filt.setVisible(true);
 	}
 }

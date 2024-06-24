@@ -6,16 +6,14 @@ public class Vaga {
 	
 	private int id;
 	private String operacao;
-	private String faixaSalarial;
+	private int faixaSalarial;
 	private String descricao;
 	private String estado;
 	private String nome;
-	private List<Competencia> competencias;
+	private List<String> competencias;
 	private String email;
 	private String token;
-	
-	
-	
+
 	
 	public int getId() {
 		return id;
@@ -47,10 +45,10 @@ public class Vaga {
 	public void setOperacao(String operacao) {
 		this.operacao = operacao;
 	}
-	public String getFaixaSalarial() {
+	public int getFaixaSalarial() {
 		return faixaSalarial;
 	}
-	public void setFaixaSalarial(String faixaSalarial) {
+	public void setFaixaSalarial(int faixaSalarial) {
 		this.faixaSalarial = faixaSalarial;
 	}
 	public String getDescricao() {
@@ -65,10 +63,10 @@ public class Vaga {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	public List<Competencia> getCompetencias() {
+	public List<String> getCompetencias() {
 		return competencias;
 	}
-	public void setCompetencias(List<Competencia> competencias) {
+	public void setCompetencias(List<String> competencias) {
 		this.competencias = competencias;
 	}
 	

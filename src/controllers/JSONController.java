@@ -19,6 +19,11 @@ import models.Candidato;
 import models.Competencia;
 import models.CompetenciaExperiencia;
 import models.Empresa;
+import models.Filtro;
+import models.FiltroCandidato;
+import models.FiltroDentro;
+import models.Mensagem;
+import models.ModeloFiltrarCandidato;
 import models.Resposta;
 import models.Vaga;
 import models.Vagas;
@@ -113,6 +118,42 @@ public class JSONController {
 		
 }
 	
+public JSONObject changeReponseToJsonFiltroCandidato(ModeloFiltrarCandidato model){
+		
+	JSONObject responseJson = new JSONObject();
+    responseJson.put("operacao", model.getOperacao());
+
+    // Construção do objeto filtros
+    JSONObject filtrosJson = new JSONObject();
+    List<Competencia> competencias = model.getFiltros().getCompetenciasExperiencias();
+    if (competencias.size() != 0) {
+        JSONArray competenciasArray = new JSONArray();
+
+        for (Competencia c : competencias) {
+            JSONObject competenciaJson = new JSONObject();
+            competenciaJson.put("competencia", c.getDescricao());
+            competenciaJson.put("experiencia", c.getExperiencia());
+            competenciasArray.add(competenciaJson);
+        }
+
+        filtrosJson.put("competenciasExperiencias", competenciasArray);
+    }
+
+    // Definindo o tipo nos filtros
+    filtrosJson.put("tipo", "OR");
+
+    // Adicionando o objeto filtros ao JSON principal
+    responseJson.put("filtros", filtrosJson);
+
+    // Adicionando token se existir
+    if (model.getToken() != null) {
+        responseJson.put("token", model.getToken());
+    }
+
+    return responseJson;
+		
+}
+	
 public JSONObject changeReponseToJsonCompetenciaWithStatus(CompetenciaExperiencia compExp){
 		
 		JSONObject comp = new JSONObject();
@@ -155,10 +196,8 @@ public JSONObject changeReponseToJsonVaga(Vaga vaga){
 	if (vaga.getCompetencias().size()!= 0) {
         JSONArray competenciasArray = new JSONArray();
         
-        for (Competencia c : vaga.getCompetencias()) {
-            JSONObject competenciaJson = new JSONObject();
-            competenciaJson.put("competencia", c.getDescricao());
-            competenciasArray.add(competenciaJson);
+        for (String c : vaga.getCompetencias()) {
+            competenciasArray.add(c.toString());
         }
         
         vaga1.put("competencias", competenciasArray);
@@ -172,7 +211,7 @@ public JSONObject changeReponseToJsonVaga(Vaga vaga){
 	if(vaga.getEstado() != null) {
 		vaga1.put("estado", vaga.getEstado());			
 	}
-	if(vaga.getFaixaSalarial() != null) {
+	if(vaga.getFaixaSalarial() != 0) {
 		vaga1.put("faixaSalarial", vaga.getFaixaSalarial());			
 	}
 	if(vaga.getNome() != null) {
@@ -181,6 +220,44 @@ public JSONObject changeReponseToJsonVaga(Vaga vaga){
 	if(vaga.getDescricao() != null) {
 		vaga1.put("descricao", vaga.getDescricao());			
 	}
+	return vaga1;
+	
+}
+
+public JSONObject changeReponseToJsonVaga(Resposta vaga){
+	
+	JSONObject vaga1 = new JSONObject();
+	vaga1.put("operacao", vaga.getOperacao());
+	
+	if (vaga.getCompetenciasString() != null) {
+        JSONArray competenciasArray = new JSONArray();
+        
+        for (String c : vaga.getCompetenciasString()) {
+            competenciasArray.add(c.toString());
+        }
+        
+        vaga1.put("competencias", competenciasArray);
+    }
+	if(vaga.getEmail() != null) {
+		vaga1.put("email", vaga.getEmail());			
+	}
+	if(vaga.getToken() != null) {
+		vaga1.put("token", vaga.getToken());			
+	}
+	if(vaga.getEstado() != null) {
+		vaga1.put("estado", vaga.getEstado());			
+	}
+	if(vaga.getFaixaSalarial() != 0) {
+		vaga1.put("faixaSalarial", vaga.getFaixaSalarial());			
+	}
+	if(vaga.getNome() != null) {
+		vaga1.put("nome", vaga.getNome());			
+	}
+	if(vaga.getDescricao() != null) {
+		vaga1.put("descricao", vaga.getDescricao());			
+	}
+	vaga1.put("status", vaga.getStatus());	
+
 	return vaga1;
 	
 }
@@ -197,6 +274,23 @@ public JSONObject changeReponseToJsonVagaListar(Vaga vaga){
 	if(vaga.getToken() != null) {
 		vaga1.put("token", vaga.getToken());			
 	}
+	if(vaga.getFaixaSalarial() != 0) {
+		vaga1.put("faixa", vaga.getFaixaSalarial());			
+	}
+	if(vaga.getDescricao() != null) {
+		vaga1.put("descricao", vaga.getDescricao());			
+	}
+	if(vaga.getEstado() != null) {
+		vaga1.put("estado", vaga.getEstado());			
+	}
+	if(vaga.getCompetencias() != null) {
+		vaga1.put("competencias", vaga.getCompetencias());			
+	}
+	if(vaga.getNome() != null) {
+		vaga1.put("nome", vaga.getNome());			
+	}
+	int idAux = vaga.getId();
+	vaga1.put("idVaga", idAux);
 	return vaga1;
 	
 }
@@ -218,6 +312,23 @@ public JSONObject changeReponseToJsonVagaVisualizar(Vaga vaga){
 	if(idLong != null) {
 		vaga1.put("idVaga", idLong);			
 	}			
+	return vaga1;
+	
+}
+
+public JSONObject changeReponseToJsonVagaListar2(Vaga vaga){
+	
+	JSONObject vaga1 = new JSONObject();
+	vaga1.put("operacao", vaga.getOperacao());
+	
+	
+	if(vaga.getEmail() != null) {
+		vaga1.put("email", vaga.getEmail());			
+	}
+	if(vaga.getToken() != null) {
+		vaga1.put("token", vaga.getToken());			
+	}
+		
 	return vaga1;
 	
 }
@@ -278,6 +389,30 @@ public JSONObject changeReponseToJsonVagaVisualizar(Vaga vaga){
 			
 			String cnpj  = (String) jsonObject.get("cnpj");
 			resposta1.setCnpj(cnpj);
+				
+			
+			 JSONArray candidatosArray = (JSONArray) jsonObject.get("candidatos");
+	         if (candidatosArray != null && !candidatosArray.isEmpty()) {
+	                JSONObject candidatoObj = (JSONObject) candidatosArray.get(0); 
+	                long idCandidato = (long) candidatoObj.get("idCandidato");
+	                String nomeCandidato = (String) candidatoObj.get("nome");
+	                String emailCandidato = (String) candidatoObj.get("email");
+
+	                JSONArray competenciasExperienciaArray = (JSONArray) candidatoObj.get("competenciaExperiencia");
+	                List<CompetenciaExperiencia> competenciasExp = new ArrayList<>();
+
+	                for (Object obj : competenciasExperienciaArray) {
+	                    JSONObject competenciaObj = (JSONObject) obj;
+	                    String competenciaCandidato = (String) competenciaObj.get("competencia");
+	                    int experienciaCandidato = ((Number) competenciaObj.get("experiencia")).intValue();
+
+	                    CompetenciaExperiencia compExp = new CompetenciaExperiencia();
+	                    resposta1.setCompetencia(competenciaCandidato.toString());
+	                    resposta1.setExperiencia(experienciaCandidato);
+
+	                    competenciasExp.add(compExp);
+	                }
+			
 			
 			JSONArray competenciasArray = (JSONArray) jsonObject.get("competenciaExperiencia");
 			if(competenciasArray != null) {
@@ -286,7 +421,7 @@ public JSONObject changeReponseToJsonVagaVisualizar(Vaga vaga){
 				for (Object obj : competenciasArray) {
 					JSONObject competenciaJson = (JSONObject) obj;
 					
-					String experiencia = (String) competenciaJson.get("experiencia");
+					int experiencia = ((Number) competenciaJson.get("experiencia")).intValue();
 					String competencia = (String) competenciaJson.get("competencia");
 					
 					Competencia comp = new Competencia();
@@ -298,6 +433,23 @@ public JSONObject changeReponseToJsonVagaVisualizar(Vaga vaga){
 				}
 				
 			}
+			
+			JSONArray competenciasString = (JSONArray) jsonObject.get("competencias");
+			if(competenciasString != null) {
+				resposta1.setCompetenciasString(competenciasString);				
+			}
+			
+			Object faixaSalarialObj = jsonObject.get("faixaSalarial");
+			if (faixaSalarialObj != null) {
+			    resposta1.setFaixaSalarial(((Number) faixaSalarialObj).intValue());
+			}
+			
+			String estado = (String) jsonObject.get("estado");
+			if(estado != null) {
+				resposta1.setEstado(estado);				
+			}
+			
+	
 			
 			JSONArray vagasArray = (JSONArray) jsonObject.get("vagas");
 			if(vagasArray != null) {
@@ -320,11 +472,12 @@ public JSONObject changeReponseToJsonVagaVisualizar(Vaga vaga){
 			}
 				
 			return resposta1;
-			
+	         }
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
         }
+		return resposta1;
 	}
 
 	public JSONObject changeToJSON(Candidato candidato){
@@ -513,7 +666,7 @@ public JSONObject changeToJSONEmpresa(Empresa empresa){
 				 List<Competencia> competencias = new ArrayList<>();
 				 for (Object obj : competenciasArray) {
 					 JSONObject competenciaJson = (JSONObject) obj;
-					 String experiencia = (String) competenciaJson.get("experiencia");
+					 int experiencia = ((Number) competenciaJson.get("experiencia")).intValue();
 					 String descricao = (String) competenciaJson.get("competencia");
 					 Competencia compAux = new Competencia();
 					 compAux.setDescricao(descricao);
@@ -542,22 +695,24 @@ public JSONObject changeToJSONEmpresa(Empresa empresa){
 				
 			vaga.setEmail((String) jsonObject.get("email") );
 			vaga.setEstado((String) jsonObject.get("estado") );
-			vaga.setFaixaSalarial((String) jsonObject.get("faixaSalarial") );
+			Object faixaSalarialObj = jsonObject.get("faixaSalarial");
+			if (faixaSalarialObj != null) {
+			    vaga.setFaixaSalarial(((Number) faixaSalarialObj).intValue());
+			}
 			vaga.setNome((String) jsonObject.get("nome") );
 			vaga.setDescricao((String) jsonObject.get("descricao") );
+			if((jsonObject.get("idVaga")) != null) {
+				int idVaga = ((Number) jsonObject.get("idVaga")).intValue();				
+				vaga.setId(idVaga);
+			}
 			String oldUUID = (String) jsonObject.get("token");
 			 JSONArray competenciasArray = (JSONArray) jsonObject.get("competencias");
 			 if(competenciasArray != null) {
-				 List<Competencia> competencias = new ArrayList<>();
+				 List<String> competencias = new ArrayList<>();
 				 for (Object obj : competenciasArray) {
-					 JSONObject competenciaJson = (JSONObject) obj;
-					 String descricao = (String) competenciaJson.get("competencia");
-					 Competencia compAux = new Competencia();
-					 compAux.setDescricao(descricao);
-					 competencias.add(compAux);
+					 competencias.add(obj.toString());
 				 }
 				 vaga.setCompetencias(competencias);
-				 
 			 }
 				
         } catch (ParseException e) {
@@ -613,6 +768,103 @@ public JSONObject changeToJSONEmpresa(Empresa empresa){
         } catch (ParseException e) {
             e.printStackTrace();
         }
+		return obj;
+	}
+	
+	public JSONObject changeReponseToJsonFiltroVaga(Filtro filtro) {
+		JSONObject filt = new JSONObject();
+		filt.put("operacao", filtro.getOperacao());
+		
+		
+		
+		if(filtro.getToken() != null) {
+			filt.put("token", filtro.getToken());			
+		}
+		if(filtro.getFiltros() != null) {
+			filt.put("filtros", filtro.getFiltros());			
+		}
+		JSONObject filtros = new JSONObject();
+		filtros.put("competencias", filtro.getFiltros().getCompetencias());
+		filtros.put("tipo", filtro.getFiltros().getTipo());
+		if(filtro.getFiltros() != null) {
+			filt.put("filtros", filtros);			
+		}
+		return filt;
+	}
+	
+	public Filtro changeFiltroCompletoJSON(String res) throws ParseException {
+		JSONParser parser = new JSONParser();
+		JSONObject jsonObject = (JSONObject) parser.parse(res);
+		Filtro filtro = new Filtro();
+		FiltroDentro dentro = new FiltroDentro();
+		filtro.setToken((String) jsonObject.get("token") );
+		filtro.setOperacao((String) jsonObject.get("operacao") );
+		if (jsonObject.get("filtros") != null) {
+            JSONObject jsonFiltros = (JSONObject) jsonObject.get("filtros");
+            if(jsonFiltros.get("competencias") != null) {
+            	List<String> comps = (List<String>) jsonFiltros.get("competencias");
+            	dentro.setCompetencias(comps);
+            }
+            if(jsonFiltros.get("tipo") != null) {
+            	dentro.setTipo(jsonFiltros.get("tipo").toString());
+            }
+            
+        }
+		filtro.setFiltros(dentro);
+		
+		return filtro;
+	}
+	
+	public ModeloFiltrarCandidato changeFiltroCompletoJSONtoObjetct(String res) throws ParseException {
+		JSONParser parser = new JSONParser();
+		JSONObject jsonObject = (JSONObject) parser.parse(res);
+		ModeloFiltrarCandidato resposta = new ModeloFiltrarCandidato();
+        resposta.setOperacao((String) jsonObject.get("operacao"));
+        resposta.setToken((String) jsonObject.get("token"));
+
+        JSONObject jsonFiltros = (JSONObject) jsonObject.get("filtros");
+        if (jsonFiltros != null) {
+            FiltroCandidato filtros = new FiltroCandidato();
+
+            JSONArray competenciasArray = (JSONArray) jsonFiltros.get("competenciasExperiencias");
+            if (competenciasArray != null) {
+                List<Competencia> competencias = new ArrayList<>();
+
+                for (Object obj : competenciasArray) {
+                    JSONObject competenciaJson = (JSONObject) obj;
+
+                    int experiencia = ((Number) competenciaJson.get("experiencia")).intValue();
+                    String competencia = (String) competenciaJson.get("competencia");
+
+                    Competencia comp = new Competencia();
+                    comp.setDescricao(competencia);
+                    comp.setExperiencia(experiencia);
+
+                    competencias.add(comp);
+                }
+
+                filtros.setCompetenciasExperiencias(competencias);
+            }
+
+            if (jsonFiltros.get("tipo") != null) {
+                filtros.setTipo((String) jsonFiltros.get("tipo"));
+            }
+
+            resposta.setFiltros(filtros);
+        }
+
+        return resposta;
+	}
+	
+	public JSONObject changeMsgToJson(Mensagem msg) {
+		JSONObject obj = new JSONObject();
+		obj.put("operacao", msg.getOperacao());
+		if(msg.getEmail() != null) {
+			obj.put("email", msg.getEmail());			
+		}
+		if(msg.getToken() != null) {
+			obj.put("token", msg.getToken());			
+		}
 		return obj;
 	}
 	

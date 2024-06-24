@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import java.util.List;
 
 import models.Candidato;
 import models.Competencia;
+import models.Filtro;
 import models.Vaga;
 
 public class VagaDao {
@@ -25,7 +27,7 @@ public class VagaDao {
 	    try {
 	        st = conn.prepareStatement("INSERT INTO vaga (nome, faixaSalarial, descricao, estado, email) values (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 	        st.setString(1, vaga.getNome());
-	        st.setString(2, vaga.getFaixaSalarial());
+	        st.setInt(2, vaga.getFaixaSalarial());
 	        st.setString(3, vaga.getDescricao());
 	        st.setString(4, vaga.getEstado());
 	        st.setString(5, vaga.getEmail());
@@ -45,6 +47,58 @@ public class VagaDao {
 	    return vagaId; 
 	}
 	
+	public Vaga visualizarVaga(String email, int id) {
+        String sql = "SELECT v.id, v.nome, v.faixaSalarial, v.descricao, v.estado, cpv.nome AS competencia " +
+                     "FROM vaga v " +
+                     "JOIN vagacompetencia vc ON v.id = vc.vaga_id " +
+                     "JOIN competenciaparavaga cpv ON vc.competencia_id = cpv.id " +
+                     "WHERE v.id = ? AND v.email = ?";
+        
+        Vaga vaga = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        
+        try {
+        	System.out.println("id antes de buscar:"+ id);
+        	System.out.println("email antes de buscar: "+ email);
+            st = conn.prepareStatement(sql);
+            st.setInt(1, id);
+            st.setString(2, email);
+            rs = st.executeQuery();
+            
+            vaga = new Vaga();
+            List<String> competencias = new ArrayList<>();
+            
+            boolean firstRow = true;
+            while (rs.next()) {
+                if (firstRow) {
+                    vaga.setId(rs.getInt("id"));
+                    vaga.setNome(rs.getString("nome"));
+                    vaga.setFaixaSalarial(rs.getInt("faixaSalarial"));
+                    vaga.setDescricao(rs.getString("descricao"));
+                    vaga.setEstado(rs.getString("estado"));
+                    firstRow = false;
+                }
+                competencias.add(rs.getString("competencia"));
+            }
+            
+            vaga.setCompetencias(competencias);
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (st != null) st.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        System.out.println("RETORNANDO VAGA: "+ vaga.getDescricao() + vaga.getEstado() + vaga.getFaixaSalarial());
+        return vaga;
+    }
+	
 	public void cadastrarVagaRelacionamento(int idVaga, int idCompetencia) throws SQLException {
 		PreparedStatement st = null;
 		try {
@@ -57,16 +111,35 @@ public class VagaDao {
 			BancoDados.desconectar();
 		}
 	}
-
 	
-	public int cadastrarVagaCompetencia(Competencia comp, int idVaga) throws SQLException {
+	public void apagarVagaCompetencias(int vagaId) throws SQLException {
+        String sql = "DELETE FROM vagacompetencia WHERE vaga_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, vagaId);
+            stmt.executeUpdate();
+        }
+    }
+	
+	public void apagarVagaCompleta(int idVaga) throws SQLException {
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("DELETE FROM vaga WHERE ID = ?");
+			st.setInt(1, idVaga);
+			st.executeUpdate();
+		}finally {
+			BancoDados.finalizarStatement(st);
+			BancoDados.desconectar();
+		}
+	}
+	
+	public int cadastrarVagaCompetencia(String comp, int idVaga) throws SQLException {
 	    PreparedStatement st = null;
 	    ResultSet rs = null;
 	    int generatedId = -1; 
 
 	    try {
 	        st = conn.prepareStatement("INSERT INTO competenciaparavaga (nome) values (?)", Statement.RETURN_GENERATED_KEYS);
-	        st.setString(1, comp.getDescricao());
+	        st.setString(1, comp);
 
 	        st.executeUpdate();
 
@@ -100,7 +173,7 @@ public class VagaDao {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement("UPDATE competencia SET experiencia = ? WHERE email = ? AND descricao = ?");
-			st.setString(1, comp.getExperiencia());
+			st.setInt(1, comp.getExperiencia());
 			st.setString(2, email);
 			st.setString(3, comp.getDescricao());
 			st.executeUpdate();
@@ -148,5 +221,6 @@ public class VagaDao {
 	    }
 	    return vagas;
 	}
+	
 	
 }

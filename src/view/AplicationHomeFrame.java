@@ -52,9 +52,9 @@ public class AplicationHomeFrame extends JFrame {
 	private String email;
 	private Label bemVindo;
 	private JButton botaoVagaCompetencia1;
-	private JButton btnExc;
 	private JButton btnVisu;
 	private Boolean isCandidato = false;
+	private JButton btnVisualizarPorId;
 
 	public AplicationHomeFrame(Cliente cliente, String token, String email) {
 		this.candidato = new Candidato();
@@ -149,15 +149,6 @@ public class AplicationHomeFrame extends JFrame {
 		this.botaoVagaCompetencia1.setBounds(66, 169, 689, 30);
 		contentPane.add(this.botaoVagaCompetencia1);
 		
-		this.btnExc = new JButton("Excluir competências");
-		this.btnExc.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				excluirCompetencia();
-			}
-		});
-		this.btnExc.setBounds(66, 292, 689, 30);
-		contentPane.add(this.btnExc);
-		
 		this.btnVisu = new JButton("Visualizar competências");
 		btnVisu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -167,14 +158,23 @@ public class AplicationHomeFrame extends JFrame {
 		this.btnVisu.setBounds(66, 210, 689, 30);
 		contentPane.add(this.btnVisu);
 		
-		JButton btnVisualizarPorId = new JButton("Visualizar por ID");
-		btnVisualizarPorId.addActionListener(new ActionListener() {
+		this.btnVisualizarPorId = new JButton("Visualizar por ID");
+		this.btnVisualizarPorId.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				visualizarUmaVaga();
 			}
 		});
-		btnVisualizarPorId.setBounds(66, 251, 689, 30);
-		contentPane.add(btnVisualizarPorId);
+		this.btnVisualizarPorId.setBounds(66, 251, 689, 30);
+		contentPane.add(this.btnVisualizarPorId);
+		
+		JButton btnVisualizarPorId_1 = new JButton("Buscar candidatos");
+		btnVisualizarPorId_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				abrirFiltroCandidato();
+			}
+		});
+		btnVisualizarPorId_1.setBounds(63, 292, 689, 30);
+		contentPane.add(btnVisualizarPorId_1);
 
 	}
 	
@@ -314,15 +314,20 @@ public class AplicationHomeFrame extends JFrame {
 		this.cliente.enviarMensagem(obj);
 	}
 	
+	public void enviarDadosClienteVaga(JSONObject obj, int id) {
+		this.cliente.setIdVaga(id);
+		this.cliente.enviarMensagem(obj);
+	}
+	
 	public void setarLabel() {
 		if(this.isCandidato) {
 			this.botaoVagaCompetencia1.setText("Cadastrar competências");
 			this.btnVisu.setText("Visualizar competências");
-			this.btnExc.setText("Excluir competências");
+			this.btnVisualizarPorId.setVisible(false);
+			
 		}else {
 			this.botaoVagaCompetencia1.setText("Cadastrar vaga");
-			this.btnVisu.setText("Visualizar vagas");
-			this.btnExc.setText("Excluir vagas");
+			this.btnVisu.setText("Listar vagas");
 		}
 	}
 	public void excluirCompetencia() {
@@ -346,7 +351,7 @@ public class AplicationHomeFrame extends JFrame {
 			CompetenciaExperiencia compExp = new CompetenciaExperiencia();
 			compExp.setToken(this.token);
 			compExp.setEmail(this.email);
-			compExp.setOperacao("vizualizarCompetenciaExperiencia");
+			compExp.setOperacao("visualizarCompetenciaExperiencia");
 			JSONController json = new JSONController();
 			JSONObject obj = json.changeReponseToJsonCompetencia(compExp);
 			enviarDadosClienteCompetencia(obj);			
@@ -356,13 +361,12 @@ public class AplicationHomeFrame extends JFrame {
 			vaga.setEmail(this.email);
 			vaga.setOperacao("listarVagas");
 			JSONController json = new JSONController();
-			JSONObject obj = json.changeReponseToJsonVagaVisualizar(vaga);
+			JSONObject obj = json.changeReponseToJsonVagaListar2(vaga);
 			enviarDadosClienteCompetencia(obj);
 		}
 		
 	}
 	public void setarIsCandidato(Boolean is) {
-		System.out.println("É CANDIDATO? "+is);
 		this.isCandidato = is;
 		this.setarLabel();
 	}
@@ -370,5 +374,8 @@ public class AplicationHomeFrame extends JFrame {
 		VisualizarUmaVaga visu = new VisualizarUmaVaga(this, this.cliente, this.email, this.token);
 		visu.setVisible(true);
 	}
-
+	public void abrirFiltroCandidato() {
+		FiltrarCandidatosFrame filt = new FiltrarCandidatosFrame(this, this.email, this.token, false);
+		filt.setVisible(true);
+	}
 }

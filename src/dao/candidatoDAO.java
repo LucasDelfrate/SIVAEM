@@ -4,9 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 import models.Candidato;
+import models.ModeloFiltrarCandidato;
 
 public class candidatoDAO {
 	private Connection conn;
@@ -39,6 +41,12 @@ public class candidatoDAO {
     			BancoDados.finalizarStatement(st);
     			BancoDados.desconectar();
     		}
+	}
+	
+	public void getCandidatosByCompetencia(ModeloFiltrarCandidato filtro) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
 	}
 
 	

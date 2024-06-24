@@ -17,9 +17,89 @@ public class Resposta {
 	private String razaoSocial;
 	private List<Vaga> vagas;
 	private List<Competencia> competencias;
+	private int faixaSalarial;
+	private String estado;
+	private List<String> competenciasString;
+	private String tipo;
+	private FiltroCandidato filtros;
+	private int idCandidato;
+	private int experiencia;
+	private String competencia;
 	
 	
 	
+	public int getIdCandidato() {
+		return idCandidato;
+	}
+
+	public void setIdCandidato(int idCandidato) {
+		this.idCandidato = idCandidato;
+	}
+
+	public int getExperiencia() {
+		return experiencia;
+	}
+
+	public void setExperiencia(int experiencia) {
+		this.experiencia = experiencia;
+	}
+
+	public String getCompetencia() {
+		return competencia;
+	}
+
+	public void setCompetencia(String competencia) {
+		this.competencia = competencia;
+	}
+
+	public int getSetidCandidato() {
+		return idCandidato;
+	}
+
+	public void setSetidCandidato(int setidCandidato) {
+		this.idCandidato = setidCandidato;
+	}
+
+	public FiltroCandidato getFiltros() {
+		return filtros;
+	}
+
+	public void setFiltros(FiltroCandidato filtros) {
+		this.filtros = filtros;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public List<String> getCompetenciasString() {
+		return competenciasString;
+	}
+
+	public void setCompetenciasString(List<String> competenciasString) {
+		this.competenciasString = competenciasString;
+	}
+
+	public int getFaixaSalarial() {
+		return faixaSalarial;
+	}
+
+	public void setFaixaSalarial(int faixaSalarial) {
+		this.faixaSalarial = faixaSalarial;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
 	public List<Vaga> getVagas() {
 		return vagas;
 	}

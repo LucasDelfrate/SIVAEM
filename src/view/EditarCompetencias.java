@@ -95,7 +95,7 @@ public class EditarCompetencias extends JFrame {
 					Competencia compAux = new Competencia();
 					compAux.setDescricao(competencias.get(i).getDescricao());
 					Object value = tableModel.getValueAt(i,1);
-					compAux.setExperiencia(value.toString());
+					compAux.setExperiencia(Integer.parseInt(value.toString()));
 					competencias2.add(compAux);	
 				}
 				editarCompetencias(competencias2);

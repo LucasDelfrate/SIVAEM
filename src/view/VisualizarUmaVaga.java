@@ -71,9 +71,9 @@ public class VisualizarUmaVaga extends JFrame {
 		vaga.setId(id);
 		vaga.setOperacao("visualizarVaga");
 		vaga.setEmail(email);
-		vaga.setToken(email);
+		vaga.setToken(token);
 		JSONController json = new JSONController();
 		JSONObject obj = json.changeReponseToJsonVagaListar(vaga);
-		this.app.enviarDadosClienteCompetencia(obj);
+		this.app.enviarDadosClienteVaga(obj, id);
 	}
 }

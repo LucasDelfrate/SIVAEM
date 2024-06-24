@@ -12,6 +12,8 @@ import models.Candidato;
 import models.Competencia;
 import models.CompetenciaExperiencia;
 import models.Empresa;
+import models.Filtro;
+import models.Resposta;
 import models.Vaga;
 
 public class AplicationController {
@@ -53,6 +55,25 @@ public class AplicationController {
 		});
 		return true;
 	}
+	
+	public Boolean loopPraEditarVaga(Vaga vaga) throws IOException {
+		editarVaga();
+		vaga.getCompetencias().forEach(competencia -> {
+			//editarVagaCompetencia(competencia, idVaga);
+		});
+		return true;
+	}
+	
+	public void editarVaga() {
+		//Connection conn = BancoDados.conectar();
+        // VagaDao vagaDao = new VagaDao(conn);
+        //vagaDao.editarVagaCompetencia(comp, idVaga);
+	}
+	
+	public void editarVagaCompetencia(String competencia, int idVaga){
+		
+	}
+	
 	
 	public Boolean loopPraApagarCompetencia(CompetenciaExperiencia compExp) {
 		compExp.competencias.forEach(competencia -> {
@@ -111,7 +132,7 @@ public class AplicationController {
             }
     }
 	
-	public void cadastrarVagaCompetencia(Competencia comp, int idVaga) throws IOException{
+	public void cadastrarVagaCompetencia(String comp, int idVaga) throws IOException{
         try {
             Connection conn = BancoDados.conectar();
             VagaDao vagaDao = new VagaDao(conn);
@@ -134,6 +155,7 @@ public class AplicationController {
         }
 		return -1;
 	}
+	
 	
 	public Empresa getEmpresaByToken(String token){
 		return null;

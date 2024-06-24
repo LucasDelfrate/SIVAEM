@@ -19,16 +19,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
-public class CadastrarCompetencia extends JFrame {
+public class AdicionarCompetenciaFiltroJava extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private CompetenciaExperiencia competencias;
 	private int tamanho = 1;
-	private CadastrarCompetenciasFrame comps;
+	private FiltrarCandidatosFrame filt;
 
-	public CadastrarCompetencia(CadastrarCompetenciasFrame comps) {
-		this.comps = comps;
+	public AdicionarCompetenciaFiltroJava(FiltrarCandidatosFrame filt) {
+		this.filt = filt;
 		this.competencias = new CompetenciaExperiencia();
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -92,7 +92,7 @@ public class CadastrarCompetencia extends JFrame {
 		Competencia comp = new Competencia();
 		comp.setDescricao(titulo);
 		comp.setExperiencia(Integer.parseInt(exp));
-		this.comps.receberCompetencia(comp);
+		this.filt.receberCompetencia(comp);
 		dispose();
 	}
 }

@@ -2,6 +2,7 @@ package models;
 import java.net.*;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONObject;
@@ -23,6 +24,7 @@ import enums.CadastroEnum;
 import enums.EdicaoEnum;
 import enums.EmailEnum;
 import enums.LoginEnum;
+import view.ClientesConectadosFrame;
 
 import java.io.*; 
 
@@ -31,11 +33,11 @@ public class Servidor extends Thread
  protected static boolean serverContinue = true;
  protected Socket clientSocket;
  protected int porta;
+ private ClientesConectadosFrame conectadosFrame;
 
 
 public void ligarServidor() {
-	 ServerSocket serverSocket = null; 
-
+	 ServerSocket serverSocket = null;
 	    try { 
 	         serverSocket = new ServerSocket(this.porta); 
 	         System.out.println ("Connection Socket Created");
@@ -93,7 +95,9 @@ public void ligarServidor() {
 public void run()
    {
     System.out.println ("New Communication Thread Started");
-
+    String clientIp = clientSocket.getInetAddress().toString();
+    atualizarConectados(clientIp);
+    
     try { 
          PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), 
                                       true); 
@@ -512,17 +516,11 @@ public void run()
 		            		 break;
 		            	 }
 		              case "atualizarVaga": {
+		            	  	 AplicationController app = new AplicationController();
+		            	     Vaga vaga = jsonController.changeVagaCompletoJSON(res);
 		            	  	 Resposta resposta = new Resposta();
 			            	 resposta.setOperacao("atualizarVaga");
-			            	 AplicationController app = new AplicationController();
-			            	 Boolean response = true;
-			            	 if(response == true) {
-			            		 resposta.setStatus(201);
-			            		 resposta.setMsg("Vaga atualizada com sucesso!");
-			            	 }else {
-			            		 resposta.setStatus(422);
-			            		 resposta.setMsg("Erro");
-			            	 }
+			            	 
 		            		 break;
 		            	 }
 		              case "apagarCompetenciaExperiencia": {
@@ -538,20 +536,23 @@ public void run()
 		            		 break;
 		            	 }
 		              case "apagarVaga": {
+		            	     AplicationController app = new AplicationController();
+		            	     Vaga vaga = jsonController.changeVagaCompletoJSON(res);
 		            	  	 Resposta resposta = new Resposta();
 			            	 resposta.setOperacao("apagarVaga");
-			            	 AplicationController app = new AplicationController();
-			            	 Boolean response = true;
-			            	 if(response == true) {
-			            		 resposta.setStatus(201);
-			            		 resposta.setMsg("Vaga apagada com sucesso!");
-			            	 }else {
-			            		 resposta.setStatus(422);
-			            		 resposta.setMsg("Erro");
-			            	 }
+			            	 try {
+								Connection conn = BancoDados.conectar();
+								VagaDao vagaDao = new VagaDao(conn);
+								vagaDao.apagarVagaCompetencias(vaga.getId());
+								vagaDao.apagarVagaCompleta(vaga.getId());
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+			            	 
 		            		 break;
 		            	 }
-		              case "vizualizarCompetenciaExperiencia": {
+		              case "visualizarCompetenciaExperiencia": {
 		            	  System.out.println("entrei no visualizar");
 		            	     AplicationController app = new AplicationController();
 		            	  	 Resposta resposta = new Resposta();
@@ -574,17 +575,33 @@ public void run()
 		            		 break;
 		            	 }
 		              case "visualizarVaga": {
+		            	     AplicationController app = new AplicationController();
+		            	     Vaga vaga = jsonController.changeVagaCompletoJSON(res);
 		            	  	 Resposta resposta = new Resposta();
 			            	 resposta.setOperacao("visualizarVaga");
-			            	 AplicationController app = new AplicationController();
-			            	 Boolean response = true;
-			            	 if(response == true) {
-			            		 resposta.setStatus(201);
-			            		 resposta.setMsg("não implementado ainda rs");
-			            	 }else {
-			            		 resposta.setStatus(422);
-			            		 resposta.setMsg("Erro");
-			            	 }
+			            	 Connection conn;
+							try {
+								conn = BancoDados.conectar();
+								VagaDao vagaDao = new VagaDao(conn);
+								Vaga vagaResposta = new Vaga();
+								vagaResposta = vagaDao.visualizarVaga(vaga.getEmail(), vaga.getId());
+								if(vagaResposta.getNome() == null) {
+									resposta.setStatus(404);
+									resposta.setMsg("Vaga não encontrada");
+									JSONObject respostaJSON = jsonController.changeReponseToJsonVaga(resposta);
+					            	out.println(respostaJSON);
+								}else {
+									resposta.setDescricao(vagaResposta.getDescricao());
+									resposta.setFaixaSalarial(vagaResposta.getFaixaSalarial());
+									resposta.setEstado(vagaResposta.getEstado());
+									resposta.setCompetenciasString(vagaResposta.getCompetencias());
+									resposta.setStatus(201);
+									JSONObject respostaJSON = jsonController.changeReponseToJsonVaga(resposta);
+					            	out.println(respostaJSON);
+								}
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
 		            		 break;
 		            	 }
 		              case "listarVagas": {
@@ -608,17 +625,40 @@ public void run()
 							}
 		            	 }
 		              case "filtrarVagas": {
-		            	  	 Resposta resposta = new Resposta();
-			            	 resposta.setOperacao("filtrarVagas");
-			            	 AplicationController app = new AplicationController();
-			            	 Boolean response = true;
-			            	 if(response == true) {
-			            		 resposta.setStatus(201);
-			            		 resposta.setMsg("não implementado ainda rs");
-			            	 }else {
-			            		 resposta.setStatus(422);
-			            		 resposta.setMsg("Erro");
-			            	 }
+		            	     AplicationController app = new AplicationController();
+			            	 Filtro filtro;
+							try {
+								Connection conn;
+								filtro = jsonController.changeFiltroCompletoJSON(res);
+//								conn = BancoDados.conectar();
+//								VagaDao vagaDao = new VagaDao(conn);
+//								List<Vaga> vagas;
+//								vagas = vagaDao.filtrarVagas(filtro);
+								
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+		            		 break;
+		            	 }
+		              case "filtrarCandidato": {
+//		            	  	 AplicationController app = new AplicationController();
+//		            	  	 Connection conn;
+//		            	     try {
+//								ModeloFiltrarCandidato model = jsonController.changeFiltroCompletoJSONtoObjetct(res);
+//								try {
+//									conn = BancoDados.conectar();
+//									candidatoDAO candDao = new candidatoDAO(conn);
+//									CompetenciaDao compDao = new CompetenciaDao(conn);
+//								} catch (SQLException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+//				
+//							} catch (ParseException e) {
+//								e.printStackTrace();
+//							}
+		            	  	
 		            		 break;
 		            	 }
 		            }
@@ -629,8 +669,17 @@ public void run()
          }
     catch (IOException e) 
         { 
+    	 this.conectadosFrame.removerConectado(clientIp);
          System.err.println("Problem with Communication Server");
          System.exit(1); 
         } 
     }
+	public void atualizarConectados(String ip) {
+		if(this.conectadosFrame == null) {
+			this.conectadosFrame = new ClientesConectadosFrame();
+			this.conectadosFrame.setVisible(true);			
+		}
+		 this.conectadosFrame.atualizarConectados(ip);
+	}
+	
 } 
