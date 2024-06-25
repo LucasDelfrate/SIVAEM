@@ -106,7 +106,7 @@ public class FiltrarCandidatosFrame extends JFrame {
 		
 		    ModeloFiltrarCandidato modeloFiltCand = new ModeloFiltrarCandidato();
 	
-			modeloFiltCand.setOperacao("filtrarCandidato");
+			modeloFiltCand.setOperacao("filtrarCandidatos");
 			modeloFiltCand.setToken(this.token);
 			FiltroCandidato filtroCand = new FiltroCandidato();
 			filtroCand.setCompetenciasExperiencias(this.competencias);

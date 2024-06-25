@@ -100,12 +100,12 @@ public class CadastrarVaga extends JFrame {
 		btnNewButton.setBounds(123, 478, 187, 38);
 		contentPane.add(btnNewButton);
 		
-		JCheckBox python = new JCheckBox("Python");
+		JCheckBox python = new JCheckBox("python");
 		python.setHorizontalAlignment(SwingConstants.LEFT);
 		python.setBounds(60, 328, 97, 23);
 		contentPane.add(python);
 		
-		JCheckBox Java = new JCheckBox("Java");
+		JCheckBox Java = new JCheckBox("java");
 		Java.setHorizontalAlignment(SwingConstants.LEFT);
 		Java.setBounds(155, 328, 109, 23);
 		contentPane.add(Java);

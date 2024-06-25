@@ -307,6 +307,7 @@ public class Cliente {
 	                        	String msg;
 	                        	if(status == 201) {	                        		
                         			System.out.println("MOSTRANDO O RESULTADO DO FILTRO: ");
+                        			
                         			abrirCandidatosFiltrados();
 	                        	}
 	                        	else if(status == 404){
@@ -425,6 +426,7 @@ public class Cliente {
 		visuVaga.setVisible(true);
 	}
 	public void abrirUmaVaga(Resposta res) {
+		System.out.println("COMPETENCIAS: " + res.getCompetenciasString());
 		UmaVagaFrame uma = new UmaVagaFrame();
 		uma.setVariables(this, res.getFaixaSalarial(), res.getDescricao(), res.getEstado(), res.getCompetenciasString(), this.idVaga, res.getNome(), this.email, this.token);
 		uma.setVisible(true);

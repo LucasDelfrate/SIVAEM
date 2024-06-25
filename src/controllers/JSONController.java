@@ -397,8 +397,9 @@ public JSONObject changeReponseToJsonVagaListar2(Vaga vaga){
 	                long idCandidato = (long) candidatoObj.get("idCandidato");
 	                String nomeCandidato = (String) candidatoObj.get("nome");
 	                String emailCandidato = (String) candidatoObj.get("email");
-
-	                JSONArray competenciasExperienciaArray = (JSONArray) candidatoObj.get("competenciaExperiencia");
+	                
+	                JSONArray competenciasExperienciaArray = new JSONArray();
+	                competenciasExperienciaArray = (JSONArray) candidatoObj.get("competenciasExperiencias");
 	                List<CompetenciaExperiencia> competenciasExp = new ArrayList<>();
 
 	                for (Object obj : competenciasExperienciaArray) {
@@ -434,10 +435,17 @@ public JSONObject changeReponseToJsonVagaListar2(Vaga vaga){
 				
 			}
 			
-			JSONArray competenciasString = (JSONArray) jsonObject.get("competencias");
-			if(competenciasString != null) {
-				resposta1.setCompetenciasString(competenciasString);				
-			}
+			JSONObject jsonObjectComp = (JSONObject) parser.parse(resposta);
+
+            // Get the competencias array
+            JSONArray competenciasArrayComp = (JSONArray) jsonObjectComp.get("competencias");
+
+            // Convert the competencias array to a list of Strings
+            List<String> competenciasString = new ArrayList<>();
+            for (Object competencia : competenciasArrayComp) {
+            	competenciasString.add((String) competencia);
+            }
+            resposta1.setCompetenciasString(competenciasString);
 			
 			Object faixaSalarialObj = jsonObject.get("faixaSalarial");
 			if (faixaSalarialObj != null) {
