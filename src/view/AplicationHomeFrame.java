@@ -55,6 +55,7 @@ public class AplicationHomeFrame extends JFrame {
 	private JButton btnVisu;
 	private Boolean isCandidato = false;
 	private JButton btnVisualizarPorId;
+	private JButton buscaCand;
 
 	public AplicationHomeFrame(Cliente cliente, String token, String email) {
 		this.candidato = new Candidato();
@@ -167,15 +168,15 @@ public class AplicationHomeFrame extends JFrame {
 		this.btnVisualizarPorId.setBounds(66, 251, 689, 30);
 		contentPane.add(this.btnVisualizarPorId);
 		
-		JButton btnVisualizarPorId_1 = new JButton("Buscar candidatos");
-		btnVisualizarPorId_1.addActionListener(new ActionListener() {
+		this.buscaCand = new JButton("Buscar candidatos");
+		this.buscaCand.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				abrirFiltroCandidato();
 			}
 		});
-		btnVisualizarPorId_1.setBounds(63, 292, 689, 30);
-		contentPane.add(btnVisualizarPorId_1);
-
+		this.buscaCand.setBounds(63, 292, 689, 30);
+		
+		contentPane.add(this.buscaCand);
 	}
 	
 	public void getByEmail(Boolean isCandidato, String email){
@@ -187,6 +188,7 @@ public class AplicationHomeFrame extends JFrame {
 				Candidato candidato = new Candidato();
 				candidato.setOperacao("visualizarCandidato");
 				candidato.setEmail(this.email);
+				candidato.setUUID(this.token);
 				JSONController showController = new JSONController();
 				JSONObject res = showController.changeToJSON(candidato);
 				this.cliente.enviarMensagem(res);	
@@ -194,6 +196,7 @@ public class AplicationHomeFrame extends JFrame {
 				Empresa empresa = new Empresa();
 				empresa.setOperacao("visualizarEmpresa");
 				empresa.setEmail(this.email);
+				empresa.setUUID(this.token);
 				JSONController showController = new JSONController();
 				JSONObject res = showController.changeEmpresaToJSON(empresa);
 				this.cliente.enviarMensagem(res);	
@@ -324,6 +327,7 @@ public class AplicationHomeFrame extends JFrame {
 			this.botaoVagaCompetencia1.setText("Cadastrar competências");
 			this.btnVisu.setText("Visualizar competências");
 			this.btnVisualizarPorId.setVisible(false);
+			this.buscaCand.setVisible(false);
 			
 		}else {
 			this.botaoVagaCompetencia1.setText("Cadastrar vaga");

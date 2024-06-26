@@ -65,15 +65,6 @@ public class VisualizarVagas extends JFrame {
 		table.getColumnModel().getColumn(1).setPreferredWidth(130);
 		scrollPane.setViewportView(table);
 		
-		JButton btnNewButton = new JButton("Filtrar");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				filtrarVaga();
-			}
-		});
-		btnNewButton.setBounds(396, 418, 89, 23);
-		contentPane.add(btnNewButton);
-		
 	}
 	public void setarCompetencias(List<Vaga> vagas){
 		if(vagas != null) {
@@ -83,8 +74,5 @@ public class VisualizarVagas extends JFrame {
 			});			
 		}
 	}
-	public void filtrarVaga() {
-		FiltrarVagasFrame filt = new FiltrarVagasFrame(this.token, this.cliente);
-		filt.setVisible(true);
-	}
+	
 }

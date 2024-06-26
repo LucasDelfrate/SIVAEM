@@ -1,9 +1,11 @@
 package models;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 import controllers.JSONController;
 import enums.StatusEnum;
@@ -90,6 +92,7 @@ public class Cliente {
                         	case "loginCandidato":{
                         		String msg;
 	                        		if(status == 201 || status == 200) {
+	                        			System.out.println("! TOKENNNNN !!: "+ token);
 	                        			abrirApp(token);
 	                        			fecharTelaLogin();
 	                        		}else if(status == 401) {
@@ -282,38 +285,59 @@ public class Cliente {
 	                        	break;
 	                        }
 	                        case "listarVagas":{
-	                        	String msg;
-	                        	if(status == 201) {	                        		
-                        			abrirVisuVagas(resposta.getVagas());
-	                        	}
-	                        	else if(status == 404){
-	                        		msg = "Erro ao listar";
-	                        		respostaTelaEdit(msg);
-	                        	}
+	                        	List<Vaga> vagas = new ArrayList();
+	                        	try {
+									vagas = json.getVagas(mensagem);
+									String msg;
+		                        	if(status == 201) {	                        		
+	                        			abrirVisuVagas(vagas);
+		                        	}
+		                        	else if(status == 404){
+		                        		msg = "Erro ao listar";
+		                        		respostaTelaEdit(msg);
+		                        	}
+								} catch (ParseException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+	                        	
 	                        	break;
 	                        }
 	                        case "visualizarVaga":{
-	                        	String msg;
-	                        	if(status == 201) {	                        		
-                        			abrirUmaVaga(resposta);
-	                        	}
-	                        	else if(status == 404){
-	                        		msg = "Vaga não encontrada";
-	                        		respostaTelaEdit(msg);
-	                        	}
+	                        	Vaga vaga = new Vaga();
+	                        	try {
+									vaga = json.visualizarVagaJson(mensagem);
+									String msg;
+		                        	if(status == 201) {	                        		
+	                        			abrirUmaVaga(vaga);
+		                        	}
+		                        	else if(status == 404){
+		                        		msg = "Vaga não encontrada";
+		                        		respostaTelaEdit(msg);
+		                        	}
+								} catch (ParseException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 	                        	break;
 	                        }
 	                        case "filtrarCandidatos":{
-	                        	String msg;
-	                        	if(status == 201) {	                        		
-                        			System.out.println("MOSTRANDO O RESULTADO DO FILTRO: ");
-                        			
-                        			abrirCandidatosFiltrados();
-	                        	}
-	                        	else if(status == 404){
-	                        		msg = "Vaga não encontrada";
-	                        		respostaTelaEdit(msg);
-	                        	}
+	                        	RespostaFiltro res = new RespostaFiltro();
+	                        	try {
+									res = json.candidatosJson(mensagem);
+									String msg;
+									System.out.println("STATUS: "+ res.getStatus());
+		                        	if(res.getStatus() == 201) {	                        		
+	                        			abrirCandidatosFiltrados(res);
+		                        	}
+		                        	else if(status == 404){
+		                        		msg = "Vaga não encontrada";
+		                        		respostaTelaEdit(msg);
+		                        	}
+								} catch (ParseException e) {
+									e.printStackTrace();
+								}
+	                        	
 	                        	break;
 	                        }
                         }
@@ -374,7 +398,7 @@ public class Cliente {
 	}
 	public void abrirApp(String token) {
 		this.token = token;
-		AplicationHomeFrame app = new AplicationHomeFrame(this, token, this.email);
+		AplicationHomeFrame app = new AplicationHomeFrame(this, this.token, this.email);
 		this.app = app;
 		this.app.getByEmail(true, this.email);
 		this.app.setarIsCandidato(true);
@@ -425,16 +449,17 @@ public class Cliente {
 		visuVaga.setarCompetencias(vagas);
 		visuVaga.setVisible(true);
 	}
-	public void abrirUmaVaga(Resposta res) {
-		System.out.println("COMPETENCIAS: " + res.getCompetenciasString());
+	public void abrirUmaVaga(Vaga res) {
+		System.out.println("COMPETENCIAS: " + res.getCompetencias());
 		UmaVagaFrame uma = new UmaVagaFrame();
-		uma.setVariables(this, res.getFaixaSalarial(), res.getDescricao(), res.getEstado(), res.getCompetenciasString(), this.idVaga, res.getNome(), this.email, this.token);
+		uma.setVariables(this, res.getFaixaSalarial(), res.getDescricao(), res.getEstado(), res.getCompetencias(), this.idVaga, res.getNome(), this.email, this.token);
 		uma.setVisible(true);
 	}
 	public void setIdVaga(int id) {
 		this.idVaga = id;
 	}
-	public void abrirCandidatosFiltrados(){
-		CandidatosFiltrados candFilt = new CandidatosFiltrados(this.email, this.token, this);
+	public void abrirCandidatosFiltrados(RespostaFiltro res){
+		CandidatosFiltrados candFilt = new CandidatosFiltrados(this.email, this.token, this, res);
+		candFilt.setVisible(true);
 	}
 }

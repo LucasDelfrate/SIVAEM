@@ -5,12 +5,14 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import org.json.simple.JSONObject;
 
 import controllers.JSONController;
 import models.Cliente;
 import models.Mensagem;
+import models.RespostaFiltro;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -28,9 +30,10 @@ public class CandidatosFiltrados extends JFrame {
 	private String email;
 	private String token;
 	private Cliente cliente;
+	private DefaultTableModel tableModel;
 
 
-	public CandidatosFiltrados(String email, String token, Cliente cliente) {
+	public CandidatosFiltrados(String email, String token, Cliente cliente, RespostaFiltro res) {
 		this.email = email;
 		this.token = token;
 		this.cliente = cliente;
@@ -50,7 +53,12 @@ public class CandidatosFiltrados extends JFrame {
 		scrollPane.setBounds(41, 50, 352, 288);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
+		this.tableModel = new DefaultTableModel(new Object[][] {
+		},
+		new String[] {
+				"IdCandidato", "Nome", "Email","Competencia"
+			});
+		table = new JTable(this.tableModel);
 		scrollPane.setViewportView(table);
 		
 		JButton btnNewButton = new JButton("Enviar mensagem");
@@ -61,6 +69,10 @@ public class CandidatosFiltrados extends JFrame {
 		});
 		btnNewButton.setBounds(76, 361, 281, 33);
 		contentPane.add(btnNewButton);
+		
+		res.getCandidatos().forEach((candidato) -> {
+			this.tableModel.addRow(new Object[]{candidato.getId(), candidato.getNome(), candidato.getEmail(), candidato.getCompExp().getCompetencias().get(0).getDescricao()});
+		});
 	}
 	public void enviarMensagem() {
 		Mensagem msg = new Mensagem();

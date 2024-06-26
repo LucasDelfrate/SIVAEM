@@ -100,12 +100,12 @@ public class CadastrarVaga extends JFrame {
 		btnNewButton.setBounds(123, 478, 187, 38);
 		contentPane.add(btnNewButton);
 		
-		JCheckBox python = new JCheckBox("python");
+		JCheckBox python = new JCheckBox("Python");
 		python.setHorizontalAlignment(SwingConstants.LEFT);
 		python.setBounds(60, 328, 97, 23);
 		contentPane.add(python);
 		
-		JCheckBox Java = new JCheckBox("java");
+		JCheckBox Java = new JCheckBox("Java");
 		Java.setHorizontalAlignment(SwingConstants.LEFT);
 		Java.setBounds(155, 328, 109, 23);
 		contentPane.add(Java);
@@ -120,7 +120,7 @@ public class CadastrarVaga extends JFrame {
 		cmaismais.setBounds(60, 354, 97, 23);
 		contentPane.add(cmaismais);
 		
-		JCheckBox javascript = new JCheckBox("JavaScript");
+		JCheckBox javascript = new JCheckBox("JS");
 		javascript.setHorizontalAlignment(SwingConstants.LEFT);
 		javascript.setBounds(155, 354, 109, 23);
 		contentPane.add(javascript);
@@ -150,7 +150,7 @@ public class CadastrarVaga extends JFrame {
 		css.setBounds(60, 406, 97, 23);
 		contentPane.add(css);
 		
-		JCheckBox go = new JCheckBox("GO");
+		JCheckBox go = new JCheckBox("Go");
 		go.setHorizontalAlignment(SwingConstants.LEFT);
 		go.setBounds(155, 406, 109, 23);
 		contentPane.add(go);

@@ -13,8 +13,17 @@ public class Vaga {
 	private List<String> competencias;
 	private String email;
 	private String token;
+	private int status;
+	
+	
 
 	
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
 	public int getId() {
 		return id;
 	}

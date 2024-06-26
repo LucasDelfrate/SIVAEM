@@ -16,6 +16,7 @@ import org.json.simple.JSONArray;
 
 
 import models.Candidato;
+import models.CandidatosResposta;
 import models.Competencia;
 import models.CompetenciaExperiencia;
 import models.Empresa;
@@ -25,6 +26,7 @@ import models.FiltroDentro;
 import models.Mensagem;
 import models.ModeloFiltrarCandidato;
 import models.Resposta;
+import models.RespostaFiltro;
 import models.Vaga;
 import models.Vagas;
 
@@ -275,7 +277,7 @@ public JSONObject changeReponseToJsonVagaListar(Vaga vaga){
 		vaga1.put("token", vaga.getToken());			
 	}
 	if(vaga.getFaixaSalarial() != 0) {
-		vaga1.put("faixa", vaga.getFaixaSalarial());			
+		vaga1.put("faixaSalarial", vaga.getFaixaSalarial());			
 	}
 	if(vaga.getDescricao() != null) {
 		vaga1.put("descricao", vaga.getDescricao());			
@@ -399,7 +401,7 @@ public JSONObject changeReponseToJsonVagaListar2(Vaga vaga){
 	                String emailCandidato = (String) candidatoObj.get("email");
 	                
 	                JSONArray competenciasExperienciaArray = new JSONArray();
-	                competenciasExperienciaArray = (JSONArray) candidatoObj.get("competenciasExperiencias");
+	                competenciasExperienciaArray = (JSONArray) candidatoObj.get("competenciaExperiencia");
 	                List<CompetenciaExperiencia> competenciasExp = new ArrayList<>();
 
 	                for (Object obj : competenciasExperienciaArray) {
@@ -435,17 +437,18 @@ public JSONObject changeReponseToJsonVagaListar2(Vaga vaga){
 				
 			}
 			
-			JSONObject jsonObjectComp = (JSONObject) parser.parse(resposta);
-
-            // Get the competencias array
-            JSONArray competenciasArrayComp = (JSONArray) jsonObjectComp.get("competencias");
-
-            // Convert the competencias array to a list of Strings
-            List<String> competenciasString = new ArrayList<>();
-            for (Object competencia : competenciasArrayComp) {
-            	competenciasString.add((String) competencia);
-            }
-            resposta1.setCompetenciasString(competenciasString);
+//			JSONObject jsonObjectComp = (JSONObject) parser.parse(resposta);
+//
+//            // Get the competencias array
+//            JSONArray competenciasArrayComp = (JSONArray) jsonObjectComp.get("competencias");
+//
+//            // Convert the competencias array to a list of Strings
+//            List<String> competenciasString = new ArrayList<>();
+//
+//            for (Object competencia : competenciasArrayComp) {
+//            	competenciasString.add((String) competencia);
+//            }
+//            resposta1.setCompetenciasString(competenciasString);
 			
 			Object faixaSalarialObj = jsonObject.get("faixaSalarial");
 			if (faixaSalarialObj != null) {
@@ -523,6 +526,9 @@ public JSONObject changeToJSONEmpresa(Empresa empresa){
 		emp.put("operacao", empresa.getOperacao());
 		if(empresa.getEmail() != null) {
 			emp.put("email", empresa.getEmail());			
+		}
+		if(empresa.getUUID() != null) {
+			emp.put("token", empresa.getUUID());			
 		}
 		if(empresa.getRazaoSocial() != null) {
 			emp.put("razaoSocial", empresa.getRazaoSocial());			
@@ -876,4 +882,81 @@ public JSONObject changeToJSONEmpresa(Empresa empresa){
 		return obj;
 	}
 	
+	public RespostaFiltro candidatosJson(String msg) throws ParseException {
+		RespostaFiltro resposta = new RespostaFiltro();
+		JSONParser parser = new JSONParser();
+		CandidatosResposta candidatoResposta = new CandidatosResposta();
+		JSONObject jsonObject = (JSONObject) parser.parse(msg);
+		String operacao = (String) jsonObject.get("operacao");
+		int status = ((Number) jsonObject.get("status")).intValue();
+		CompetenciaExperiencia compExp = new CompetenciaExperiencia();
+		JSONArray candidatosArray = (JSONArray) jsonObject.get("candidatos");
+		List<CandidatosResposta> candidatosFinal = new ArrayList();
+		 for (Object obj : candidatosArray) {
+			 JSONObject candidato = (JSONObject) obj;
+             int id = ((Number) candidato.get("idCandidato")).intValue();
+             String nome = (String) candidato.get("nome");
+             String email = (String) candidato.get("email");
+             List<Competencia> listCompetencias = new ArrayList();
+             JSONArray competenciasExperiencias = (JSONArray) candidato.get("competenciaExperiencia");
+             for (Object obj2 : competenciasExperiencias) {
+    			 JSONObject compExpAux = (JSONObject) obj2;
+                 String comp = (String) compExpAux.get("competencia");
+                 int exp = (((Number) compExpAux.get("experiencia")).intValue());
+                 Competencia competenciaAuxiliar = new Competencia();
+                 competenciaAuxiliar.setDescricao(comp);
+                 competenciaAuxiliar.setExperiencia(exp);
+                 listCompetencias.add(competenciaAuxiliar);
+    		 }
+             compExp.setCompetencias(listCompetencias);
+             candidatoResposta.setCompExp(compExp);
+             candidatoResposta.setEmail(email);
+             candidatoResposta.setId(id);
+             candidatoResposta.setNome(nome);
+             candidatosFinal.add(candidatoResposta);
+		 }
+		 resposta.setCandidatos(candidatosFinal);
+		 resposta.setStatus(status);
+		 return resposta;
+	}
+	public Vaga visualizarVagaJson(String msg) throws ParseException {
+		JSONParser parser = new JSONParser();
+		JSONObject jsonObject = (JSONObject) parser.parse(msg);
+		Vaga vaga = new Vaga();
+		if(jsonObject.get("descricao") != null) {
+			String operacao = (String) jsonObject.get("operacao");
+			int faixa = ((Number) jsonObject.get("faixaSalarial")).intValue();
+			String descricao = (String) jsonObject.get("descricao");
+			String estado = (String) jsonObject.get("estado");
+			int status = ((Number) jsonObject.get("status")).intValue();
+			JSONArray compsArray = (JSONArray) jsonObject.get("competencias");
+			vaga.setCompetencias(compsArray);
+			vaga.setOperacao(operacao);
+			vaga.setDescricao(descricao);
+			vaga.setEstado(estado);
+			vaga.setFaixaSalarial(faixa);
+			vaga.setStatus(status);
+			return vaga;
+			
+		}
+		return vaga;
+	}
+	public List<Vaga> getVagas(String msg) throws ParseException{
+		List<Vaga> vagas = new ArrayList();
+		JSONParser parser = new JSONParser();
+		JSONObject jsonObject = (JSONObject) parser.parse(msg);
+		String operacao = (String) jsonObject.get("operacao");
+		int status = ((Number) jsonObject.get("status")).intValue();
+		JSONArray vagasArray = (JSONArray) jsonObject.get("vagas");
+		 for (Object vaga : vagasArray) {
+			 JSONObject vagaObject = (JSONObject) vaga;
+			 Vaga vagaAux = new Vaga();
+			 String nome = (String) vagaObject.get("nome");
+			 int id = (((Number) vagaObject.get("idVaga")).intValue());
+			 vagaAux.setNome(nome);
+			 vagaAux.setId(id);
+			 vagas.add(vagaAux);
+		 }
+		return vagas;
+	}
 }

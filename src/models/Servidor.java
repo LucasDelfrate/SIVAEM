@@ -576,7 +576,12 @@ public void run()
 		            	 }
 		              case "visualizarVaga": {
 		            	     AplicationController app = new AplicationController();
-		            	     Vaga vaga = jsonController.changeVagaCompletoJSON(res);
+		            	     Vaga vaga;
+							try {
+								vaga = jsonController.visualizarVagaJson(res);
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
 		            	  	 Resposta resposta = new Resposta();
 			            	 resposta.setOperacao("visualizarVaga");
 			            	 Connection conn;
@@ -584,7 +589,7 @@ public void run()
 								conn = BancoDados.conectar();
 								VagaDao vagaDao = new VagaDao(conn);
 								Vaga vagaResposta = new Vaga();
-								vagaResposta = vagaDao.visualizarVaga(vaga.getEmail(), vaga.getId());
+
 								if(vagaResposta.getNome() == null) {
 									resposta.setStatus(404);
 									resposta.setMsg("Vaga não encontrada");
