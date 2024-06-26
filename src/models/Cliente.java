@@ -19,6 +19,7 @@ import view.PerfilFrame;
 import view.RegistroCandidatoFrame;
 import view.RegistroEmpresaFrame;
 import view.UmaVagaFrame;
+import view.VagasFiltradas;
 import view.VisualizarVagas;
 
 public class Cliente {
@@ -340,6 +341,24 @@ public class Cliente {
 	                        	
 	                        	break;
 	                        }
+	                        case "filtrarVagas":{
+	                        	List<Vaga> vagas = new ArrayList();
+	                        	try {
+	                        		vagas = json.vagasChangeObject(mensagem);
+									String msg;
+		                        	if(status == 201) {	  
+	                        			abrirVagasFiltrados(vagas);
+		                        	}
+		                        	else if(status == 404){
+		                        		msg = "Vaga não encontrada";
+		                        		respostaTelaEdit(msg);
+		                        	}
+								} catch (ParseException e) {
+									e.printStackTrace();
+								}
+	                        	
+	                        	break;
+	                        }
                         }
                       }
 	                } catch (IOException e) {
@@ -461,5 +480,9 @@ public class Cliente {
 	public void abrirCandidatosFiltrados(RespostaFiltro res){
 		CandidatosFiltrados candFilt = new CandidatosFiltrados(this.email, this.token, this, res);
 		candFilt.setVisible(true);
+	}
+	public void abrirVagasFiltrados(List<Vaga> vagas) {
+		VagasFiltradas vagasFilt = new VagasFiltradas(vagas);
+		vagasFilt.setVisible(true);
 	}
 }

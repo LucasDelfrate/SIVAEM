@@ -71,7 +71,7 @@ public class FiltrarVagasFrame extends JFrame {
 		cmaismais.setBounds(72, 74, 97, 23);
 		contentPane.add(cmaismais);
 		
-		JCheckBox javascript = new JCheckBox("JavaScript");
+		JCheckBox javascript = new JCheckBox("JS");
 		javascript.setHorizontalAlignment(SwingConstants.LEFT);
 		javascript.setBounds(167, 74, 109, 23);
 		contentPane.add(javascript);

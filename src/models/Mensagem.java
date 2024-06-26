@@ -1,10 +1,12 @@
 package models;
 
+import java.util.List;
+
 public class Mensagem {
 	
 	private String operacao;
 	private String email;
-	private int[] candidatos;
+	private List<Integer> candidatos;
 	private String token;
 	
 	
@@ -20,11 +22,11 @@ public class Mensagem {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public int[] getCandidatos() {
+	public List<Integer> getCandidatos() {
 		return candidatos;
 	}
-	public void setCandidatos(int[] candidatos) {
-		this.candidatos = candidatos;
+	public void setCandidatos(List<Integer> checkboxes) {
+		this.candidatos = checkboxes;
 	}
 	public String getToken() {
 		return token;

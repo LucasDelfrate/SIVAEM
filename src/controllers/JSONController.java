@@ -142,7 +142,7 @@ public JSONObject changeReponseToJsonFiltroCandidato(ModeloFiltrarCandidato mode
     }
 
     // Definindo o tipo nos filtros
-    filtrosJson.put("tipo", "OR");
+    filtrosJson.put("tipo", model.getFiltros().getTipo());
 
     // Adicionando o objeto filtros ao JSON principal
     responseJson.put("filtros", filtrosJson);
@@ -879,13 +879,15 @@ public JSONObject changeToJSONEmpresa(Empresa empresa){
 		if(msg.getToken() != null) {
 			obj.put("token", msg.getToken());			
 		}
+		if(msg.getCandidatos() != null) {
+			obj.put("candidatos", msg.getCandidatos());
+		}
 		return obj;
 	}
 	
 	public RespostaFiltro candidatosJson(String msg) throws ParseException {
 		RespostaFiltro resposta = new RespostaFiltro();
 		JSONParser parser = new JSONParser();
-		CandidatosResposta candidatoResposta = new CandidatosResposta();
 		JSONObject jsonObject = (JSONObject) parser.parse(msg);
 		String operacao = (String) jsonObject.get("operacao");
 		int status = ((Number) jsonObject.get("status")).intValue();
@@ -908,6 +910,7 @@ public JSONObject changeToJSONEmpresa(Empresa empresa){
                  competenciaAuxiliar.setExperiencia(exp);
                  listCompetencias.add(competenciaAuxiliar);
     		 }
+             CandidatosResposta candidatoResposta = new CandidatosResposta();
              compExp.setCompetencias(listCompetencias);
              candidatoResposta.setCompExp(compExp);
              candidatoResposta.setEmail(email);
@@ -957,6 +960,34 @@ public JSONObject changeToJSONEmpresa(Empresa empresa){
 			 vagaAux.setId(id);
 			 vagas.add(vagaAux);
 		 }
+		return vagas;
+	}
+	public List<Vaga> vagasChangeObject(String mensagem) throws ParseException{
+		List<Vaga> vagas = new ArrayList();
+		JSONParser parser = new JSONParser();
+		JSONObject jsonObject = (JSONObject) parser.parse(mensagem);
+		int status = ((Number)jsonObject.get("status")).intValue();
+		JSONArray vagasArray = (JSONArray) jsonObject.get("vagas");
+		for (Object vaga : vagasArray) {
+			JSONObject vagaObj = (JSONObject) vaga;
+			int id = ((Number)vagaObj.get("idVaga")).intValue();
+			String nome = (String) vagaObj.get("nome");
+			int faixa = ((Number)vagaObj.get("faixaSalarial")).intValue();
+			String descricao = (String) vagaObj.get("descricao");
+			String estado = (String) vagaObj.get("estado");
+			String email = (String) vagaObj.get("email");
+			List<String> competencias = (List<String>) vagaObj.get("competencias");
+			Vaga vagaAux = new Vaga();
+			vagaAux.setCompetencias(competencias);
+			vagaAux.setDescricao(descricao);
+			vagaAux.setEmail(email);
+			vagaAux.setEstado(estado);
+			vagaAux.setFaixaSalarial(faixa);
+			vagaAux.setId(id);
+			vagaAux.setNome(nome);
+			vagas.add(vagaAux);
+			vagaAux.setStatus(status);
+		}
 		return vagas;
 	}
 }

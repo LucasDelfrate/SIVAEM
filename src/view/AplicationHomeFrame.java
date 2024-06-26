@@ -56,6 +56,7 @@ public class AplicationHomeFrame extends JFrame {
 	private Boolean isCandidato = false;
 	private JButton btnVisualizarPorId;
 	private JButton buscaCand;
+	private JButton btnBuscarVagasDisponveis;
 
 	public AplicationHomeFrame(Cliente cliente, String token, String email) {
 		this.candidato = new Candidato();
@@ -177,6 +178,15 @@ public class AplicationHomeFrame extends JFrame {
 		this.buscaCand.setBounds(63, 292, 689, 30);
 		
 		contentPane.add(this.buscaCand);
+		
+		this.btnBuscarVagasDisponveis = new JButton("Buscar vagas disponíveis");
+		this.btnBuscarVagasDisponveis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				abrirFiltrosVagas();
+			}
+		});
+		this.btnBuscarVagasDisponveis.setBounds(66, 333, 689, 30);
+		contentPane.add(this.btnBuscarVagasDisponveis);
 	}
 	
 	public void getByEmail(Boolean isCandidato, String email){
@@ -332,6 +342,7 @@ public class AplicationHomeFrame extends JFrame {
 		}else {
 			this.botaoVagaCompetencia1.setText("Cadastrar vaga");
 			this.btnVisu.setText("Listar vagas");
+			this.buscaCand.setVisible(true);
 		}
 	}
 	public void excluirCompetencia() {
@@ -381,5 +392,9 @@ public class AplicationHomeFrame extends JFrame {
 	public void abrirFiltroCandidato() {
 		FiltrarCandidatosFrame filt = new FiltrarCandidatosFrame(this, this.email, this.token, false);
 		filt.setVisible(true);
+	}
+	public void abrirFiltrosVagas() {
+		FiltrarVagasFrame filtrar = new FiltrarVagasFrame(this.token, this.cliente);
+		filtrar.setVisible(true);
 	}
 }

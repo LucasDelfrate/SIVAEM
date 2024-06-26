@@ -110,7 +110,7 @@ public class FiltrarCandidatosFrame extends JFrame {
 			modeloFiltCand.setToken(this.token);
 			FiltroCandidato filtroCand = new FiltroCandidato();
 			filtroCand.setCompetenciasExperiencias(this.competencias);
-			filtroCand.setTipo(tipo.getText());
+			filtroCand.setTipo(tipoField.getText());
 			modeloFiltCand.setFiltros(filtroCand);
 			JSONController json = new JSONController();
 			JSONObject obj = json.changeReponseToJsonFiltroCandidato(modeloFiltCand);
